@@ -82,7 +82,7 @@ const handleSubmit = async () => {
         <div
           class="relative bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden border border-slate-100"
         >
-          <div class="p-8">
+          <div class="p-6 sm:p-8">
             <header class="text-center mb-6">
               <h2 class="text-3xl font-black text-slate-800 tracking-tight">
                 {{ isLoginMode ? t("auth.welcome") : t("auth.join") }}

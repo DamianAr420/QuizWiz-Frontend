@@ -52,22 +52,24 @@ const handleDeleteAccount = async () => {
 </script>
 
 <template>
-  <div class="max-w-4xl mx-auto px-4 py-12">
+  <div class="max-w-4xl mx-auto px-4 py-8 sm:py-12">
     <div
       class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 mb-8"
     >
-      <div class="bg-indigo-700 h-32 w-full"></div>
+      <div class="bg-indigo-700 h-24 sm:h-32 w-full"></div>
 
-      <div class="px-8 pb-8">
-        <div class="relative flex justify-between items-end -mt-12 mb-8">
+      <div class="px-5 sm:px-8 pb-8">
+        <div
+          class="relative flex flex-col xs:flex-row justify-between items-start xs:items-end -mt-10 sm:-mt-12 mb-6 sm:mb-8 gap-4"
+        >
           <div
-            class="bg-slate-200 h-24 w-24 rounded-2xl border-4 border-white flex items-center justify-center text-4xl shadow-sm"
+            class="bg-slate-200 h-20 w-20 sm:h-24 sm:w-24 rounded-2xl border-4 border-white flex items-center justify-center text-3xl sm:text-4xl shadow-sm"
           >
             🧙‍♂️
           </div>
           <button
             @click="isEditing = !isEditing"
-            class="px-4 py-2 rounded-xl font-bold text-sm transition-all cursor-pointer"
+            class="self-end xs:self-auto px-4 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer"
             :class="
               isEditing
                 ? 'bg-slate-100 text-slate-600'
@@ -78,11 +80,15 @@ const handleDeleteAccount = async () => {
           </button>
         </div>
 
-        <header class="mb-8">
-          <h1 class="text-3xl font-black text-slate-800 tracking-tight">
+        <header class="mb-6 sm:mb-8">
+          <h1
+            class="text-2xl sm:text-3xl font-black text-slate-800 tracking-tight"
+          >
             {{ t("profile.title") }}
           </h1>
-          <p class="text-slate-500">{{ t("profile.subtitle") }}</p>
+          <p class="text-sm sm:text-base text-slate-500">
+            {{ t("profile.subtitle") }}
+          </p>
         </header>
 
         <Transition name="slide-up">
@@ -116,7 +122,7 @@ const handleDeleteAccount = async () => {
               t("auth.email")
             }}</label>
             <div
-              class="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-slate-500 select-none"
+              class="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-slate-500 select-none text-sm sm:text-base"
             >
               {{ userStore.profile?.email }}
             </div>
@@ -131,7 +137,7 @@ const handleDeleteAccount = async () => {
                 v-model="form.displayName"
                 :disabled="!isEditing || userStore.loading"
                 type="text"
-                class="w-full px-4 py-3 border rounded-xl outline-none transition-all"
+                class="w-full px-4 py-3 border rounded-xl outline-none transition-all text-sm sm:text-base"
                 :class="
                   isEditing
                     ? 'bg-white border-indigo-200 focus:ring-2 focus:ring-indigo-500 shadow-sm'
@@ -143,7 +149,9 @@ const handleDeleteAccount = async () => {
             <div
               class="pt-4 border-t border-slate-50 flex flex-col sm:flex-row justify-between items-center gap-4"
             >
-              <span class="text-xs text-slate-400 italic">
+              <span
+                class="text-xs text-slate-400 italic text-center sm:text-left"
+              >
                 {{ t("profile.memberSince") }}:
                 {{ formatDate(userStore.profile?.createdAt) }}
               </span>
@@ -152,7 +160,7 @@ const handleDeleteAccount = async () => {
                 v-if="isEditing"
                 type="submit"
                 :disabled="userStore.loading"
-                class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 rounded-xl transition-all disabled:opacity-50 cursor-pointer"
+                class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 rounded-xl transition-all disabled:opacity-50 cursor-pointer shadow-lg shadow-indigo-200"
               >
                 {{ userStore.loading ? t("auth.loading") : t("common.save") }}
               </button>
@@ -163,9 +171,9 @@ const handleDeleteAccount = async () => {
     </div>
 
     <div
-      class="bg-red-50 rounded-3xl p-8 border border-red-100 flex flex-col sm:flex-row justify-between items-center gap-6"
+      class="bg-red-50 rounded-3xl p-6 sm:p-8 border border-red-100 flex flex-col md:flex-row justify-between items-center gap-6"
     >
-      <div class="text-center sm:text-left">
+      <div class="text-center md:text-left">
         <h4 class="text-red-800 font-black text-lg">
           {{ t("profile.dangerZone") }}
         </h4>
@@ -175,7 +183,7 @@ const handleDeleteAccount = async () => {
       </div>
       <button
         @click="isDeleteModalOpen = true"
-        class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-xl font-bold text-sm transition-all shadow-lg shadow-red-200 active:scale-95 cursor-pointer"
+        class="w-full md:w-auto bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-xl font-bold text-sm transition-all shadow-lg shadow-red-200 active:scale-95 cursor-pointer whitespace-nowrap"
       >
         {{ t("profile.deleteBtn") }}
       </button>

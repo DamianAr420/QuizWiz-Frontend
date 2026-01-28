@@ -41,7 +41,7 @@ const iconColors = {
       <div
         class="relative bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-pop"
       >
-        <div class="p-8">
+        <div class="p-6 sm:p-8">
           <div
             :class="[
               'w-12 h-12 rounded-2xl flex items-center justify-center mb-6 text-xl',
