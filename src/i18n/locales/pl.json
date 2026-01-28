@@ -30,5 +30,22 @@
     "title": "Sprawdź swoją wiedzę!",
     "description": "Wybierz interesującą Cię kategorię i zmierz się z czasem. Czy uda Ci się zdobyć tytuł Mistrza Quizu?",
     "cta": "Rozpocznij przygodę"
+  },
+  "profile": {
+    "title": "Mój Profil",
+    "subtitle": "Zarządzaj swoimi danymi i postępami",
+    "editBtn": "Edytuj profil",
+    "memberSince": "Dołączono",
+    "updateSuccess": "Profil został zaktualizowany!",
+    "updateError": "Nie udało się zaktualizować profilu.",
+    "dangerZone": "Strefa niebezpieczna",
+    "deleteDesc": "Usunięcie konta jest nieodwracalne. Wszystkie Twoje statystyki zostaną skasowane.",
+    "deleteBtn": "Usuń konto",
+    "deleteConfirmTitle": "Czy na pewno chcesz nas opuścić?",
+    "deleteConfirmDesc": "To działanie całkowicie usunie Twoje dane z serwerów QuizWiz. Nie będziesz mógł cofnąć tej operacji."
+  },
+  "common": {
+    "save": "Zapisz",
+    "cancel": "Anuluj"
   }
 }

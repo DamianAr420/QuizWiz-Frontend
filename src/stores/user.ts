@@ -1,17 +1,11 @@
 import { defineStore } from "pinia";
 import api from "@/services/api";
 import { useAuthStore } from "./auth";
-
-interface UserProfile {
-  id: number;
-  displayName: string;
-  email: string;
-  createdAt: string;
-}
+import type { User } from "@/types/user";
 
 export const useUserStore = defineStore("user", {
   state: () => ({
-    profile: null as UserProfile | null,
+    profile: null as User | null,
     loading: false,
     error: null as string | null,
   }),
@@ -21,12 +15,13 @@ export const useUserStore = defineStore("user", {
       this.loading = true;
       this.error = null;
       try {
-        const response = await api.get<UserProfile>("/users/me");
+        const response = await api.get<User>("/users/me");
         this.profile = response.data;
 
         const authStore = useAuthStore();
         if (authStore.user) {
           authStore.user.displayName = response.data.displayName;
+          localStorage.setItem("user", JSON.stringify(authStore.user));
         }
       } catch (err: any) {
         this.error =
@@ -39,9 +34,10 @@ export const useUserStore = defineStore("user", {
     async updateProfile(displayName: string) {
       this.loading = true;
       try {
-        const response = await api.put("/users/update-profile", {
+        const response = await api.put<User>("/users/update-profile", {
           displayName,
         });
+
         if (this.profile) {
           this.profile.displayName = response.data.displayName;
         }
@@ -49,6 +45,7 @@ export const useUserStore = defineStore("user", {
         const authStore = useAuthStore();
         if (authStore.user) {
           authStore.user.displayName = response.data.displayName;
+          localStorage.setItem("user", JSON.stringify(authStore.user));
         }
       } catch (err: any) {
         this.error = err.response?.data?.message || "Błąd podczas aktualizacji";

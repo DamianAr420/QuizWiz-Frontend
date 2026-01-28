@@ -119,9 +119,20 @@ const navLinks = [
 
         <template v-if="authStore.isAuthenticated">
           <div class="flex items-center gap-4">
-            <span class="text-sm font-medium">{{
-              authStore.user?.displayName
-            }}</span>
+            <router-link
+              to="/profile"
+              class="flex items-center gap-2 group px-2 py-1 rounded-lg hover:bg-indigo-600 transition-all"
+            >
+              <div
+                class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-xs border border-indigo-400 shadow-inner group-hover:scale-110 transition-transform"
+              >
+                👤
+              </div>
+              <span class="text-sm font-bold tracking-wide">
+                {{ authStore.user?.displayName }}
+              </span>
+            </router-link>
+
             <button
               @click="authStore.logout"
               class="text-xs bg-red-500/20 hover:bg-red-500 px-3 py-1.5 rounded-md transition-colors font-bold uppercase tracking-wider"
@@ -130,6 +141,7 @@ const navLinks = [
             </button>
           </div>
         </template>
+
         <template v-else>
           <button
             @click="isModalOpen = true"

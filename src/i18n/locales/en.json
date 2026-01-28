@@ -30,5 +30,22 @@
     "title": "Test your knowledge!",
     "description": "Pick a category and race against the clock. Can you achieve the title of Quiz Master?",
     "cta": "Start adventure"
+  },
+  "profile": {
+    "title": "My Profile",
+    "subtitle": "Manage your details and progress",
+    "editBtn": "Edit profile",
+    "memberSince": "Member since",
+    "updateSuccess": "Profile updated successfully!",
+    "updateError": "Failed to update profile.",
+    "dangerZone": "Danger Zone",
+    "deleteDesc": "Deleting your account is permanent. All your statistics will be wiped.",
+    "deleteBtn": "Delete Account",
+    "deleteConfirmTitle": "Are you sure you want to leave?",
+    "deleteConfirmDesc": "This action will completely remove your data from QuizWiz servers. You cannot undo this operation."
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel"
   }
 }
