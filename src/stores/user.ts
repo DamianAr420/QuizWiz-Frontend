@@ -1,0 +1,77 @@
+import { defineStore } from "pinia";
+import api from "@/services/api";
+import { useAuthStore } from "./auth";
+
+interface UserProfile {
+  id: number;
+  displayName: string;
+  email: string;
+  createdAt: string;
+}
+
+export const useUserStore = defineStore("user", {
+  state: () => ({
+    profile: null as UserProfile | null,
+    loading: false,
+    error: null as string | null,
+  }),
+
+  actions: {
+    async fetchProfile() {
+      this.loading = true;
+      this.error = null;
+      try {
+        const response = await api.get<UserProfile>("/users/me");
+        this.profile = response.data;
+
+        const authStore = useAuthStore();
+        if (authStore.user) {
+          authStore.user.displayName = response.data.displayName;
+        }
+      } catch (err: any) {
+        this.error =
+          err.response?.data?.message || "Nie udało się pobrać profilu";
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    async updateProfile(displayName: string) {
+      this.loading = true;
+      try {
+        const response = await api.put("/users/update-profile", {
+          displayName,
+        });
+        if (this.profile) {
+          this.profile.displayName = response.data.displayName;
+        }
+
+        const authStore = useAuthStore();
+        if (authStore.user) {
+          authStore.user.displayName = response.data.displayName;
+        }
+      } catch (err: any) {
+        this.error = err.response?.data?.message || "Błąd podczas aktualizacji";
+        throw err;
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    async deleteAccount() {
+      this.loading = true;
+      try {
+        await api.delete("/users/delete-account");
+        const authStore = useAuthStore();
+        authStore.logout();
+        this.profile = null;
+      } catch (err: any) {
+        this.error =
+          err.response?.data?.message || "Błąd podczas usuwania konta";
+        throw err;
+      } finally {
+        this.loading = false;
+      }
+    },
+  },
+});

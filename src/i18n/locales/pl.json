@@ -1,0 +1,34 @@
+{
+  "nav": {
+    "start": "Start",
+    "play": "Graj",
+    "ranking": "Ranking",
+    "login": "Zaloguj się",
+    "logout": "Wyloguj"
+  },
+  "auth": {
+    "welcome": "Witaj w QuizWiz",
+    "join": "Dołącz do gry",
+    "subtitle": "Wpisz swoje dane poniżej",
+    "email": "Email",
+    "password": "Hasło",
+    "displayName": "Jak Cię zwać?",
+    "placeholderName": "np. MistrzQuizu99",
+    "loading": "Chwileczkę...",
+    "submitLogin": "Zaloguj się",
+    "submitRegister": "Stwórz konto",
+    "noAccount": "Nie masz jeszcze konta? Zarejestruj się",
+    "hasAccount": "Masz już konto? Zaloguj się"
+  },
+  "footer": {
+    "rules": "Regulamin",
+    "privacy": "Polityka prywatności",
+    "contact": "Kontakt",
+    "builtWith": "Zbudowano w"
+  },
+  "home": {
+    "title": "Sprawdź swoją wiedzę!",
+    "description": "Wybierz interesującą Cię kategorię i zmierz się z czasem. Czy uda Ci się zdobyć tytuł Mistrza Quizu?",
+    "cta": "Rozpocznij przygodę"
+  }
+}

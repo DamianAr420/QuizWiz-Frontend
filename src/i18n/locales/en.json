@@ -1,0 +1,34 @@
+{
+  "nav": {
+    "start": "Home",
+    "play": "Play",
+    "ranking": "Leaderboard",
+    "login": "Login",
+    "logout": "Logout"
+  },
+  "auth": {
+    "welcome": "Welcome to QuizWiz",
+    "join": "Join the game",
+    "subtitle": "Enter your details below",
+    "email": "Email",
+    "password": "Password",
+    "displayName": "Display Name",
+    "placeholderName": "e.g. QuizMaster99",
+    "loading": "Just a moment...",
+    "submitLogin": "Login",
+    "submitRegister": "Create Account",
+    "noAccount": "Don't have an account? Sign up",
+    "hasAccount": "Already have an account? Log in"
+  },
+  "footer": {
+    "rules": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "contact": "Contact",
+    "builtWith": "Built with"
+  },
+  "home": {
+    "title": "Test your knowledge!",
+    "description": "Pick a category and race against the clock. Can you achieve the title of Quiz Master?",
+    "cta": "Start adventure"
+  }
+}
