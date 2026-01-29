@@ -21,6 +21,7 @@ const languages = [
 const setLanguage = (code: string) => {
   locale.value = code;
   isLangMenuOpen.value = false;
+  localStorage.setItem("Lang", code);
 };
 
 const navLinks = [
@@ -42,6 +43,13 @@ watch(
     isMobileMenuOpen.value = false;
   },
 );
+
+onMounted(() => {
+  const savedLang = localStorage.getItem("Lang");
+  if (savedLang) {
+    locale.value = savedLang;
+  }
+});
 
 onMounted(() => window.addEventListener("click", closeDropdown));
 onUnmounted(() => window.removeEventListener("click", closeDropdown));
