@@ -25,6 +25,8 @@ watch(
   () => props.isOpen,
   async (newVal) => {
     if (newVal) {
+      document.body.style.overflow = "hidden";
+
       await nextTick();
       if (isLoginMode.value) {
         identifierInput.value?.focus();
@@ -32,9 +34,11 @@ watch(
         displayNameInput.value?.focus();
       }
     } else {
+      document.body.style.overflow = "";
       resetForm();
     }
   },
+  { immediate: true },
 );
 
 const resetForm = () => {

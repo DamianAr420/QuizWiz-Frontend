@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { watch } from "vue";
 import { useI18n } from "vue-i18n";
 
 interface Props {
@@ -13,6 +14,18 @@ interface Props {
 const props = defineProps<Props>();
 const emit = defineEmits(["confirm", "close"]);
 const { t } = useI18n();
+
+watch(
+  () => props.isOpen,
+  (newVal) => {
+    if (newVal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+  },
+  { immediate: true },
+);
 
 const priorityClasses = {
   High: "bg-red-600 hover:bg-red-700 text-white shadow-red-200",
