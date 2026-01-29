@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { onMounted, computed } from "vue";
 import { useI18n } from "vue-i18n";
+import { useStatsStore } from "@/stores/stats";
 
 const { t } = useI18n();
+const statsStore = useStatsStore();
 
 const features = [
   {
@@ -14,14 +17,31 @@ const features = [
     title: "home.features.ranking",
     desc: "home.features.rankingDesc",
   },
-  { icon: "⚡", title: "home.features.speed", desc: "home.features.speedDesc" },
+  {
+    icon: "⚡",
+    title: "home.features.speed",
+    desc: "home.features.speedDesc",
+  },
 ];
 
-const stats = [
-  { value: "1000+", label: "home.stats.questions" },
-  { value: "50+", label: "home.stats.categories" },
-  { value: "10k+", label: "home.stats.users" },
-];
+const statsItems = computed(() => [
+  {
+    value: statsStore.stats.totalQuestions,
+    label: "home.stats.questions",
+  },
+  {
+    value: statsStore.stats.totalQuizzes,
+    label: "home.stats.quizzes",
+  },
+  {
+    value: statsStore.stats.totalUsers,
+    label: "home.stats.users",
+  },
+]);
+
+onMounted(() => {
+  statsStore.fetchStats();
+});
 </script>
 
 <template>
@@ -59,12 +79,12 @@ const stats = [
         class="mt-16 grid grid-cols-2 md:grid-cols-3 gap-8 max-w-4xl mx-auto"
       >
         <div
-          v-for="stat in stats"
+          v-for="stat in statsItems"
           :key="stat.label"
           class="p-6 bg-white rounded-3xl shadow-sm border border-slate-50"
         >
           <div class="text-3xl font-black text-indigo-600">
-            {{ stat.value }}
+            {{ statsStore.loading ? "..." : stat.value }}
           </div>
           <div
             class="text-sm text-slate-500 font-medium uppercase tracking-wider"
