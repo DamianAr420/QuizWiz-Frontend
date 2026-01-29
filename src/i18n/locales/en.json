@@ -72,5 +72,30 @@
     "subtitle": "Who is the biggest brain in QuizWiz?",
     "comingSoon": "Feature coming soon!",
     "comingSoonDesc": "We are working on a global ranking system. Soon you will be able to compete with the best players!"
+  },
+  "quiz": {
+    "listTitle": "Available Quizzes",
+    "createTitle": "Create New Quiz",
+    "questions": "Questions",
+    "title": "Title",
+    "description": "Description",
+    "timeLimit": "Time limit (s)",
+    "maxQuestions": "Questions count",
+    "addQuestion": "Add Question",
+    "save": "Save Quiz",
+    "correctAnswer": "Correct Answer",
+    "wrongAnswers": "Wrong Answers",
+    "empty": "No quizzes available."
+  },
+  "game": {
+    "score": "Score",
+    "timeLeft": "Time left",
+    "next": "Next",
+    "finish": "Finish",
+    "gameOver": "Quiz Over!",
+    "playAgain": "Play Again",
+    "backToList": "Back to List",
+    "correct": "Correct!",
+    "wrong": "Wrong!"
   }
 }

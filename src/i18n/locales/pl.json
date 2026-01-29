@@ -72,5 +72,30 @@
     "subtitle": "Kto jest największym mózgiem w QuizWiz?",
     "comingSoon": "Funkcja dostępna wkrótce!",
     "comingSoonDesc": "Pracujemy nad systemem globalnych rankingów. Już niedługo będziesz mógł mierzyć się z najlepszymi!"
+  },
+  "quiz": {
+    "listTitle": "Dostępne Quizy",
+    "createTitle": "Stwórz nowy Quiz",
+    "questions": "Pytania",
+    "title": "Tytuł",
+    "description": "Opis",
+    "timeLimit": "Czas na odpowiedź (s)",
+    "maxQuestions": "Liczba pytań",
+    "addQuestion": "Dodaj pytanie",
+    "save": "Zapisz quiz",
+    "correctAnswer": "Poprawna odpowiedź",
+    "wrongAnswers": "Błędne odpowiedzi",
+    "empty": "Brak dostępnych quizów."
+  },
+  "game": {
+    "score": "Wynik",
+    "timeLeft": "Pozostały czas",
+    "next": "Następne",
+    "finish": "Zakończ",
+    "gameOver": "Koniec Quizu!",
+    "playAgain": "Zagraj ponownie",
+    "backToList": "Powrót do listy",
+    "correct": "Dobrze!",
+    "wrong": "Błąd!"
   }
 }
