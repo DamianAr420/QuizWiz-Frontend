@@ -29,9 +29,25 @@
     "builtWith": "Zbudowano w"
   },
   "home": {
-    "title": "Sprawdź swoją wiedzę!",
-    "description": "Wybierz interesującą Cię kategorię i zmierz się z czasem. Czy uda Ci się zdobyć tytuł Mistrza Quizu?",
-    "cta": "Rozpocznij przygodę"
+    "title": "Zostań mistrzem w",
+    "description": "Sprawdź swoją wiedzę w setkach kategorii, rywalizuj ze znajomymi i wspinaj się na szczyt rankingu. Najlepszy sposób na naukę i zabawę zaczyna się tutaj!",
+    "cta": "Zagraj teraz",
+    "readyToPlay": "Gotowy na wyzwanie?",
+    "ctaSub": "Dołącz do tysięcy graczy i udowodnij, że wiesz wszystko.",
+    "startNow": "Zacznij przygodę",
+    "features": {
+      "quizzes": "Tysiące pytań",
+      "quizzesDesc": "Baza stale aktualizowana o nowe wyzwania z każdej dziedziny życia.",
+      "ranking": "Globalny Ranking",
+      "rankingDesc": "Porównuj swoje wyniki z graczami z całego świata i bądź numerem jeden.",
+      "speed": "Tryb Szybki",
+      "speedDesc": "Graj przeciwko czasowi i zdobywaj dodatkowe punkty za refleks."
+    },
+    "stats": {
+      "questions": "Pytań",
+      "categories": "Kategorii",
+      "users": "Graczy"
+    }
   },
   "profile": {
     "title": "Mój Profil",

@@ -29,9 +29,25 @@
     "builtWith": "Built with"
   },
   "home": {
-    "title": "Test your knowledge!",
-    "description": "Pick a category and race against the clock. Can you achieve the title of Quiz Master?",
-    "cta": "Start adventure"
+    "title": "Become a master in",
+    "description": "Test your knowledge across hundreds of categories, compete with friends, and climb to the top of the leaderboard. The best way to learn and have fun starts here!",
+    "cta": "Play Now",
+    "readyToPlay": "Ready for a challenge?",
+    "ctaSub": "Join thousands of players and prove that you know it all.",
+    "startNow": "Start Adventure",
+    "features": {
+      "quizzes": "Thousands of Questions",
+      "quizzesDesc": "A constantly updated database with new challenges from every field of life.",
+      "ranking": "Global Leaderboard",
+      "rankingDesc": "Compare your scores with players worldwide and aim for number one.",
+      "speed": "Speed Mode",
+      "speedDesc": "Play against the clock and earn extra points for your reflexes."
+    },
+    "stats": {
+      "questions": "Questions",
+      "categories": "Categories",
+      "users": "Players"
+    }
   },
   "profile": {
     "title": "My Profile",
