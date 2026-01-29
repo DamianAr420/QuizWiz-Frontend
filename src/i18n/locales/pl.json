@@ -85,7 +85,10 @@
     "save": "Zapisz quiz",
     "correctAnswer": "Poprawna odpowiedź",
     "wrongAnswers": "Błędne odpowiedzi",
-    "empty": "Brak dostępnych quizów."
+    "empty": "Brak dostępnych quizów.",
+    "official": "Oficjalne",
+    "users": "Użytkowników",
+    "searchPlaceholder": "Szukaj quizu po nazwie lub opisie..."
   },
   "game": {
     "score": "Wynik",

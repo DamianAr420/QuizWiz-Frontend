@@ -85,7 +85,10 @@
     "save": "Save Quiz",
     "correctAnswer": "Correct Answer",
     "wrongAnswers": "Wrong Answers",
-    "empty": "No quizzes available."
+    "empty": "No quizzes available.",
+    "official": "Official",
+    "users": "Users",
+    "searchPlaceholder": "Search quiz by name or description..."
   },
   "game": {
     "score": "Score",

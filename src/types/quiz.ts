@@ -13,6 +13,7 @@ export interface Quiz {
   maxQuestions: number;
   questions: Question[];
   questionsCount?: number;
+  isOfficial: boolean;
 }
 
 export interface CreateQuizDto extends Omit<Quiz, "id" | "questionsCount"> {}
