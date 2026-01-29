@@ -21,6 +21,12 @@ const form = ref({
   password: "",
 });
 
+const resetForm = () => {
+  errorMessage.value = "";
+  showPassword.value = false;
+  form.value = { displayName: "", email: "", password: "" };
+};
+
 watch(
   () => props.isOpen,
   async (newVal) => {
@@ -40,12 +46,6 @@ watch(
   },
   { immediate: true },
 );
-
-const resetForm = () => {
-  errorMessage.value = "";
-  showPassword.value = false;
-  form.value = { displayName: "", email: "", password: "" };
-};
 
 const toggleMode = () => {
   isLoginMode.value = !isLoginMode.value;
