@@ -9,16 +9,18 @@
   "auth": {
     "welcome": "Welcome to QuizWiz",
     "join": "Join the game",
-    "subtitle": "Enter your details below",
-    "email": "Email",
-    "password": "Password",
-    "displayName": "Display Name",
-    "placeholderName": "e.g. QuizMaster99",
+    "displayName": "What's your name?",
     "loading": "Just a moment...",
     "submitLogin": "Login",
-    "submitRegister": "Create Account",
+    "submitRegister": "Create account",
     "noAccount": "Don't have an account? Sign up",
-    "hasAccount": "Already have an account? Log in"
+    "hasAccount": "Already have an account? Login",
+    "placeholders": {
+      "displayName": "e.g. QuizMaster99",
+      "identifier": "Your email or nick",
+      "email": "your@email.com",
+      "password": "Password"
+    }
   },
   "footer": {
     "rules": "Terms of Service",

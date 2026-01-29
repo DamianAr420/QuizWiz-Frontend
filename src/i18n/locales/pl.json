@@ -9,16 +9,18 @@
   "auth": {
     "welcome": "Witaj w QuizWiz",
     "join": "Dołącz do gry",
-    "subtitle": "Wpisz swoje dane poniżej",
-    "email": "Email",
-    "password": "Hasło",
     "displayName": "Jak Cię zwać?",
-    "placeholderName": "np. MistrzQuizu99",
     "loading": "Chwileczkę...",
     "submitLogin": "Zaloguj się",
     "submitRegister": "Stwórz konto",
     "noAccount": "Nie masz jeszcze konta? Zarejestruj się",
-    "hasAccount": "Masz już konto? Zaloguj się"
+    "hasAccount": "Masz już konto? Zaloguj się",
+    "placeholders": {
+      "displayName": "np. MistrzQuizu99",
+      "identifier": "Twój email lub nick",
+      "email": "twoj@email.com",
+      "password": "Hasło"
+    }
   },
   "footer": {
     "rules": "Regulamin",

@@ -65,6 +65,11 @@ const handleSubmit = async () => {
     errorMessage.value = err;
   }
 };
+
+const inputClasses =
+  "w-full px-4 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-slate-800 placeholder-transparent peer";
+const labelClasses =
+  "absolute left-4 top-4 text-slate-400 pointer-events-none transition-all duration-200 origin-left peer-focus:-translate-y-10 peer-focus:scale-90 peer-focus:text-indigo-600 peer-focus:font-bold peer-[:not(:placeholder-shown)]:-translate-y-10 peer-[:not(:placeholder-shown)]:scale-90 peer-[:not(:placeholder-shown)]:text-indigo-600 peer-[:not(:placeholder-shown)]:font-bold";
 </script>
 
 <template>
@@ -75,7 +80,7 @@ const handleSubmit = async () => {
         class="fixed inset-0 z-50 flex items-center justify-center p-4"
       >
         <div
-          class="absolute inset-0 bg-slate-900/60 backdrop-blur-md"
+          class="absolute inset-0 bg-slate-900/60 backdrop-blur-xs"
           @click="emit('close')"
         ></div>
 
@@ -83,7 +88,7 @@ const handleSubmit = async () => {
           class="relative bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden border border-slate-100"
         >
           <div class="p-6 sm:p-8">
-            <header class="text-center mb-6">
+            <header class="text-center mb-10">
               <h2 class="text-3xl font-black text-slate-800 tracking-tight">
                 {{ isLoginMode ? t("auth.welcome") : t("auth.join") }}
               </h2>
@@ -98,70 +103,65 @@ const handleSubmit = async () => {
               </div>
             </Transition>
 
-            <form @submit.prevent="handleSubmit" class="space-y-4">
-              <div v-if="!isLoginMode">
-                <label
-                  class="block text-sm font-semibold text-slate-700 mb-1 ml-1"
-                  >{{ t("auth.displayName") }}</label
-                >
+            <form @submit.prevent="handleSubmit" class="space-y-6">
+              <div v-if="!isLoginMode" class="relative">
                 <input
                   ref="displayNameInput"
                   v-model="form.displayName"
                   type="text"
-                  required
+                  name="username"
                   autocomplete="username"
-                  class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                  required
+                  placeholder=" "
+                  :class="inputClasses"
                 />
+                <label :class="labelClasses">{{ t("auth.displayName") }}</label>
               </div>
 
-              <div>
-                <label
-                  class="block text-sm font-semibold text-slate-700 mb-1 ml-1"
-                >
-                  {{ isLoginMode ? "Email lub Nazwa" : t("auth.email") }}
-                </label>
+              <div class="relative">
                 <input
                   ref="identifierInput"
                   v-model="form.email"
                   :type="isLoginMode ? 'text' : 'email'"
-                  required
+                  :name="isLoginMode ? 'username' : 'email'"
                   :autocomplete="isLoginMode ? 'username' : 'email'"
-                  class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                  :placeholder="
-                    isLoginMode ? 'Twój email lub nick' : 'twoj@email.com'
-                  "
+                  required
+                  placeholder=" "
+                  :class="inputClasses"
                 />
+                <label :class="labelClasses">
+                  {{
+                    isLoginMode
+                      ? t("auth.placeholders.identifier")
+                      : t("auth.placeholders.email")
+                  }}
+                </label>
               </div>
 
-              <div>
-                <label
-                  class="block text-sm font-semibold text-slate-700 mb-1 ml-1"
-                  >{{ t("auth.password") }}</label
+              <div class="relative">
+                <input
+                  v-model="form.password"
+                  :type="showPassword ? 'text' : 'password'"
+                  required
+                  placeholder=" "
+                  :class="[inputClasses, 'pr-12']"
+                />
+                <label :class="labelClasses">{{
+                  t("auth.placeholders.password")
+                }}</label>
+                <button
+                  type="button"
+                  @click="showPassword = !showPassword"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 p-2 hover:text-indigo-500 transition-colors z-10"
                 >
-                <div class="relative">
-                  <input
-                    v-model="form.password"
-                    :type="showPassword ? 'text' : 'password'"
-                    required
-                    :autocomplete="
-                      isLoginMode ? 'current-password' : 'new-password'
-                    "
-                    class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all pr-12"
-                  />
-                  <button
-                    type="button"
-                    @click="showPassword = !showPassword"
-                    class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 p-1"
-                  >
-                    {{ showPassword ? "👁️‍🗨️" : "👁️" }}
-                  </button>
-                </div>
+                  {{ showPassword ? "👁️‍🗨️" : "👁️" }}
+                </button>
               </div>
 
               <button
                 type="submit"
                 :disabled="authStore.loading"
-                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl transition-all transform active:scale-95 disabled:opacity-50 shadow-lg shadow-indigo-200"
+                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl transition-all transform active:scale-95 disabled:opacity-50 shadow-lg shadow-indigo-200 mt-4"
               >
                 {{
                   authStore.loading
@@ -198,6 +198,7 @@ const handleSubmit = async () => {
   opacity: 0;
   transform: scale(0.95);
 }
+
 .slide-up-enter-active {
   transition: all 0.2s ease-out;
 }
