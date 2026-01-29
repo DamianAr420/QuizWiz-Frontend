@@ -64,6 +64,13 @@
   },
   "common": {
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "backToHome": "Back to home"
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "subtitle": "Who is the biggest brain in QuizWiz?",
+    "comingSoon": "Feature coming soon!",
+    "comingSoonDesc": "We are working on a global ranking system. Soon you will be able to compete with the best players!"
   }
 }

@@ -5,6 +5,7 @@ import {
 } from "vue-router";
 import Home from "@/views/Home.vue";
 import Profile from "@/views/Profile.vue";
+import Leaderboard from "@/views/Leaderboard.vue";
 import { useAuthStore } from "@/stores/auth";
 
 const routes: RouteRecordRaw[] = [
@@ -18,6 +19,11 @@ const routes: RouteRecordRaw[] = [
     name: "profile",
     component: Profile,
     meta: { requiresAuth: true },
+  },
+  {
+    path: "/leaderboard",
+    name: "leaderboard",
+    component: Leaderboard,
   },
 ];
 
