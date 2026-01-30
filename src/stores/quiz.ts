@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import api from "@/services/api";
-import type { Quiz, CreateQuizDto } from "@/types/quiz";
+import type { Quiz, CreateQuizDto, UpdateQuizDto } from "@/types/quiz";
 
 export const useQuizStore = defineStore("quiz", () => {
   const quizzes = ref<Quiz[]>([]);
@@ -25,6 +25,7 @@ export const useQuizStore = defineStore("quiz", () => {
     try {
       const { data } = await api.get<Quiz>(`/quizzes/${id}`);
       currentQuiz.value = data;
+      return data;
     } finally {
       loading.value = false;
     }
@@ -34,7 +35,25 @@ export const useQuizStore = defineStore("quiz", () => {
     loading.value = true;
     try {
       await api.post("/quizzes", quizData);
-      await fetchQuizzes(true);
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const updateQuiz = async (id: number, quizData: UpdateQuizDto) => {
+    loading.value = true;
+    try {
+      await api.put(`/quizzes/${id}`, quizData);
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const deleteQuiz = async (id: number) => {
+    loading.value = true;
+    try {
+      await api.delete(`/quizzes/${id}`);
+      quizzes.value = quizzes.value.filter((q) => q.id !== id);
     } finally {
       loading.value = false;
     }
@@ -47,5 +66,7 @@ export const useQuizStore = defineStore("quiz", () => {
     fetchQuizzes,
     fetchQuizById,
     createQuiz,
+    updateQuiz,
+    deleteQuiz,
   };
 });

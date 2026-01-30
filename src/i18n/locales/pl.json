@@ -63,9 +63,14 @@
     "deleteConfirmDesc": "To działanie całkowicie usunie Twoje dane z serwerów QuizWiz. Nie będziesz mógł cofnąć tej operacji."
   },
   "common": {
+    "backToHome": "Wróć do strony głównej",
+    "confirmDelete": "Czy na pewno chcesz usunąć ten quiz?",
+    "loading": "Ładowanie...",
     "save": "Zapisz",
+    "update": "Aktualizuj",
     "cancel": "Anuluj",
-    "backToHome": "Wróć do strony głównej"
+    "delete": "Usuń teraz",
+    "error": "Wystąpił błąd"
   },
   "leaderboard": {
     "title": "Ranking Graczy",
@@ -75,20 +80,56 @@
   },
   "quiz": {
     "listTitle": "Dostępne Quizy",
-    "createTitle": "Stwórz nowy Quiz",
-    "questions": "Pytania",
-    "title": "Tytuł",
+    "createTitle": "Stwórz Nowy Quiz",
+    "editTitle": "Edytuj Quiz",
+    "createNew": "Nowy Quiz",
+    "searchPlaceholder": "Szukaj po nazwie lub opisie...",
+    "title": "Tytuł quizu",
     "description": "Opis",
-    "timeLimit": "Czas na odpowiedź (s)",
+    "timeLimit": "Limit czasu",
     "maxQuestions": "Liczba pytań",
     "addQuestion": "Dodaj pytanie",
-    "save": "Zapisz quiz",
+    "question": "Pytanie",
     "correctAnswer": "Poprawna odpowiedź",
     "wrongAnswers": "Błędne odpowiedzi",
-    "empty": "Brak dostępnych quizów.",
-    "official": "Oficjalne",
-    "users": "Użytkowników",
-    "searchPlaceholder": "Szukaj quizu po nazwie lub opisie..."
+    "playNow": "Graj teraz",
+    "deleteWarning": "Czy na pewno chcesz usunąć ten quiz? Wszystkie dane, statystyki oraz historia wyników powiązana z tym quizem zostaną bezpowrotnie utracone.",
+    "locked": "Zablokowane",
+    "noResults": "Nie znaleziono żadnych quizów",
+    "markAsOfficial": "Oficjalny quiz",
+    "adminOnly": "Tylko dla admina",
+    "filter": {
+      "official": "Oficjalne",
+      "users": "Społeczność"
+    },
+    "status": {
+      "private": "Prywatny",
+      "comingSoon": "Wkrótce",
+      "yours": "Twój"
+    },
+    "form": {
+      "createTitle": "Stwórz Nowy Quiz",
+      "editTitle": "Edytuj Quiz",
+      "title": "Tytuł quizu",
+      "description": "Opis quizu",
+      "visible": "Widoczność",
+      "playable": "Możliwość gry",
+      "official": "Oficjalny (Admin)",
+      "statusPublic": "Publiczny / Prywatny",
+      "statusPlay": "Graj / Podgląd",
+      "statusAdmin": "Tylko dla Admina",
+      "questionNumber": "Pytanie",
+      "questionPlaceholder": "Wpisz treść pytania...",
+      "correctAnswer": "Poprawna odpowiedź",
+      "wrongAnswers": "Błędne odpowiedzi",
+      "addQuestion": "Dodaj kolejne pytanie",
+      "save": "Zapisz i opublikuj",
+      "update": "Zaktualizuj quiz"
+    },
+    "stats": {
+      "questions": "pytań",
+      "perQuestion": "pyt."
+    }
   },
   "game": {
     "score": "Wynik",
@@ -99,6 +140,20 @@
     "playAgain": "Zagraj ponownie",
     "backToList": "Powrót do listy",
     "correct": "Dobrze!",
-    "wrong": "Błąd!"
+    "wrong": "Błąd!",
+    "solo": "Graj Solo",
+    "multiplayer": "Tryb Wieloosobowy",
+    "loading": "Ładowanie",
+    "question": "Pytanie",
+    "yourScore": "Twój wynik to"
+  },
+  "lobby": {
+    "questionCount": "Wybierz liczbę pytań",
+    "max": "Wszystkie",
+    "soloMode": "Graj Solo",
+    "soloDesc": "Trenuj swoje umiejętności w spokojnym tempie.",
+    "multiMode": "Multiplayer",
+    "multiDesc": "Rywalizuj z innymi w czasie rzeczywistym.",
+    "soon": "Wkrótce"
   }
 }

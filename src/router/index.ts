@@ -7,8 +7,9 @@ import Home from "@/views/Home.vue";
 import Profile from "@/views/Profile.vue";
 import Leaderboard from "@/views/Leaderboard.vue";
 import QuizList from "@/views/QuizList.vue";
-import CreateQuiz from "@/views/CreateQuiz.vue";
+import QuizDetail from "@/views/QuizDetail.vue";
 import QuizPlay from "@/views/QuizPlay.vue";
+import QuizForm from "@/views/QuizForm.vue";
 import { useAuthStore } from "@/stores/auth";
 
 const routes: RouteRecordRaw[] = [
@@ -36,11 +37,25 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/quiz/create",
     name: "quiz-create",
-    component: CreateQuiz,
-    meta: { requiresAuth: true, requiresAdmin: true },
+    component: QuizForm,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/quiz/edit/:id",
+    name: "quiz-edit",
+    component: QuizForm,
+    props: true,
+    meta: { requiresAuth: true },
   },
   {
     path: "/quiz/:id",
+    name: "quiz-detail",
+    component: QuizDetail,
+    props: true,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/quiz/:id/play",
     name: "quiz-play",
     component: QuizPlay,
     props: true,
@@ -55,7 +70,6 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
-
   const isAuthenticated = authStore.isAuthenticated;
   const isAdmin = authStore.user?.role === "Admin";
 

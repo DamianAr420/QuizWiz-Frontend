@@ -63,9 +63,14 @@
     "deleteConfirmDesc": "This action will completely remove your data from QuizWiz servers. You cannot undo this operation."
   },
   "common": {
+    "backToHome": "Back to home",
+    "confirmDelete": "Are you sure you want to delete this quiz?",
+    "loading": "Loading...",
     "save": "Save",
+    "update": "Update",
     "cancel": "Cancel",
-    "backToHome": "Back to home"
+    "delete": "Delete Now",
+    "error": "An error occurred"
   },
   "leaderboard": {
     "title": "Leaderboard",
@@ -76,19 +81,55 @@
   "quiz": {
     "listTitle": "Available Quizzes",
     "createTitle": "Create New Quiz",
-    "questions": "Questions",
-    "title": "Title",
+    "editTitle": "Edit Quiz",
+    "createNew": "New Quiz",
+    "searchPlaceholder": "Search by title or description...",
+    "title": "Quiz Title",
     "description": "Description",
-    "timeLimit": "Time limit (s)",
-    "maxQuestions": "Questions count",
+    "timeLimit": "Time Limit",
+    "maxQuestions": "Max Questions",
     "addQuestion": "Add Question",
-    "save": "Save Quiz",
+    "question": "Question",
     "correctAnswer": "Correct Answer",
     "wrongAnswers": "Wrong Answers",
-    "empty": "No quizzes available.",
-    "official": "Official",
-    "users": "Users",
-    "searchPlaceholder": "Search quiz by name or description..."
+    "playNow": "Play Now",
+    "locked": "Locked",
+    "deleteWarning": "Are you sure you want to delete this quiz? All data, statistics, and result history associated with this quiz will be permanently lost.",
+    "noResults": "No quizzes found",
+    "markAsOfficial": "Official Quiz",
+    "adminOnly": "Admin Only",
+    "filter": {
+      "official": "Official",
+      "users": "Community"
+    },
+    "status": {
+      "private": "Private",
+      "comingSoon": "Soon",
+      "yours": "Yours"
+    },
+    "form": {
+      "createTitle": "Create New Quiz",
+      "editTitle": "Edit Quiz",
+      "title": "Quiz Title",
+      "description": "Quiz Description",
+      "visible": "Visibility",
+      "playable": "Playable Status",
+      "official": "Official (Admin)",
+      "statusPublic": "Public / Private",
+      "statusPlay": "Play / Preview",
+      "statusAdmin": "Admin Only",
+      "questionNumber": "Question",
+      "questionPlaceholder": "Enter question text...",
+      "correctAnswer": "Correct Answer",
+      "wrongAnswers": "Wrong Answers",
+      "addQuestion": "Add another question",
+      "save": "Save & Publish",
+      "update": "Update Quiz"
+    },
+    "stats": {
+      "questions": "questions",
+      "perQuestion": "ques."
+    }
   },
   "game": {
     "score": "Score",
@@ -99,6 +140,18 @@
     "playAgain": "Play Again",
     "backToList": "Back to List",
     "correct": "Correct!",
-    "wrong": "Wrong!"
+    "wrong": "Wrong!",
+    "loading": "Loading",
+    "question": "Question",
+    "yourScore": "Your score is"
+  },
+  "lobby": {
+    "questionCount": "Select number of questions",
+    "max": "All",
+    "soloMode": "Play Solo",
+    "soloDesc": "Practice your skills at your own pace.",
+    "multiMode": "Multiplayer",
+    "multiDesc": "Compete with others in real-time.",
+    "soon": "Soon"
   }
 }
