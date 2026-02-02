@@ -45,7 +45,7 @@ onMounted(async () => {
         })),
       };
 
-      if (data.authorId !== authStore.user?.id && !isAdmin.value) {
+      if (data.authorId?.toString() !== authStore.user?.id.toString()) {
         router.push("/quiz");
       }
     }

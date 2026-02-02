@@ -21,9 +21,15 @@ const quizToDelete = ref<number | null>(null);
 onMounted(() => quizStore.fetchQuizzes(activeFilter.value === "official"));
 
 const isOwner = (quiz: Quiz) => {
-  return (
-    authStore.user?.id === quiz.authorId || authStore.user?.role === "Admin"
-  );
+  if (quiz) {
+    if (quiz.isOfficial) {
+      return authStore.user?.role === "Admin";
+    } else {
+      return authStore.user?.id.toString() === quiz.authorId?.toString();
+    }
+  } else {
+    return false;
+  }
 };
 
 const filteredQuizzes = computed(() => {
@@ -225,10 +231,9 @@ const confirmDelete = async () => {
           </div>
         </div>
 
-        <div class="pt-6 border-t border-slate-50">
+        <div v-if="isOwner(quiz)" class="border-t border-slate-200">
           <div
-            v-if="isOwner(quiz)"
-            class="flex flex-row justify-between items-center relative z-20"
+            class="flex flex-row pt-2 justify-between items-center relative z-20"
           >
             <button
               @click.stop="router.push(`/quiz/edit/${quiz.id}`)"
