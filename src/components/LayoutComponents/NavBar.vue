@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/stores/auth";
 import AuthModal from "@/components/Modals/Auth.vue";
@@ -8,6 +8,7 @@ import AuthModal from "@/components/Modals/Auth.vue";
 const { t, locale } = useI18n();
 const authStore = useAuthStore();
 const route = useRoute();
+const router = useRouter();
 
 const isModalOpen = ref(false);
 const isLangMenuOpen = ref(false);
@@ -22,6 +23,12 @@ const setLanguage = (code: string) => {
   locale.value = code;
   isLangMenuOpen.value = false;
   localStorage.setItem("Lang", code);
+};
+
+const handleLogout = async () => {
+  await authStore.logout();
+  router.push("/");
+  isMobileMenuOpen.value = false;
 };
 
 const navLinks = [
@@ -49,9 +56,9 @@ onMounted(() => {
   if (savedLang) {
     locale.value = savedLang;
   }
+  window.addEventListener("click", closeDropdown);
 });
 
-onMounted(() => window.addEventListener("click", closeDropdown));
 onUnmounted(() => window.removeEventListener("click", closeDropdown));
 </script>
 
@@ -142,7 +149,7 @@ onUnmounted(() => window.removeEventListener("click", closeDropdown));
               }}</span>
             </router-link>
             <button
-              @click="authStore.logout"
+              @click="handleLogout"
               class="text-xs bg-red-500/20 hover:bg-red-500 px-3 py-1.5 rounded-md transition-colors font-bold uppercase tracking-wider"
             >
               {{ t("nav.logout") }}
@@ -203,7 +210,7 @@ onUnmounted(() => window.removeEventListener("click", closeDropdown));
               <span class="font-bold">{{ authStore.user?.displayName }}</span>
             </router-link>
             <button
-              @click="authStore.logout"
+              @click="handleLogout"
               class="w-full text-left px-3 py-2 text-red-300 hover:text-red-100 font-bold uppercase text-sm"
             >
               {{ t("nav.logout") }}
