@@ -60,7 +60,10 @@
     "deleteDesc": "Usunięcie konta jest nieodwracalne. Wszystkie Twoje statystyki zostaną skasowane.",
     "deleteBtn": "Usuń konto",
     "deleteConfirmTitle": "Czy na pewno chcesz nas opuścić?",
-    "deleteConfirmDesc": "To działanie całkowicie usunie Twoje dane z serwerów QuizWiz. Nie będziesz mógł cofnąć tej operacji."
+    "deleteConfirmDesc": "To działanie całkowicie usunie Twoje dane z serwerów QuizWiz. Nie będziesz mógł cofnąć tej operacji.",
+    "deleteError": "Wystąpił błąd podczas usuwania konta.",
+    "myQuizzes": "Moje Quizy",
+    "noQuizzes": "Nie stworzyłeś jeszcze żadnego quizu."
   },
   "common": {
     "backToHome": "Wróć do strony głównej",

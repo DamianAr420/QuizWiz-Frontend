@@ -1,19 +1,35 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
+import { useQuizStore } from "@/stores/quiz";
+import { useAuthStore } from "@/stores/auth";
+import QuizCard from "@/components/Cards/QuizCard.vue";
 import ConfirmModal from "@/components/Modals/Confirm.vue";
 
 const { t } = useI18n();
+const router = useRouter();
 const userStore = useUserStore();
+const quizStore = useQuizStore();
+const authStore = useAuthStore();
 
 const isEditing = ref(false);
 const isDeleteModalOpen = ref(false);
+const isQuizDeleteModalOpen = ref(false);
+const quizToDelete = ref<number | null>(null);
 const message = ref({ type: "", text: "" });
 const form = ref({ displayName: "" });
 
+const myQuizzes = computed(() => {
+  return quizStore.quizzes.filter(
+    (q) => String(q.authorId) === String(authStore.user?.id) && !q.isOfficial,
+  );
+});
+
 onMounted(async () => {
-  await userStore.fetchProfile();
+  await Promise.all([userStore.fetchProfile(), quizStore.fetchQuizzes(false)]);
+
   if (userStore.profile) {
     form.value.displayName = userStore.profile.displayName;
   }
@@ -45,19 +61,31 @@ const handleDeleteAccount = async () => {
     isDeleteModalOpen.value = false;
     message.value = {
       type: "error",
-      text: userStore.error || "Błąd podczas usuwania konta",
+      text: userStore.error || t("profile.deleteError"), // Użycie i18n zamiast twardego tekstu
     };
+  }
+};
+
+const openQuizDelete = (id: number) => {
+  quizToDelete.value = id;
+  isQuizDeleteModalOpen.value = true;
+};
+
+const confirmQuizDelete = async () => {
+  if (quizToDelete.value) {
+    await quizStore.deleteQuiz(quizToDelete.value);
+    isQuizDeleteModalOpen.value = false;
+    quizToDelete.value = null;
   }
 };
 </script>
 
 <template>
-  <div class="max-w-4xl mx-auto px-4 py-8 sm:py-12">
+  <div class="max-w-7xl mx-auto px-4 py-8 sm:py-12">
     <div
-      class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 mb-8"
+      class="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 mb-12"
     >
       <div class="bg-indigo-700 h-24 sm:h-32 w-full"></div>
-
       <div class="px-5 sm:px-8 pb-8">
         <div
           class="relative flex flex-col xs:flex-row justify-between items-start xs:items-end -mt-10 sm:-mt-12 mb-6 sm:mb-8 gap-4"
@@ -145,7 +173,6 @@ const handleDeleteAccount = async () => {
                 "
               />
             </div>
-
             <div
               class="pt-4 border-t border-slate-50 flex flex-col sm:flex-row justify-between items-center gap-4"
             >
@@ -155,7 +182,6 @@ const handleDeleteAccount = async () => {
                 {{ t("profile.memberSince") }}:
                 {{ formatDate(userStore.profile?.createdAt) }}
               </span>
-
               <button
                 v-if="isEditing"
                 type="submit"
@@ -170,6 +196,59 @@ const handleDeleteAccount = async () => {
       </div>
     </div>
 
+    <section class="mb-12">
+      <div class="flex items-center justify-between mb-8">
+        <h3 class="text-3xl font-black text-slate-900 tracking-tight">
+          🚀 {{ t("profile.myQuizzes") }}
+        </h3>
+        <span
+          class="px-4 py-1.5 bg-slate-100 text-slate-600 rounded-full font-bold text-sm"
+        >
+          {{ myQuizzes.length }}
+        </span>
+      </div>
+
+      <div
+        v-if="quizStore.loading"
+        class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8"
+      >
+        <div
+          v-for="i in 3"
+          :key="i"
+          class="h-64 bg-slate-100 animate-pulse rounded-[3rem]"
+        ></div>
+      </div>
+
+      <div
+        v-else-if="myQuizzes.length"
+        class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8"
+      >
+        <QuizCard
+          v-for="quiz in myQuizzes"
+          :key="quiz.id"
+          :quiz="quiz"
+          :is-author="true"
+          :has-full-access="true"
+          @click="(q) => router.push(`/quiz/${q.id}`)"
+          @edit="(id) => router.push(`/quiz/edit/${id}`)"
+          @delete="openQuizDelete"
+        />
+      </div>
+
+      <div
+        v-else
+        class="py-16 text-center bg-white rounded-[3rem] border-2 border-dashed border-slate-200"
+      >
+        <p class="text-slate-400 font-bold">{{ t("profile.noQuizzes") }}</p>
+        <button
+          @click="router.push('/quiz/create')"
+          class="mt-4 text-indigo-600 font-black hover:underline cursor-pointer"
+        >
+          + {{ t("quiz.createNew") }}
+        </button>
+      </div>
+    </section>
+
     <div
       class="bg-red-50 rounded-3xl p-6 sm:p-8 border border-red-100 flex flex-col md:flex-row justify-between items-center gap-6"
     >
@@ -183,7 +262,7 @@ const handleDeleteAccount = async () => {
       </div>
       <button
         @click="isDeleteModalOpen = true"
-        class="w-full md:w-auto bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-xl font-bold text-sm transition-all shadow-lg shadow-red-200 active:scale-95 cursor-pointer whitespace-nowrap"
+        class="w-full md:w-auto bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-xl font-bold text-sm transition-all shadow-lg shadow-red-200 active:scale-95 cursor-pointer"
       >
         {{ t("profile.deleteBtn") }}
       </button>
@@ -198,6 +277,17 @@ const handleDeleteAccount = async () => {
       :loading="userStore.loading"
       @close="isDeleteModalOpen = false"
       @confirm="handleDeleteAccount"
+    />
+
+    <ConfirmModal
+      :is-open="isQuizDeleteModalOpen"
+      :title="t('common.confirmDelete')"
+      :description="t('quiz.deleteWarning')"
+      :confirm-text="t('common.delete')"
+      priority="High"
+      :loading="quizStore.loading"
+      @close="isQuizDeleteModalOpen = false"
+      @confirm="confirmQuizDelete"
     />
   </div>
 </template>

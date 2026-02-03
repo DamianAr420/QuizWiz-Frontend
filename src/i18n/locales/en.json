@@ -60,7 +60,10 @@
     "deleteDesc": "Deleting your account is permanent. All your statistics will be wiped.",
     "deleteBtn": "Delete Account",
     "deleteConfirmTitle": "Are you sure you want to leave?",
-    "deleteConfirmDesc": "This action will completely remove your data from QuizWiz servers. You cannot undo this operation."
+    "deleteConfirmDesc": "This action will completely remove your data from QuizWiz servers. You cannot undo this operation.",
+    "deleteError": "An error occurred while deleting your account.",
+    "myQuizzes": "My Quizzes",
+    "noQuizzes": "You haven't created any quizzes yet."
   },
   "common": {
     "backToHome": "Back to home",
