@@ -9,6 +9,7 @@
   "auth": {
     "welcome": "Witaj w QuizWiz",
     "join": "Dołącz do gry",
+    "email": "Twój email",
     "displayName": "Jak Cię zwać?",
     "loading": "Chwileczkę...",
     "submitLogin": "Zaloguj się",
