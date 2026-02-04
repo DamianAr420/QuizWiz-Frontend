@@ -61,7 +61,7 @@ const handleDeleteAccount = async () => {
     isDeleteModalOpen.value = false;
     message.value = {
       type: "error",
-      text: userStore.error || t("profile.deleteError"), // Użycie i18n zamiast twardego tekstu
+      text: userStore.error || t("profile.deleteError"),
     };
   }
 };
@@ -81,27 +81,31 @@ const confirmQuizDelete = async () => {
 </script>
 
 <template>
-  <div class="max-w-7xl mx-auto px-4 py-8 sm:py-12">
+  <div
+    class="max-w-7xl mx-auto px-4 py-8 sm:py-12 transition-colors duration-300"
+  >
     <div
-      class="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 mb-12"
+      class="max-w-4xl mx-auto bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-xl dark:shadow-none overflow-hidden border border-slate-100 dark:border-slate-800 mb-12"
     >
-      <div class="bg-indigo-700 h-24 sm:h-32 w-full"></div>
+      <div
+        class="bg-green-600 dark:bg-green-700 h-24 sm:h-32 w-full opacity-90"
+      ></div>
       <div class="px-5 sm:px-8 pb-8">
         <div
           class="relative flex flex-col xs:flex-row justify-between items-start xs:items-end -mt-10 sm:-mt-12 mb-6 sm:mb-8 gap-4"
         >
           <div
-            class="bg-slate-200 h-20 w-20 sm:h-24 sm:w-24 rounded-2xl border-4 border-white flex items-center justify-center text-3xl sm:text-4xl shadow-sm"
+            class="bg-slate-200 dark:bg-slate-800 h-20 w-20 sm:h-24 sm:w-24 rounded-2xl border-4 border-white dark:border-slate-900 flex items-center justify-center text-3xl sm:text-4xl shadow-sm"
           >
             🧙‍♂️
           </div>
           <button
             @click="isEditing = !isEditing"
-            class="self-end xs:self-auto px-4 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer"
+            class="self-end xs:self-auto px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer shadow-sm active:scale-95"
             :class="
               isEditing
-                ? 'bg-slate-100 text-slate-600'
-                : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100'
+                ? 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
+                : 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/50'
             "
           >
             {{ isEditing ? t("common.cancel") : t("profile.editBtn") }}
@@ -110,11 +114,11 @@ const confirmQuizDelete = async () => {
 
         <header class="mb-6 sm:mb-8">
           <h1
-            class="text-2xl sm:text-3xl font-black text-slate-800 tracking-tight"
+            class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight"
           >
             {{ t("profile.title") }}
           </h1>
-          <p class="text-sm sm:text-base text-slate-500">
+          <p class="text-sm sm:text-base text-slate-500 dark:text-slate-400">
             {{ t("profile.subtitle") }}
           </p>
         </header>
@@ -124,10 +128,10 @@ const confirmQuizDelete = async () => {
             v-if="message.text"
             :class="
               message.type === 'success'
-                ? 'bg-emerald-50 text-emerald-600 border-emerald-100'
-                : 'bg-red-50 text-red-600 border-red-100'
+                ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-900/30'
+                : 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30'
             "
-            class="mb-6 p-4 rounded-xl border font-medium text-sm flex items-center gap-2"
+            class="mb-6 p-4 rounded-xl border font-bold text-sm flex items-center gap-2"
           >
             <span>{{ message.type === "success" ? "✅" : "❌" }}</span>
             {{ message.text }}
@@ -139,18 +143,20 @@ const confirmQuizDelete = async () => {
           class="py-12 text-center text-slate-400"
         >
           <div
-            class="animate-spin inline-block w-6 h-6 border-4 border-indigo-500 border-t-transparent rounded-full mb-2"
+            class="animate-spin inline-block w-6 h-6 border-4 border-green-500 border-t-transparent rounded-full mb-2"
           ></div>
           <p>{{ t("auth.loading") }}...</p>
         </div>
 
         <div v-else class="grid gap-6">
           <div class="space-y-1">
-            <label class="text-xs font-bold text-slate-400 uppercase ml-1">{{
-              t("auth.email")
-            }}</label>
+            <label
+              class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase ml-1"
+            >
+              {{ t("auth.email") }}
+            </label>
             <div
-              class="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-slate-500 select-none text-sm sm:text-base"
+              class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-xl text-slate-500 dark:text-slate-400 select-none text-sm sm:text-base"
             >
               {{ userStore.profile?.email }}
             </div>
@@ -158,9 +164,11 @@ const confirmQuizDelete = async () => {
 
           <form @submit.prevent="handleUpdate" class="space-y-6">
             <div class="space-y-1">
-              <label class="text-xs font-bold text-slate-400 uppercase ml-1">{{
-                t("auth.displayName")
-              }}</label>
+              <label
+                class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase ml-1"
+              >
+                {{ t("auth.displayName") }}
+              </label>
               <input
                 v-model="form.displayName"
                 :disabled="!isEditing || userStore.loading"
@@ -168,16 +176,16 @@ const confirmQuizDelete = async () => {
                 class="w-full px-4 py-3 border rounded-xl outline-none transition-all text-sm sm:text-base"
                 :class="
                   isEditing
-                    ? 'bg-white border-indigo-200 focus:ring-2 focus:ring-indigo-500 shadow-sm'
-                    : 'bg-slate-50 border-slate-100 text-slate-700'
+                    ? 'bg-white dark:bg-slate-800 border-green-200 dark:border-green-900 focus:ring-2 focus:ring-green-500 text-slate-900 dark:text-white shadow-sm'
+                    : 'bg-slate-50 dark:bg-slate-800/50 border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-400'
                 "
               />
             </div>
             <div
-              class="pt-4 border-t border-slate-50 flex flex-col sm:flex-row justify-between items-center gap-4"
+              class="pt-4 border-t border-slate-50 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-4"
             >
               <span
-                class="text-xs text-slate-400 italic text-center sm:text-left"
+                class="text-xs text-slate-400 dark:text-slate-500 italic text-center sm:text-left"
               >
                 {{ t("profile.memberSince") }}:
                 {{ formatDate(userStore.profile?.createdAt) }}
@@ -186,7 +194,7 @@ const confirmQuizDelete = async () => {
                 v-if="isEditing"
                 type="submit"
                 :disabled="userStore.loading"
-                class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 rounded-xl transition-all disabled:opacity-50 cursor-pointer shadow-lg shadow-indigo-200"
+                class="w-full sm:w-auto bg-green-600 dark:bg-green-500 hover:bg-green-700 dark:hover:bg-green-400 text-white font-black px-8 py-3 rounded-xl transition-all disabled:opacity-50 cursor-pointer shadow-lg shadow-green-100 dark:shadow-none"
               >
                 {{ userStore.loading ? t("auth.loading") : t("common.save") }}
               </button>
@@ -198,11 +206,13 @@ const confirmQuizDelete = async () => {
 
     <section class="mb-12">
       <div class="flex items-center justify-between mb-8">
-        <h3 class="text-3xl font-black text-slate-900 tracking-tight">
+        <h3
+          class="text-3xl font-black text-slate-900 dark:text-white tracking-tight"
+        >
           🚀 {{ t("profile.myQuizzes") }}
         </h3>
         <span
-          class="px-4 py-1.5 bg-slate-100 text-slate-600 rounded-full font-bold text-sm"
+          class="px-4 py-1.5 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-full font-black text-sm border border-green-100 dark:border-green-900/30"
         >
           {{ myQuizzes.length }}
         </span>
@@ -215,7 +225,7 @@ const confirmQuizDelete = async () => {
         <div
           v-for="i in 3"
           :key="i"
-          class="h-64 bg-slate-100 animate-pulse rounded-[3rem]"
+          class="h-64 bg-slate-100 dark:bg-slate-800 animate-pulse rounded-[2.5rem]"
         ></div>
       </div>
 
@@ -237,12 +247,14 @@ const confirmQuizDelete = async () => {
 
       <div
         v-else
-        class="py-16 text-center bg-white rounded-[3rem] border-2 border-dashed border-slate-200"
+        class="py-16 text-center bg-white dark:bg-slate-900 rounded-[2.5rem] border-2 border-dashed border-slate-200 dark:border-slate-800 transition-colors"
       >
-        <p class="text-slate-400 font-bold">{{ t("profile.noQuizzes") }}</p>
+        <p class="text-slate-400 dark:text-slate-500 font-bold">
+          {{ t("profile.noQuizzes") }}
+        </p>
         <button
           @click="router.push('/quiz/create')"
-          class="mt-4 text-indigo-600 font-black hover:underline cursor-pointer"
+          class="mt-4 text-green-600 dark:text-green-400 font-black hover:underline cursor-pointer"
         >
           + {{ t("quiz.createNew") }}
         </button>
@@ -250,19 +262,19 @@ const confirmQuizDelete = async () => {
     </section>
 
     <div
-      class="bg-red-50 rounded-3xl p-6 sm:p-8 border border-red-100 flex flex-col md:flex-row justify-between items-center gap-6"
+      class="bg-red-50 dark:bg-red-900/10 rounded-4xl p-6 sm:p-8 border border-red-100 dark:border-red-900/30 flex flex-col md:flex-row justify-between items-center gap-6"
     >
       <div class="text-center md:text-left">
-        <h4 class="text-red-800 font-black text-lg">
+        <h4 class="text-red-800 dark:text-red-400 font-black text-lg">
           {{ t("profile.dangerZone") }}
         </h4>
-        <p class="text-red-600/70 text-sm max-w-md">
+        <p class="text-red-600/70 dark:text-red-400/60 text-sm max-w-md">
           {{ t("profile.deleteDesc") }}
         </p>
       </div>
       <button
         @click="isDeleteModalOpen = true"
-        class="w-full md:w-auto bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-xl font-bold text-sm transition-all shadow-lg shadow-red-200 active:scale-95 cursor-pointer"
+        class="w-full md:w-auto bg-red-600 dark:bg-red-500 hover:bg-red-700 dark:hover:bg-red-600 text-white px-8 py-3 rounded-xl font-bold text-sm transition-all shadow-lg shadow-red-200 dark:shadow-none active:scale-95 cursor-pointer"
       >
         {{ t("profile.deleteBtn") }}
       </button>

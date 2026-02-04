@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, onUnmounted } from "vue";
+import { ref, onMounted, computed, onUnmounted, nextTick } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useQuizStore } from "@/stores/quiz";
 import { useI18n } from "vue-i18n";
@@ -9,12 +9,14 @@ const route = useRoute();
 const router = useRouter();
 const quizStore = useQuizStore();
 
+const quizContainer = ref<HTMLElement | null>(null);
 const gameQuestions = ref<any[]>([]);
 const currentQuestionIndex = ref(0);
 const score = ref(0);
 const timeLeft = ref(0);
 const isGameOver = ref(false);
 const selectedAnswer = ref<string | null>(null);
+const answerState = ref<"correct" | "wrong" | null>(null);
 let timerInterval: number | null = null;
 
 const currentQuestion = computed(
@@ -30,6 +32,11 @@ const shuffledAnswers = computed(() => {
   return [...all].sort(() => Math.random() - 0.5);
 });
 
+const scrollToContent = async () => {
+  await nextTick();
+  quizContainer.value?.scrollIntoView({ behavior: "smooth", block: "start" });
+};
+
 const startTimer = () => {
   if (timerInterval) clearInterval(timerInterval);
   const maxTime = quizStore.currentQuiz?.timeLimitSeconds || 30;
@@ -44,9 +51,21 @@ const startTimer = () => {
 const handleAnswer = (answer: string | null) => {
   if (selectedAnswer.value !== null) return;
   if (timerInterval) clearInterval(timerInterval);
+
   selectedAnswer.value = answer;
-  if (answer === currentQuestion.value?.correctAnswer) score.value++;
-  setTimeout(() => nextQuestion(), 1200);
+  const isCorrect = answer === currentQuestion.value?.correctAnswer;
+
+  if (isCorrect) {
+    score.value++;
+    answerState.value = "correct";
+  } else {
+    answerState.value = "wrong";
+  }
+
+  setTimeout(() => {
+    answerState.value = null;
+    nextQuestion();
+  }, 1200);
 };
 
 const nextQuestion = () => {
@@ -54,8 +73,10 @@ const nextQuestion = () => {
   if (currentQuestionIndex.value + 1 < gameQuestions.value.length) {
     currentQuestionIndex.value++;
     startTimer();
+    scrollToContent();
   } else {
     isGameOver.value = true;
+    scrollToContent();
   }
 };
 
@@ -69,6 +90,7 @@ onMounted(async () => {
     );
     gameQuestions.value = shuffled.slice(0, countLimit);
     startTimer();
+    scrollToContent();
   }
 });
 
@@ -80,169 +102,331 @@ const playAgain = () => router.go(0);
 </script>
 
 <template>
-  <div class="max-w-3xl mx-auto p-6 min-h-[70vh] flex flex-col justify-center">
-    <div v-if="quizStore.loading" class="text-center animate-pulse">
-      <div class="text-6xl mb-4">🌀</div>
+  <div
+    ref="quizContainer"
+    class="relative min-h-screen w-full flex flex-col grow justify-center items-center py-4 md:py-10"
+  >
+    <div
+      class="absolute inset-0 -mx-4 sm:-mx-6 lg:-mx-8 -my-8 z-0 overflow-hidden pointer-events-none"
+    >
       <div
-        class="font-black text-slate-300 text-2xl uppercase tracking-[0.5em]"
-      >
-        {{ t("game.loading") }}
-      </div>
+        class="absolute top-0 left-1/2 -translate-x-1/2 w-150 h-100 bg-emerald-500/40 rounded-full blur-[120px] animate-blob animation-delay-2000"
+      ></div>
+
+      <div
+        class="absolute top-40 left-0 translate-y-1/2 w-96 h-96 bg-emerald-500/40 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob"
+      ></div>
+      <div
+        class="absolute top-40 right-0 translate-y-1/2 w-96 h-96 bg-emerald-500/40 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob"
+      ></div>
+      <div
+        class="absolute bottom-0 left-1/2 -translate-x-1/2 w-150 h-100 bg-emerald-500/40 rounded-full blur-[120px] animate-blob animation-delay-2000"
+      ></div>
     </div>
 
-    <div v-else-if="currentQuestion && !isGameOver" class="space-y-8">
-      <div
-        class="relative overflow-hidden bg-white p-6 rounded-4xl shadow-xl border border-slate-100 min-h-25 flex items-center"
-      >
+    <div class="relative z-10 w-full">
+      <transition name="fade">
         <div
-          class="absolute inset-y-0 left-0 bg-indigo-50 transition-all duration-1000 ease-linear"
-          :style="{
-            width:
-              (timeLeft / (quizStore.currentQuiz?.timeLimitSeconds || 30)) *
-                100 +
-              '%',
-          }"
-          :class="{ 'bg-red-200': timeLeft < 6 }"
-        ></div>
+          v-if="quizStore.loading"
+          class="flex flex-col items-center justify-center py-20 text-center"
+        >
+          <div class="text-8xl md:text-9xl animate-spin-slow">🪄</div>
+          <h2
+            class="mt-8 text-2xl md:text-4xl font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.5em] animate-pulse"
+          >
+            {{ t("game.loading") }}
+          </h2>
+        </div>
+      </transition>
 
-        <div class="relative z-10 w-full flex justify-between items-center">
-          <div class="flex flex-col">
-            <span
-              class="text-[10px] font-black uppercase tracking-widest transition-colors duration-300"
-              :class="timeLeft < 6 ? 'text-red-600' : 'text-slate-400'"
+      <transition name="fade" mode="out-in">
+        <div
+          v-if="!quizStore.loading && currentQuestion && !isGameOver"
+          :key="currentQuestionIndex"
+          class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start w-full"
+        >
+          <aside class="lg:col-span-3 order-1 space-y-4">
+            <div
+              class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl p-6 rounded-4xl shadow-xl border border-white/20 dark:border-white/5 relative overflow-hidden"
             >
-              {{ t("game.timeLeft") }}
-            </span>
+              <div
+                class="absolute bottom-0 left-0 h-1.5 bg-linear-to-r from-green-400 to-emerald-600 transition-all duration-1000 ease-linear"
+                :style="{
+                  width:
+                    (timeLeft /
+                      (quizStore.currentQuiz?.timeLimitSeconds || 30)) *
+                      100 +
+                    '%',
+                }"
+                :class="{
+                  'from-red-500! to-orange-500! shadow-[0_0_15px_rgba(239,68,68,0.5)]':
+                    timeLeft < 6,
+                }"
+              ></div>
+              <p
+                class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1"
+              >
+                {{ t("game.timeLeft") }}
+              </p>
+              <div class="flex items-baseline gap-2">
+                <span
+                  class="text-5xl font-black tabular-nums transition-all"
+                  :class="
+                    timeLeft < 6
+                      ? 'text-red-500'
+                      : 'text-slate-800 dark:text-white'
+                  "
+                >
+                  {{ timeLeft }}
+                </span>
+                <span class="text-sm font-bold text-slate-400">sek</span>
+              </div>
+            </div>
 
-            <span
-              class="text-3xl font-black transition-all duration-300 inline-block"
-              :class="
-                timeLeft < 6
-                  ? 'text-red-500 animate-time-critical'
-                  : 'text-indigo-600'
-              "
+            <div
+              class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl p-6 rounded-4xl shadow-xl border border-white/20 dark:border-white/5 flex items-center justify-between"
             >
-              {{ timeLeft }}s
-            </span>
-          </div>
+              <div>
+                <p
+                  class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1"
+                >
+                  {{ t("game.question") }}
+                </p>
+                <span
+                  class="text-3xl font-black text-slate-800 dark:text-white"
+                >
+                  {{ currentQuestionIndex + 1
+                  }}<span class="text-slate-300 dark:text-slate-700 text-lg"
+                    >/{{ gameQuestions.length }}</span
+                  >
+                </span>
+              </div>
+              <div class="w-12 h-12">
+                <svg class="w-full h-full transform -rotate-90">
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="20"
+                    stroke="currentColor"
+                    stroke-width="4"
+                    fill="transparent"
+                    class="text-slate-100 dark:text-slate-800"
+                  />
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="20"
+                    stroke="currentColor"
+                    stroke-width="4"
+                    fill="transparent"
+                    class="text-emerald-500 transition-all duration-700"
+                    stroke-linecap="round"
+                    :style="{
+                      strokeDasharray: 125.6,
+                      strokeDashoffset:
+                        125.6 -
+                        (125.6 * (currentQuestionIndex + 1)) /
+                          gameQuestions.length,
+                    }"
+                  />
+                </svg>
+              </div>
+            </div>
+          </aside>
 
-          <div class="text-right">
-            <span
-              class="text-[10px] font-black text-slate-400 uppercase tracking-widest"
-              >{{ t("game.question") }}</span
+          <main class="lg:col-span-9 order-2">
+            <div
+              class="bg-white/70 dark:bg-slate-900/60 backdrop-blur-3xl rounded-[3rem] shadow-2xl border border-white/40 dark:border-white/10 p-6 md:p-12 lg:p-16 min-h-112.5 flex flex-col justify-center transition-all duration-500"
             >
-            <div class="text-2xl font-black text-slate-800">
-              {{ currentQuestionIndex + 1 }}
-              <span class="text-slate-200">/</span> {{ gameQuestions.length }}
+              <div class="relative z-10 mb-12 text-center">
+                <h2
+                  class="text-2xl md:text-4xl lg:text-5xl font-black text-slate-800 dark:text-white leading-tight"
+                >
+                  {{ currentQuestion.text }}
+                </h2>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                <button
+                  v-for="(answer, idx) in shuffledAnswers"
+                  :key="answer"
+                  @click="handleAnswer(answer)"
+                  :disabled="selectedAnswer !== null"
+                  class="group relative w-full p-6 rounded-4xl font-bold text-lg transition-all duration-200 border-b-[6px] active:border-b-0 active:translate-y-1.5 flex items-center overflow-hidden"
+                  :class="[
+                    selectedAnswer === null
+                      ? 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-200 hover:border-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20'
+                      : '',
+                    selectedAnswer !== null &&
+                    answer === currentQuestion.correctAnswer
+                      ? 'bg-emerald-500 border-emerald-700 text-white z-20 shadow-xl'
+                      : '',
+                    selectedAnswer === answer &&
+                    answer !== currentQuestion.correctAnswer
+                      ? 'bg-red-500 border-red-700 text-white shadow-xl shake-animation'
+                      : '',
+                    selectedAnswer !== null &&
+                    answer !== currentQuestion.correctAnswer &&
+                    answer !== selectedAnswer
+                      ? 'opacity-40 grayscale scale-95'
+                      : '',
+                  ]"
+                >
+                  <span
+                    class="w-10 h-10 shrink-0 rounded-xl flex items-center justify-center text-sm font-black mr-4 bg-slate-100 dark:bg-slate-900/50 text-slate-500"
+                    :class="{
+                      'bg-white/20 text-white':
+                        selectedAnswer !== null &&
+                        answer === currentQuestion.correctAnswer,
+                    }"
+                  >
+                    {{ String.fromCharCode(65 + idx) }}
+                  </span>
+                  <span class="text-left leading-snug">{{ answer }}</span>
+                </button>
+              </div>
+            </div>
+          </main>
+        </div>
+      </transition>
+
+      <transition name="fade">
+        <div
+          v-if="!quizStore.loading && isGameOver"
+          class="max-w-3xl mx-auto w-full py-4"
+        >
+          <div
+            class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-3xl p-10 rounded-[4rem] shadow-2xl border border-white/50 dark:border-white/10 text-center relative overflow-hidden"
+          >
+            <div
+              class="absolute top-0 left-0 w-full h-2 bg-linear-to-r from-emerald-400 via-yellow-400 to-rose-500"
+            ></div>
+            <div class="relative z-10 flex flex-col items-center">
+              <div class="text-8xl mb-6 animate-bounce-custom">🏆</div>
+              <h2
+                class="text-5xl md:text-7xl font-black text-slate-900 dark:text-white mb-8 tracking-tighter"
+              >
+                {{ t("game.gameOver") }}
+              </h2>
+
+              <div
+                class="px-12 py-6 bg-white dark:bg-slate-800 rounded-[3rem] border border-slate-100 dark:border-slate-700 flex flex-col items-center shadow-inner"
+              >
+                <span
+                  class="text-sm font-bold text-slate-400 uppercase tracking-[0.3em] mb-2"
+                  >Wynik</span
+                >
+                <span
+                  class="text-6xl font-black bg-clip-text text-transparent bg-linear-to-r from-emerald-500 to-teal-600"
+                >
+                  {{ score }} / {{ gameQuestions.length }}
+                </span>
+              </div>
+
+              <div
+                class="flex flex-col sm:flex-row gap-4 w-full max-w-lg mt-12"
+              >
+                <button
+                  @click="router.push('/quiz')"
+                  class="flex-1 py-5 px-8 bg-slate-100 dark:bg-slate-800 rounded-full font-black hover:bg-slate-200 transition-all"
+                >
+                  {{ t("game.backToList") }}
+                </button>
+                <button
+                  @click="playAgain"
+                  class="flex-1 py-5 px-8 bg-emerald-500 text-white rounded-full font-black shadow-xl hover:bg-emerald-400 transition-all"
+                >
+                  {{ t("game.playAgain") }}
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div
-        class="bg-white p-10 rounded-[3.5rem] border border-slate-100 shadow-2xl shadow-slate-200/60"
-      >
-        <h2
-          class="text-3xl font-black text-slate-900 leading-tight mb-10 text-center"
-        >
-          {{ currentQuestion.text }}
-        </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <button
-            v-for="answer in shuffledAnswers"
-            :key="answer"
-            @click="handleAnswer(answer)"
-            :disabled="selectedAnswer !== null"
-            :class="[
-              'p-6 rounded-4xl font-bold text-lg transition-all border-4 transform active:scale-95',
-              selectedAnswer === null
-                ? 'bg-slate-50 border-transparent hover:border-indigo-500 hover:bg-white'
-                : '',
-              selectedAnswer !== null &&
-              answer === currentQuestion.correctAnswer
-                ? 'bg-green-100 border-green-500 text-green-700'
-                : '',
-              selectedAnswer === answer &&
-              answer !== currentQuestion.correctAnswer
-                ? 'bg-red-100 border-red-500 text-red-700'
-                : '',
-              selectedAnswer !== null &&
-              answer !== currentQuestion.correctAnswer &&
-              answer !== selectedAnswer
-                ? 'opacity-40 border-transparent grayscale'
-                : '',
-            ]"
-          >
-            {{ answer }}
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div
-      v-else-if="isGameOver"
-      class="text-center bg-white p-12 rounded-[4rem] shadow-2xl border border-slate-100"
-    >
-      <div class="text-7xl mb-6">🎉</div>
-      <h2 class="text-4xl font-black text-slate-900 mb-2">
-        {{ t("game.gameOver") }}
-      </h2>
-      <p class="text-slate-500 font-bold text-lg mb-8">
-        {{ t("game.yourScore") }}
-        <span
-          class="inline-block px-4 py-1 bg-indigo-50 text-indigo-600 rounded-xl text-3xl ml-2 font-black"
-        >
-          {{ score }} / {{ gameQuestions.length }}
-        </span>
-      </p>
-      <div class="flex flex-col gap-4 max-w-sm mx-auto">
-        <button
-          @click="router.push('/quiz')"
-          class="w-full py-5 bg-indigo-600 text-white rounded-3xl font-black shadow-xl hover:bg-indigo-700 hover:-translate-y-1 transition-all"
-        >
-          {{ t("game.backToList") }}
-        </button>
-        <button
-          @click="playAgain"
-          class="w-full py-5 border-4 border-slate-100 text-slate-600 rounded-3xl font-black hover:bg-slate-50 transition-all"
-        >
-          {{ t("game.playAgain") }}
-        </button>
-      </div>
+      </transition>
     </div>
   </div>
 </template>
 
 <style scoped>
-.animate-time-critical {
-  animation: time-shake 0.5s infinite alternate
-    cubic-bezier(0.36, 0.07, 0.19, 0.97);
-  display: inline-block;
-  transform-origin: center;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 
-@keyframes time-shake {
+.animate-blob {
+  animation: blob 7s infinite;
+}
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+@keyframes blob {
   0% {
-    transform: scale(1) rotate(0deg);
-    text-shadow: 0 0 0px rgba(239, 68, 68, 0);
+    transform: translate(0px, 0px) scale(1);
   }
-  25% {
-    transform: scale(1.1) rotate(-2deg);
-    text-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+  33% {
+    transform: translate(20px, -30px) scale(1.05);
   }
-  50% {
-    transform: scale(1.1) rotate(2deg);
-  }
-  75% {
-    transform: scale(1.1) rotate(-1deg);
+  66% {
+    transform: translate(-10px, 10px) scale(0.95);
   }
   100% {
-    transform: scale(1.2) rotate(0deg);
-    text-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
+    transform: translate(0px, 0px) scale(1);
   }
 }
 
-span {
-  font-variant-numeric: tabular-nums;
+.animate-spin-slow {
+  animation: spin 8s linear infinite;
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.shake-animation {
+  animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+.animate-bounce-custom {
+  animation: bounce-custom 2s infinite;
+}
+@keyframes bounce-custom {
+  0%,
+  100% {
+    transform: translateY(-5%);
+  }
+  50% {
+    transform: translateY(0);
+  }
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
 }
 </style>

@@ -1,1 +1,31 @@
 @import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-brand-600: #16a34a;
+  --color-brand-700: #15803d;
+  --color-brand-800: #166534;
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+    --bg-main: #ffffff;
+    --text-main: #0f172a;
+    --nav-bg: #16a34a;
+  }
+
+  .dark {
+    color-scheme: dark;
+    --bg-main: #020617;
+    --text-main: #f8fafc;
+    --nav-bg: #0f172a;
+  }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    @apply transition-colors duration-300;
+  }
+}

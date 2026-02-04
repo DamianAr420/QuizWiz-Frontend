@@ -71,16 +71,18 @@ const confirmDelete = async () => {
 </script>
 
 <template>
-  <div class="max-w-7xl mx-auto p-6 md:p-10">
+  <div class="max-w-7xl mx-auto p-6 md:p-10 transition-colors duration-300">
     <header class="flex flex-col gap-10 mb-16">
       <div
         class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6"
       >
         <div>
-          <h1 class="text-5xl font-black text-slate-900 tracking-tight mb-2">
+          <h1
+            class="text-5xl font-black text-slate-900 dark:text-white tracking-tight mb-2"
+          >
             {{ t("quiz.listTitle") }}
           </h1>
-          <p class="text-slate-500 font-medium text-lg">
+          <p class="text-slate-500 dark:text-slate-400 font-medium text-lg">
             {{
               activeFilter === "official"
                 ? "Certyfikowane wyzwania wiedzy"
@@ -88,15 +90,16 @@ const confirmDelete = async () => {
             }}
           </p>
         </div>
+
         <button
           @click="router.push('/quiz/create')"
-          class="group relative bg-indigo-600 text-white px-10 py-5 rounded-4xl font-black shadow-[0_20px_50px_rgba(79,70,229,0.3)] hover:bg-indigo-700 transition-all active:scale-95 overflow-hidden"
+          class="group relative bg-green-600 dark:bg-green-500 text-white px-10 py-5 rounded-4xl font-black shadow-[0_20px_50px_rgba(22,163,74,0.3)] dark:shadow-none hover:bg-green-700 dark:hover:bg-green-400 transition-all active:scale-95 overflow-hidden"
         >
           <span class="relative z-10 flex items-center gap-2">
             <span class="text-2xl">+</span> {{ t("quiz.createNew") }}
           </span>
           <div
-            class="absolute inset-0 bg-linear-to-r from-indigo-400 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity"
+            class="absolute inset-0 bg-linear-to-r from-green-400 to-green-600 opacity-0 group-hover:opacity-100 transition-opacity"
           ></div>
         </button>
       </div>
@@ -105,17 +108,19 @@ const confirmDelete = async () => {
         <div class="relative flex-1 w-full group">
           <span
             class="absolute left-6 top-1/2 -translate-y-1/2 text-2xl group-focus-within:scale-110 transition-transform"
-            >🔍</span
           >
+            🔍
+          </span>
           <input
             v-model="searchQuery"
             type="text"
             :placeholder="t('quiz.searchPlaceholder')"
-            class="w-full pl-16 pr-8 py-5 bg-white border border-slate-200 rounded-4xl shadow-sm outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all text-lg"
+            class="w-full pl-16 pr-8 py-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-4xl shadow-sm outline-none focus:ring-4 focus:ring-green-500/10 focus:border-green-500 transition-all text-lg text-slate-800 dark:text-slate-100"
           />
         </div>
+
         <div
-          class="inline-flex p-2 bg-slate-200/50 backdrop-blur-md rounded-4xl font-medium border border-white shadow-inner"
+          class="inline-flex p-2 bg-slate-200/50 dark:bg-slate-800/50 backdrop-blur-md rounded-4xl font-medium border border-white dark:border-slate-700 shadow-inner"
         >
           <button
             v-for="f in ['official', 'users']"
@@ -123,8 +128,8 @@ const confirmDelete = async () => {
             @click="setFilter(f)"
             :class="[
               activeFilter === f
-                ? 'bg-white text-indigo-600 shadow-md'
-                : 'text-slate-500 hover:text-slate-700',
+                ? 'bg-white dark:bg-slate-700 text-green-600 dark:text-green-400 shadow-md'
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200',
               'px-10 py-4 rounded-[1.7rem] font-black text-sm uppercase tracking-wider transition-all active:scale-95',
             ]"
           >
@@ -141,9 +146,9 @@ const confirmDelete = async () => {
       <div
         v-for="i in 6"
         :key="i"
-        class="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm relative h-80 overflow-hidden"
+        class="bg-white dark:bg-slate-900 p-10 rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-sm relative h-80 overflow-hidden"
       >
-        <div class="skeleton-shimmer"></div>
+        <div class="skeleton-shimmer dark:opacity-20"></div>
       </div>
     </div>
 
@@ -165,11 +170,13 @@ const confirmDelete = async () => {
 
     <div
       v-else
-      class="text-center py-32 bg-white rounded-[4rem] border-2 border-dashed border-slate-200 shadow-inner"
+      class="text-center py-32 bg-white dark:bg-slate-900/50 rounded-[4rem] border-2 border-dashed border-slate-200 dark:border-slate-800 shadow-inner"
     >
       <div class="text-6xl mb-6">🏜️</div>
-      <h3 class="text-2xl font-black text-slate-800 mb-2">Nic tu nie ma...</h3>
-      <p class="text-slate-400 font-bold max-w-sm mx-auto">
+      <h3 class="text-2xl font-black text-slate-800 dark:text-white mb-2">
+        Nic tu nie ma...
+      </h3>
+      <p class="text-slate-400 dark:text-slate-500 font-bold max-w-sm mx-auto">
         {{ t("quiz.noResults") }}
       </p>
     </div>
@@ -202,6 +209,7 @@ const confirmDelete = async () => {
   );
   animation: shimmer 1.5s infinite;
 }
+
 @keyframes shimmer {
   0% {
     transform: translateX(-100%);

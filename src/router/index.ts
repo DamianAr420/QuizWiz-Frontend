@@ -59,7 +59,7 @@ const routes: RouteRecordRaw[] = [
     name: "quiz-play",
     component: QuizPlay,
     props: true,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, hideHexBg: true },
   },
 ];
 

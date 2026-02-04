@@ -45,7 +45,10 @@ onMounted(async () => {
         })),
       };
 
-      if (data.authorId?.toString() !== authStore.user?.id.toString()) {
+      if (
+        data.authorId?.toString() !== authStore.user?.id.toString() &&
+        !isAdmin.value
+      ) {
         router.push("/quiz");
       }
     }
@@ -79,26 +82,30 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div class="max-w-4xl mx-auto p-6 pb-24">
+  <div class="max-w-4xl mx-auto p-6 pb-24 transition-colors duration-300">
     <header class="mb-12 flex justify-between items-end">
       <div>
-        <h1 class="text-4xl font-black text-slate-900 tracking-tight">
+        <h1
+          class="text-4xl font-black text-slate-900 dark:text-white tracking-tight"
+        >
           {{
             isEditMode ? t("quiz.form.editTitle") : t("quiz.form.createTitle")
           }}
         </h1>
-        <p class="text-slate-500 font-medium mt-2">{{ form.title || "..." }}</p>
+        <p class="text-slate-500 dark:text-slate-400 font-medium mt-2">
+          {{ form.title || "..." }}
+        </p>
       </div>
     </header>
 
     <form @submit.prevent="handleSubmit" class="space-y-10">
       <section
-        class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-xl space-y-6"
+        class="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-xl space-y-6"
       >
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div class="flex flex-col gap-2">
             <label
-              class="text-sm font-black text-slate-700 uppercase tracking-widest ml-1"
+              class="text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest ml-1"
             >
               {{ t("quiz.form.title") }}
             </label>
@@ -106,12 +113,12 @@ const handleSubmit = async () => {
               v-model="form.title"
               type="text"
               required
-              class="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-indigo-500 outline-none transition-all"
+              class="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:border-green-500 dark:focus:border-green-400 text-slate-900 dark:text-white outline-none transition-all"
             />
           </div>
           <div class="flex flex-col gap-2">
             <label
-              class="text-sm font-black text-slate-700 uppercase tracking-widest ml-1"
+              class="text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest ml-1"
             >
               {{ t("quiz.form.description") }}
             </label>
@@ -119,24 +126,25 @@ const handleSubmit = async () => {
               v-model="form.description"
               type="text"
               required
-              class="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-indigo-500 outline-none transition-all"
+              class="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:border-green-500 dark:focus:border-green-400 text-slate-900 dark:text-white outline-none transition-all"
             />
           </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-4">
           <label
-            class="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl cursor-pointer hover:bg-slate-100 transition-colors"
+            class="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border border-transparent dark:border-slate-700"
           >
             <input
               v-model="form.isVisible"
               type="checkbox"
-              class="w-5 h-5 rounded border-slate-300 text-indigo-600"
+              class="w-5 h-5 rounded border-slate-300 text-green-600 focus:ring-green-500"
             />
             <div class="flex flex-col">
-              <span class="text-sm font-bold text-slate-700">{{
-                t("quiz.form.visible")
-              }}</span>
+              <span
+                class="text-sm font-bold text-slate-700 dark:text-slate-200"
+                >{{ t("quiz.form.visible") }}</span
+              >
               <span class="text-[10px] text-slate-400 uppercase font-black">{{
                 t("quiz.form.statusPublic")
               }}</span>
@@ -144,17 +152,18 @@ const handleSubmit = async () => {
           </label>
 
           <label
-            class="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl cursor-pointer hover:bg-slate-100 transition-colors"
+            class="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border border-transparent dark:border-slate-700"
           >
             <input
               v-model="form.isPlayable"
               type="checkbox"
-              class="w-5 h-5 rounded border-slate-300 text-indigo-600"
+              class="w-5 h-5 rounded border-slate-300 text-green-600 focus:ring-green-500"
             />
             <div class="flex flex-col">
-              <span class="text-sm font-bold text-slate-700">{{
-                t("quiz.form.playable")
-              }}</span>
+              <span
+                class="text-sm font-bold text-slate-700 dark:text-slate-200"
+                >{{ t("quiz.form.playable") }}</span
+              >
               <span class="text-[10px] text-slate-400 uppercase font-black">{{
                 t("quiz.form.statusPlay")
               }}</span>
@@ -163,101 +172,110 @@ const handleSubmit = async () => {
 
           <label
             v-if="isAdmin"
-            class="flex items-center gap-3 p-4 bg-indigo-50 rounded-2xl cursor-pointer hover:bg-indigo-100 transition-colors border border-indigo-100"
+            class="flex items-center gap-3 p-4 bg-green-50 dark:bg-green-900/20 rounded-2xl cursor-pointer hover:bg-green-100 dark:hover:bg-green-900/40 transition-colors border border-green-100 dark:border-green-900/50"
           >
             <input
               v-model="form.isOfficial"
               type="checkbox"
-              class="w-5 h-5 rounded border-indigo-300 text-indigo-600"
+              class="w-5 h-5 rounded border-green-300 text-green-600 focus:ring-green-500"
             />
             <div class="flex flex-col">
-              <span class="text-sm font-bold text-indigo-700">{{
-                t("quiz.form.official")
-              }}</span>
-              <span class="text-[10px] text-indigo-400 uppercase font-black">{{
-                t("quiz.form.statusAdmin")
-              }}</span>
+              <span
+                class="text-sm font-bold text-green-700 dark:text-green-400"
+                >{{ t("quiz.form.official") }}</span
+              >
+              <span
+                class="text-[10px] text-green-400/80 uppercase font-black"
+                >{{ t("quiz.form.statusAdmin") }}</span
+              >
             </div>
           </label>
         </div>
       </section>
 
       <div class="space-y-8">
-        <div
-          v-for="(q, index) in form.questions"
-          :key="index"
-          class="group relative bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-lg hover:shadow-xl transition-all"
-        >
-          <div class="flex justify-between items-center mb-8">
-            <span
-              class="bg-indigo-600 text-white px-5 py-1.5 rounded-full text-xs font-black uppercase tracking-tighter"
-            >
-              {{ t("quiz.form.questionNumber") }} #{{ index + 1 }}
-            </span>
-            <button
-              type="button"
-              v-if="form.questions.length > 1"
-              @click="removeQuestion(index)"
-              class="text-red-400 hover:text-red-600 font-bold text-sm p-2 transition-colors"
-            >
-              ✕
-            </button>
-          </div>
+        <TransitionGroup name="list">
+          <div
+            v-for="(q, index) in form.questions"
+            :key="index"
+            class="group relative bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-lg hover:shadow-xl transition-all"
+          >
+            <div class="flex justify-between items-center mb-8">
+              <span
+                class="bg-green-600 dark:bg-green-500 text-white px-5 py-1.5 rounded-full text-xs font-black uppercase tracking-tighter shadow-sm"
+              >
+                {{ t("quiz.form.questionNumber") }} #{{ index + 1 }}
+              </span>
+              <button
+                type="button"
+                v-if="form.questions.length > 1"
+                @click="removeQuestion(index)"
+                class="text-red-400 hover:text-red-600 dark:hover:text-red-300 font-bold text-sm p-2 transition-colors"
+              >
+                ✕
+              </button>
+            </div>
 
-          <div class="space-y-6">
-            <input
-              v-model="q.text"
-              type="text"
-              required
-              :placeholder="t('quiz.form.questionPlaceholder')"
-              class="w-full px-6 py-5 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-lg outline-none focus:border-indigo-500 transition-all"
-            />
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div class="flex flex-col gap-2">
-                <label
-                  class="text-[10px] font-black text-green-600 uppercase tracking-widest ml-2"
-                  >{{ t("quiz.form.correctAnswer") }}</label
-                >
-                <input
-                  v-model="q.correctAnswer"
-                  type="text"
-                  required
-                  class="w-full px-6 py-4 bg-green-50 border border-green-100 rounded-2xl outline-none"
-                />
-              </div>
-              <div class="flex flex-col gap-2">
-                <label
-                  class="text-[10px] font-black text-red-600 uppercase tracking-widest ml-2"
-                  >{{ t("quiz.form.wrongAnswers") }}</label
-                >
-                <div class="space-y-2">
+            <div class="space-y-6">
+              <input
+                v-model="q.text"
+                type="text"
+                required
+                :placeholder="t('quiz.form.questionPlaceholder')"
+                class="w-full px-6 py-5 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl font-bold text-lg text-slate-800 dark:text-white outline-none focus:border-green-500 dark:focus:border-green-400 transition-all"
+              />
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="flex flex-col gap-2">
+                  <label
+                    class="text-[10px] font-black text-green-600 dark:text-green-400 uppercase tracking-widest ml-2"
+                  >
+                    {{ t("quiz.form.correctAnswer") }}
+                  </label>
                   <input
-                    v-for="(_, dIndex) in q.distractors"
-                    :key="dIndex"
-                    v-model="q.distractors[dIndex]"
+                    v-model="q.correctAnswer"
                     type="text"
                     required
-                    class="w-full px-6 py-3 bg-red-50 border border-red-100 rounded-xl outline-none"
+                    class="w-full px-6 py-4 bg-green-50 dark:bg-green-900/10 border border-green-100 dark:border-green-900/30 text-slate-800 dark:text-green-50 rounded-2xl outline-none focus:ring-2 focus:ring-green-500/20 transition-all"
                   />
+                </div>
+
+                <div class="flex flex-col gap-2">
+                  <label
+                    class="text-[10px] font-black text-red-600 dark:text-red-400 uppercase tracking-widest ml-2"
+                  >
+                    {{ t("quiz.form.wrongAnswers") }}
+                  </label>
+                  <div class="space-y-2">
+                    <input
+                      v-for="(_, dIndex) in q.distractors"
+                      :key="dIndex"
+                      v-model="q.distractors[dIndex]"
+                      type="text"
+                      required
+                      class="w-full px-6 py-3 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/30 text-slate-800 dark:text-red-50 rounded-xl outline-none focus:ring-2 focus:ring-red-500/20 transition-all"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </TransitionGroup>
       </div>
 
       <div class="flex flex-col gap-4">
         <button
           type="button"
           @click="addQuestion"
-          class="w-full py-6 border-2 border-dashed border-slate-200 rounded-[2.5rem] text-slate-400 font-black hover:border-indigo-500 hover:text-indigo-500 hover:bg-indigo-50/30 transition-all"
+          class="w-full py-6 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-[2.5rem] text-slate-400 dark:text-slate-500 font-black hover:border-green-500 dark:hover:border-green-400 hover:text-green-500 dark:hover:text-green-400 hover:bg-green-50/30 dark:hover:bg-green-900/10 transition-all"
         >
           + {{ t("quiz.form.addQuestion") }}
         </button>
+
         <button
           type="submit"
           :disabled="quizStore.loading"
-          class="w-full py-6 bg-indigo-600 text-white rounded-[2.5rem] font-black text-xl shadow-2xl hover:bg-indigo-700 active:scale-95 disabled:opacity-50 transition-all"
+          class="w-full py-6 bg-green-600 dark:bg-green-500 text-white rounded-[2.5rem] font-black text-xl shadow-2xl shadow-green-200 dark:shadow-none hover:bg-green-700 dark:hover:bg-green-400 active:scale-95 disabled:opacity-50 transition-all"
         >
           {{
             quizStore.loading
@@ -271,3 +289,15 @@ const handleSubmit = async () => {
     </form>
   </div>
 </template>
+
+<style scoped>
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.4s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+</style>

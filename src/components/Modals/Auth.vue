@@ -32,7 +32,6 @@ watch(
   async (newVal) => {
     if (newVal) {
       document.body.style.overflow = "hidden";
-
       await nextTick();
       if (isLoginMode.value) {
         identifierInput.value?.focus();
@@ -70,10 +69,12 @@ const handleSubmit = async () => {
   }
 };
 
+// Klasy Tailwind v4 z obsługą Dark Mode
 const inputClasses =
-  "w-full px-4 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-slate-800 placeholder-transparent peer";
+  "w-full px-4 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-green-500 outline-none transition-all text-slate-800 dark:text-slate-100 placeholder-transparent peer";
+
 const labelClasses =
-  "absolute left-4 top-4 text-slate-400 pointer-events-none transition-all duration-200 origin-left peer-focus:-translate-y-10 peer-focus:scale-90 peer-focus:text-indigo-600 peer-focus:font-bold peer-[:not(:placeholder-shown)]:-translate-y-10 peer-[:not(:placeholder-shown)]:scale-90 peer-[:not(:placeholder-shown)]:text-indigo-600 peer-[:not(:placeholder-shown)]:font-bold";
+  "absolute left-4 top-4 text-slate-400 pointer-events-none transition-all duration-200 origin-left peer-focus:-translate-y-10 peer-focus:scale-90 peer-focus:text-green-600 dark:peer-focus:text-green-400 peer-focus:font-bold peer-[:not(:placeholder-shown)]:-translate-y-10 peer-[:not(:placeholder-shown)]:scale-90 peer-[:not(:placeholder-shown)]:text-green-600 dark:peer-[:not(:placeholder-shown)]:text-green-400 peer-[:not(:placeholder-shown)]:font-bold";
 </script>
 
 <template>
@@ -81,19 +82,21 @@ const labelClasses =
     <Transition name="fade">
       <div
         v-if="isOpen"
-        class="fixed inset-0 z-50 flex items-center justify-center p-4"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 transition-colors duration-300"
       >
         <div
-          class="absolute inset-0 bg-slate-900/60 backdrop-blur-xs"
+          class="absolute inset-0 bg-slate-900/60 dark:bg-black/80 backdrop-blur-xs"
           @click="emit('close')"
         ></div>
 
         <div
-          class="relative bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden border border-slate-100"
+          class="relative bg-white dark:bg-slate-900 w-full max-w-md rounded-3xl shadow-2xl overflow-hidden border border-slate-100 dark:border-slate-800"
         >
           <div class="p-6 sm:p-8">
             <header class="text-center mb-10">
-              <h2 class="text-3xl font-black text-slate-800 tracking-tight">
+              <h2
+                class="text-3xl font-black text-slate-800 dark:text-white tracking-tight"
+              >
                 {{ isLoginMode ? t("auth.welcome") : t("auth.join") }}
               </h2>
             </header>
@@ -101,7 +104,7 @@ const labelClasses =
             <Transition name="slide-up">
               <div
                 v-if="errorMessage"
-                class="mb-6 p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl text-center font-medium"
+                class="mb-6 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm rounded-xl text-center font-medium"
               >
                 {{ errorMessage }}
               </div>
@@ -156,7 +159,7 @@ const labelClasses =
                 <button
                   type="button"
                   @click="showPassword = !showPassword"
-                  class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 p-2 hover:text-indigo-500 transition-colors z-10"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 p-2 hover:text-green-500 transition-colors z-10"
                 >
                   {{ showPassword ? "👁️‍🗨️" : "👁️" }}
                 </button>
@@ -165,7 +168,7 @@ const labelClasses =
               <button
                 type="submit"
                 :disabled="authStore.loading"
-                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl transition-all transform active:scale-95 disabled:opacity-50 shadow-lg shadow-indigo-200 mt-4"
+                class="w-full bg-green-600 dark:bg-green-500 hover:bg-green-700 dark:hover:bg-green-400 text-white font-bold py-4 rounded-xl transition-all transform active:scale-95 disabled:opacity-50 shadow-lg shadow-green-200 dark:shadow-none mt-4"
               >
                 {{
                   authStore.loading
@@ -180,7 +183,7 @@ const labelClasses =
             <footer class="mt-8 text-center">
               <button
                 @click="toggleMode"
-                class="text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors"
+                class="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-green-600 dark:hover:text-green-400 transition-colors"
               >
                 {{ isLoginMode ? t("auth.noAccount") : t("auth.hasAccount") }}
               </button>
