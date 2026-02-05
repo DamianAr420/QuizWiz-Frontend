@@ -76,7 +76,12 @@
       "correct": "Poprawne",
       "streak": "Streak (dni)"
     },
-    "deleteSuccess": "Konto zostało usunięte"
+    "deleteSuccess": "Konto zostało usunięte",
+    "avatarSuccess": "Avatar został zmieniony",
+    "myBadges": "Moje Osiągnięcia",
+    "comingSoon": "Wkrótce",
+    "achievementsLocked": "System osiągnięć w drodze",
+    "achievementsDesc": "Pracujemy nad systemem wyzwań i unikalnych odznak. Już niedługo będziesz mógł pochwalić się swoimi wynikami przed innymi!"
   },
   "common": {
     "backToHome": "Wróć do strony głównej",

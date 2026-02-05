@@ -76,7 +76,12 @@
       "correct": "Correct",
       "streak": "Streak (days)"
     },
-    "deleteSuccess": "Account has been deleted"
+    "deleteSuccess": "Account has been deleted",
+    "avatarSuccess": "Avatar has been changed",
+    "myBadges": "My Achievements",
+    "comingSoon": "Coming Soon",
+    "achievementsLocked": "Achievements system is on its way",
+    "achievementsDesc": "We are working on a system of challenges and unique badges. Soon you will be able to show off your results to others!"
   },
   "common": {
     "backToHome": "Back to home",

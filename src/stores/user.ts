@@ -93,5 +93,40 @@ export const useUserStore = defineStore("user", {
         this.loading = false;
       }
     },
+
+    async uploadAvatar(file: File) {
+      this.loading = true;
+      const toast = useToastStore();
+      const t = i18n.global.t;
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        const response = await api.post<{ url: string }>(
+          "/users/upload-avatar",
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          },
+        );
+
+        if (this.profile) {
+          this.profile.avatarUrl = response.data.url;
+        }
+
+        toast.show(
+          t("profile.avatarSuccess") || "Avatar zaktualizowany!",
+          "success",
+        );
+        return response.data.url;
+      } catch (err: any) {
+        this.error = err.response?.data || "Błąd podczas przesyłania zdjęcia";
+        toast.show(this.error as string, "error");
+        throw err;
+      } finally {
+        this.loading = false;
+      }
+    },
   },
 });

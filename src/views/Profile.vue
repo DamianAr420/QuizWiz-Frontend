@@ -20,7 +20,10 @@ const isEditing = ref(false);
 const isDeleteModalOpen = ref(false);
 const isQuizDeleteModalOpen = ref(false);
 const quizToDelete = ref<number | null>(null);
+const fileInput = ref<HTMLInputElement | null>(null);
 const form = ref({ displayName: "" });
+
+const API_URL = "https://localhost:7225";
 
 const accuracy = computed(() => {
   const s = userStore.stats;
@@ -32,6 +35,20 @@ const myQuizzes = computed(() => {
   return quizStore.quizzes.filter(
     (q) => String(q.authorId) === String(authStore.user?.id) && !q.isOfficial,
   );
+});
+
+const avatarUrl = computed(() => {
+  if (!userStore.profile?.avatarUrl) return null;
+  return userStore.profile.avatarUrl.startsWith("http")
+    ? userStore.profile.avatarUrl
+    : `${API_URL}${userStore.profile.avatarUrl}`;
+});
+
+const roleBadgeClass = computed(() => {
+  const role = userStore.profile?.role?.toLowerCase();
+  if (role === "admin")
+    return "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 border-amber-200 dark:border-amber-800";
+  return "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border-blue-200 dark:border-blue-800";
 });
 
 onMounted(async () => {
@@ -55,9 +72,23 @@ const handleUpdate = async () => {
   try {
     await userStore.updateProfile(form.value.displayName);
     isEditing.value = false;
-    toast.show(t("profile.updateSuccess"), "success");
   } catch (error: any) {
-    toast.show(userStore.error || t("profile.updateError"), "error");
+    console.error(error);
+  }
+};
+
+const triggerFileInput = () => {
+  fileInput.value?.click();
+};
+
+const handleFileChange = async (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  if (target.files && target.files[0]) {
+    try {
+      await userStore.uploadAvatar(target.files[0]);
+    } catch (e) {
+      console.error(e);
+    }
   }
 };
 
@@ -66,7 +97,6 @@ const handleDeleteAccount = async () => {
     await userStore.deleteAccount();
   } catch (error: any) {
     isDeleteModalOpen.value = false;
-    toast.show(userStore.error || t("profile.deleteError"), "error");
   }
 };
 
@@ -99,22 +129,56 @@ const confirmQuizDelete = async () => {
       <div
         class="bg-green-600 dark:bg-green-700 h-24 sm:h-32 w-full opacity-90"
       ></div>
+
       <div class="px-5 sm:px-8 pb-8">
         <div
-          class="relative flex flex-col xs:flex-row justify-between items-start xs:items-end -mt-10 sm:-mt-12 mb-6 sm:mb-8 gap-4"
+          class="relative flex flex-row xs:flex-row justify-between items-center -mt-10 sm:-mt-12 mb-6 sm:mb-8 gap-4"
         >
-          <div
-            class="bg-slate-200 dark:bg-slate-800 h-20 w-20 sm:h-24 sm:w-24 rounded-2xl border-4 border-white dark:border-slate-900 flex items-center justify-center text-3xl sm:text-4xl shadow-sm"
-          >
-            🧙‍♂️
+          <div class="relative group cursor-pointer" @click="triggerFileInput">
+            <div
+              class="bg-slate-200 dark:bg-slate-800 h-20 w-20 sm:h-24 sm:w-24 rounded-2xl border-4 border-white dark:border-slate-900 flex items-center justify-center text-3xl sm:text-4xl shadow-sm overflow-hidden relative"
+            >
+              <img
+                v-if="avatarUrl"
+                :src="avatarUrl"
+                class="w-full h-full object-cover transition-transform group-hover:scale-110"
+              />
+              <span v-else>🧙‍♂️</span>
+
+              <div
+                class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <span
+                  class="text-[10px] font-black text-white uppercase tracking-tighter"
+                  >Zmień</span
+                >
+              </div>
+
+              <div
+                v-if="userStore.loading"
+                class="absolute inset-0 bg-white/60 dark:bg-slate-900/60 flex items-center justify-center"
+              >
+                <div
+                  class="w-5 h-5 border-2 border-green-500 border-t-transparent rounded-full animate-spin"
+                ></div>
+              </div>
+            </div>
+            <input
+              ref="fileInput"
+              type="file"
+              class="hidden"
+              accept="image/*"
+              @change="handleFileChange"
+            />
           </div>
+
           <button
             @click="isEditing = !isEditing"
-            class="self-end xs:self-auto px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer shadow-sm active:scale-95"
+            class="px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer shadow-sm active:scale-95"
             :class="
               isEditing
                 ? 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
-                : 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/50'
+                : 'bg-green-50 shadow-lg shadow-emerald-500 dark:bg-green-900 text-green-700 hover:text-green-900 dark:text-green-400 hover:bg-green-100 dark:hover:bg-emerald-500'
             "
           >
             {{ isEditing ? t("common.cancel") : t("profile.editBtn") }}
@@ -122,11 +186,20 @@ const confirmQuizDelete = async () => {
         </div>
 
         <header class="mb-6 sm:mb-8">
-          <h1
-            class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight"
-          >
-            {{ t("profile.title") }}
-          </h1>
+          <div class="flex flex-wrap items-center gap-3 mb-1">
+            <h1
+              class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight"
+            >
+              {{ t("profile.title") }}
+            </h1>
+            <span
+              v-if="userStore.profile?.role"
+              class="px-3 py-1 rounded-full text-[10px] font-black uppercase border tracking-widest"
+              :class="roleBadgeClass"
+            >
+              {{ userStore.profile.role }}
+            </span>
+          </div>
           <p class="text-sm sm:text-base text-slate-500 dark:text-slate-400">
             {{ t("profile.subtitle") }}
           </p>
@@ -143,17 +216,31 @@ const confirmQuizDelete = async () => {
         </div>
 
         <div v-else class="grid gap-6">
-          <div class="space-y-1">
-            <label
-              class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase ml-1"
-              >{{ t("auth.email") }}</label
-            >
-            <div
-              class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-xl text-slate-500 dark:text-slate-400 text-sm sm:text-base"
-            >
-              {{ userStore.profile?.email }}
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-1">
+              <label
+                class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase ml-1"
+                >{{ t("auth.email") }}</label
+              >
+              <div
+                class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-xl text-slate-500 dark:text-slate-400 text-sm sm:text-base"
+              >
+                {{ userStore.profile?.email }}
+              </div>
+            </div>
+            <div class="space-y-1">
+              <label
+                class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase ml-1"
+                >Rola Systemowa</label
+              >
+              <div
+                class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-200 font-bold text-sm sm:text-base capitalize"
+              >
+                {{ userStore.profile?.role }}
+              </div>
             </div>
           </div>
+
           <form @submit.prevent="handleUpdate" class="space-y-6">
             <div class="space-y-1">
               <label
@@ -172,6 +259,7 @@ const confirmQuizDelete = async () => {
                 "
               />
             </div>
+
             <div
               class="pt-4 border-t border-slate-50 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-4"
             >
@@ -302,6 +390,70 @@ const confirmQuizDelete = async () => {
         class="text-center py-12 bg-slate-50 dark:bg-slate-800/30 rounded-4xl border border-dashed border-slate-200 dark:border-slate-700"
       >
         <p class="text-slate-400">{{ t("profile.noQuizzes") }}</p>
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <div class="flex items-center justify-between mb-8">
+        <h3
+          class="text-3xl font-black text-slate-900 dark:text-white tracking-tight"
+        >
+          🏆 {{ t("profile.myBadges") }}
+        </h3>
+        <span
+          class="px-3 py-1 bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[10px] font-black uppercase tracking-widest rounded-lg border border-amber-500/20"
+        >
+          {{ t("profile.comingSoon") }}
+        </span>
+      </div>
+
+      <div
+        class="relative group overflow-hidden rounded-[2.5rem] border-2 border-dashed border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 p-8 sm:p-12 text-center transition-all hover:border-amber-200 dark:hover:border-amber-900/50"
+      >
+        <div
+          class="absolute inset-0 bg-linear-to-br from-amber-500/5 via-transparent to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        ></div>
+
+        <div class="relative z-10 flex flex-col items-center">
+          <div
+            class="flex gap-4 mb-6 opacity-20 grayscale group-hover:grayscale-0 group-hover:opacity-50 transition-all duration-700"
+          >
+            <div
+              class="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-2xl shadow-inner"
+            >
+              🥇
+            </div>
+            <div
+              class="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-2xl shadow-inner rotate-12"
+            >
+              🔥
+            </div>
+            <div
+              class="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-2xl shadow-inner -rotate-12"
+            >
+              💎
+            </div>
+          </div>
+
+          <h4
+            class="text-xl sm:text-2xl font-black text-slate-400 dark:text-slate-600 mb-2 uppercase tracking-tight"
+          >
+            {{ t("profile.achievementsLocked") }}
+          </h4>
+          <p
+            class="max-w-md mx-auto text-sm sm:text-base text-slate-400 dark:text-slate-500 font-medium leading-relaxed"
+          >
+            {{ t("profile.achievementsDesc") }}
+          </p>
+
+          <div
+            class="mt-8 w-full max-w-xs h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden"
+          >
+            <div
+              class="h-full bg-linear-to-r from-amber-400 to-orange-500 w-1/5 animate-pulse"
+            ></div>
+          </div>
+        </div>
       </div>
     </section>
 
