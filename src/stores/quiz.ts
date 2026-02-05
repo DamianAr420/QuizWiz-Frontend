@@ -59,6 +59,21 @@ export const useQuizStore = defineStore("quiz", () => {
     }
   };
 
+  const submitQuizResult = async (
+    quizId: number,
+    score: number,
+    totalQuestions: number,
+  ) => {
+    try {
+      await api.post(`/quizzes/${quizId}/submit`, {
+        score,
+        totalQuestions,
+      });
+    } catch (error) {
+      console.error("Failed to submit quiz result", error);
+    }
+  };
+
   return {
     quizzes,
     currentQuiz,
@@ -68,5 +83,6 @@ export const useQuizStore = defineStore("quiz", () => {
     createQuiz,
     updateQuiz,
     deleteQuiz,
+    submitQuizResult,
   };
 });

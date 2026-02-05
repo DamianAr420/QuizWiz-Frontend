@@ -64,7 +64,13 @@
     "deleteConfirmDesc": "This action will completely remove your data from QuizWiz servers. You cannot undo this operation.",
     "deleteError": "An error occurred while deleting your account.",
     "myQuizzes": "My Quizzes",
-    "noQuizzes": "You haven't created any quizzes yet."
+    "noQuizzes": "You haven't created any quizzes yet.",
+    "stats": {
+      "played": "Played",
+      "accuracy": "Accuracy",
+      "correct": "Correct",
+      "streak": "Streak (days)"
+    }
   },
   "common": {
     "backToHome": "Back to home",

@@ -1,11 +1,12 @@
 import { defineStore } from "pinia";
 import api from "@/services/api";
 import { useAuthStore } from "./auth";
-import type { User } from "@/types/user";
+import type { User, UserStats } from "@/types/user";
 
 export const useUserStore = defineStore("user", {
   state: () => ({
     profile: null as User | null,
+    stats: null as UserStats | null,
     loading: false,
     error: null as string | null,
   }),
@@ -26,6 +27,20 @@ export const useUserStore = defineStore("user", {
       } catch (err: any) {
         this.error =
           err.response?.data?.message || "Nie udało się pobrać profilu";
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    async fetchStats() {
+      this.loading = true;
+      this.error = null;
+      try {
+        const response = await api.get<UserStats>("/users/stats");
+        this.stats = response.data;
+      } catch (err: any) {
+        this.error =
+          err.response?.data?.message || "Nie udało się pobrać statystyk";
       } finally {
         this.loading = false;
       }
@@ -62,6 +77,7 @@ export const useUserStore = defineStore("user", {
         const authStore = useAuthStore();
         authStore.logout();
         this.profile = null;
+        this.stats = null;
       } catch (err: any) {
         this.error =
           err.response?.data?.message || "Błąd podczas usuwania konta";

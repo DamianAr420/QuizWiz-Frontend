@@ -16,3 +16,10 @@ export interface AuthState {
   token: string | null;
   loading: boolean;
 }
+
+export interface UserStats {
+  quizzesPlayed: number;
+  totalQuestionsAnswered: number;
+  correctAnswers: number;
+  bestStreak: number;
+}

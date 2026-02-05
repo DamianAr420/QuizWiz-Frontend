@@ -64,7 +64,13 @@
     "deleteConfirmDesc": "To działanie całkowicie usunie Twoje dane z serwerów QuizWiz. Nie będziesz mógł cofnąć tej operacji.",
     "deleteError": "Wystąpił błąd podczas usuwania konta.",
     "myQuizzes": "Moje Quizy",
-    "noQuizzes": "Nie stworzyłeś jeszcze żadnego quizu."
+    "noQuizzes": "Nie stworzyłeś jeszcze żadnego quizu.",
+    "stats": {
+      "played": "Rozegrane",
+      "accuracy": "Skuteczność",
+      "correct": "Poprawne",
+      "streak": "Streak (dni)"
+    }
   },
   "common": {
     "backToHome": "Wróć do strony głównej",

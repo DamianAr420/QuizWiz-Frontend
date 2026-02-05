@@ -3,11 +3,13 @@ import { ref, onMounted, computed, onUnmounted, nextTick } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useQuizStore } from "@/stores/quiz";
 import { useI18n } from "vue-i18n";
+import { useUserStore } from "@/stores/user";
 
 const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const quizStore = useQuizStore();
+const userStore = useUserStore();
 
 const quizContainer = ref<HTMLElement | null>(null);
 const gameQuestions = ref<any[]>([]);
@@ -68,7 +70,7 @@ const handleAnswer = (answer: string | null) => {
   }, 1200);
 };
 
-const nextQuestion = () => {
+const nextQuestion = async () => {
   selectedAnswer.value = null;
   if (currentQuestionIndex.value + 1 < gameQuestions.value.length) {
     currentQuestionIndex.value++;
@@ -76,6 +78,15 @@ const nextQuestion = () => {
     scrollToContent();
   } else {
     isGameOver.value = true;
+
+    const quizId = Number(route.params.id);
+    await quizStore.submitQuizResult(
+      quizId,
+      score.value,
+      gameQuestions.value.length,
+    );
+    await userStore.fetchStats();
+
     scrollToContent();
   }
 };
@@ -314,7 +325,7 @@ const playAgain = () => router.go(0);
               >
                 <span
                   class="text-sm font-bold text-slate-400 uppercase tracking-[0.3em] mb-2"
-                  >Wynik</span
+                  >{{ t("game.yourScore") }}</span
                 >
                 <span
                   class="text-6xl font-black bg-clip-text text-transparent bg-linear-to-r from-emerald-500 to-teal-600"
