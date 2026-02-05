@@ -37,7 +37,7 @@ const emit = defineEmits<{
         🔒 {{ t("quiz.status.private") }}
       </span>
       <span
-        v-if="isAuthor"
+        v-if="isAuthor && !quiz.isOfficial"
         class="text-[10px] px-4 py-1.5 rounded-full font-black uppercase tracking-widest bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 border border-green-100 dark:border-green-800 backdrop-blur-sm"
       >
         👤 {{ t("quiz.status.yours") }}

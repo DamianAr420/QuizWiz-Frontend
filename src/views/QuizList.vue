@@ -52,6 +52,7 @@ const handleCardClick = (quiz: any) => {
 };
 
 const setFilter = (type: string) => {
+  if (activeFilter.value === type) return;
   activeFilter.value = type;
   quizStore.fetchQuizzes(type === "official");
 };
@@ -82,13 +83,18 @@ const confirmDelete = async () => {
           >
             {{ t("quiz.listTitle") }}
           </h1>
-          <p class="text-slate-500 dark:text-slate-400 font-medium text-lg">
-            {{
-              activeFilter === "official"
-                ? "Certyfikowane wyzwania wiedzy"
-                : "Twórczość naszej społeczności"
-            }}
-          </p>
+          <Transition name="fade" mode="out-in">
+            <p
+              :key="activeFilter"
+              class="text-slate-500 dark:text-slate-400 font-medium text-lg"
+            >
+              {{
+                activeFilter === "official"
+                  ? "Certyfikowane wyzwania wiedzy"
+                  : "Twórczość naszej społeczności"
+              }}
+            </p>
+          </Transition>
         </div>
 
         <button
@@ -120,66 +126,88 @@ const confirmDelete = async () => {
         </div>
 
         <div
-          class="inline-flex p-2 bg-slate-200/50 dark:bg-slate-800/50 backdrop-blur-md rounded-4xl font-medium border border-white dark:border-slate-700 shadow-inner"
+          class="relative grid grid-cols-2 p-1.5 bg-slate-200/80 dark:bg-slate-800/80 backdrop-blur-md rounded-4xl border border-white dark:border-slate-700 shadow-inner w-full lg:w-auto lg:min-w-100"
         >
+          <div
+            class="absolute top-1.5 bottom-1.5 w-[calc(50%-0.375rem)] bg-white dark:bg-slate-700 rounded-[1.7rem] shadow-md transition-all duration-300 ease-spring"
+            :class="activeFilter === 'official' ? 'left-1.5' : 'left-[50%]'"
+          ></div>
+
           <button
-            v-for="f in ['official', 'users']"
-            :key="f"
-            @click="setFilter(f)"
-            :class="[
-              activeFilter === f
-                ? 'bg-white dark:bg-slate-700 text-green-600 dark:text-green-400 shadow-md'
-                : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200',
-              'px-10 py-4 rounded-[1.7rem] font-black text-sm uppercase tracking-wider transition-all active:scale-95',
-            ]"
+            @click="setFilter('official')"
+            class="relative z-10 px-6 py-3 rounded-[1.7rem] font-black text-sm uppercase tracking-wider transition-colors duration-300"
+            :class="
+              activeFilter === 'official'
+                ? 'text-green-600 dark:text-green-400'
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
+            "
           >
-            {{ t(`quiz.filter.${f}`) }}
+            {{ t("quiz.filter.official") }}
+          </button>
+
+          <button
+            @click="setFilter('users')"
+            class="relative z-10 px-6 py-3 rounded-[1.7rem] font-black text-sm uppercase tracking-wider transition-colors duration-300"
+            :class="
+              activeFilter === 'users'
+                ? 'text-green-600 dark:text-green-400'
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
+            "
+          >
+            {{ t("quiz.filter.users") }}
           </button>
         </div>
       </div>
     </header>
 
-    <div
-      v-if="quizStore.loading"
-      class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10"
-    >
+    <Transition name="fade-slide" mode="out-in">
       <div
-        v-for="i in 6"
-        :key="i"
-        class="bg-white dark:bg-slate-900 p-10 rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-sm relative h-80 overflow-hidden"
+        v-if="quizStore.loading"
+        key="loading"
+        class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10"
       >
-        <div class="skeleton-shimmer dark:opacity-20"></div>
+        <div
+          v-for="i in 6"
+          :key="i"
+          class="bg-white dark:bg-slate-900 p-10 rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-sm relative h-80 overflow-hidden"
+        >
+          <div class="skeleton-shimmer dark:opacity-20"></div>
+        </div>
       </div>
-    </div>
 
-    <div
-      v-else-if="filteredQuizzes.length"
-      class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10"
-    >
-      <QuizCard
-        v-for="quiz in filteredQuizzes"
-        :key="quiz.id"
-        :quiz="quiz"
-        :is-author="isAuthor(quiz.authorId)"
-        :has-full-access="isAuthor(quiz.authorId) || isAdmin"
-        @click="handleCardClick"
-        @edit="(id) => router.push(`/quiz/edit/${id}`)"
-        @delete="openDeleteConfirm"
-      />
-    </div>
+      <div
+        v-else-if="filteredQuizzes.length"
+        key="list"
+        class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10"
+      >
+        <QuizCard
+          v-for="quiz in filteredQuizzes"
+          :key="quiz.id"
+          :quiz="quiz"
+          :is-author="isAuthor(quiz.authorId)"
+          :has-full-access="isAuthor(quiz.authorId) || isAdmin"
+          @click="handleCardClick"
+          @edit="(id) => router.push(`/quiz/edit/${id}`)"
+          @delete="openDeleteConfirm"
+        />
+      </div>
 
-    <div
-      v-else
-      class="text-center py-32 bg-white dark:bg-slate-900/50 rounded-[4rem] border-2 border-dashed border-slate-200 dark:border-slate-800 shadow-inner"
-    >
-      <div class="text-6xl mb-6">🏜️</div>
-      <h3 class="text-2xl font-black text-slate-800 dark:text-white mb-2">
-        Nic tu nie ma...
-      </h3>
-      <p class="text-slate-400 dark:text-slate-500 font-bold max-w-sm mx-auto">
-        {{ t("quiz.noResults") }}
-      </p>
-    </div>
+      <div
+        v-else
+        key="empty"
+        class="text-center py-32 bg-white dark:bg-slate-900/50 rounded-[4rem] border-2 border-dashed border-slate-200 dark:border-slate-800 shadow-inner"
+      >
+        <div class="text-6xl mb-6 grayscale opacity-80">🏜️</div>
+        <h3 class="text-2xl font-black text-slate-800 dark:text-white mb-2">
+          Nic tu nie ma...
+        </h3>
+        <p
+          class="text-slate-400 dark:text-slate-500 font-bold max-w-sm mx-auto"
+        >
+          {{ t("quiz.noResults") }}
+        </p>
+      </div>
+    </Transition>
 
     <ConfirmModal
       :is-open="isConfirmOpen"
@@ -195,6 +223,35 @@ const confirmDelete = async () => {
 </template>
 
 <style scoped>
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.3s ease;
+}
+
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.ease-spring {
+  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
 .skeleton-shimmer {
   position: absolute;
   top: 0;
