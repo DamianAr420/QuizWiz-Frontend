@@ -4,14 +4,12 @@ import { useRoute, useRouter } from "vue-router";
 import { useQuizStore } from "@/stores/quiz";
 import { useI18n } from "vue-i18n";
 import { useUserStore } from "@/stores/user";
-import { useToastStore } from "@/stores/toast";
 
 const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const quizStore = useQuizStore();
 const userStore = useUserStore();
-const toast = useToastStore();
 
 const quizContainer = ref<HTMLElement | null>(null);
 const gameQuestions = ref<any[]>([]);
@@ -89,9 +87,8 @@ const nextQuestion = async () => {
         gameQuestions.value.length,
       );
       await userStore.fetchStats();
-      toast.show(t("game.scoreSaved"), "success");
     } catch (e) {
-      toast.show(t("game.errorSaving"), "error");
+      router.push("/quiz");
     }
 
     scrollToContent();
@@ -142,7 +139,7 @@ const playAgain = () => router.go(0);
       ></div>
     </div>
 
-    <div class="relative z-10 w-full">
+    <div class="relative z-10 w-[95%] lg:w-full max-w-7xl">
       <transition name="fade">
         <div
           v-if="quizStore.loading"
@@ -165,39 +162,47 @@ const playAgain = () => router.go(0);
         >
           <aside class="lg:col-span-3 order-1 space-y-4">
             <div
-              class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl p-6 rounded-4xl shadow-xl border border-white/20 dark:border-white/5 relative overflow-hidden"
+              class="relative bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl p-6 rounded-4xl shadow-xl border border-white/20 dark:border-white/5 overflow-hidden"
             >
               <div
-                class="absolute bottom-0 left-0 h-1.5 bg-linear-to-r from-green-400 to-emerald-600 transition-all duration-1000 ease-linear"
+                class="absolute inset-0 z-0 transition-all duration-1000 ease-linear origin-left"
+                :class="[
+                  timeLeft < 6
+                    ? 'bg-red-500/30 dark:bg-red-500/60'
+                    : 'bg-emerald-500/40 dark:bg-emerald-500/80',
+                ]"
                 :style="{
-                  width:
-                    (timeLeft /
-                      (quizStore.currentQuiz?.timeLimitSeconds || 30)) *
-                      100 +
-                    '%',
-                }"
-                :class="{
-                  'from-red-500! to-orange-500! shadow-[0_0_15px_rgba(239,68,68,0.5)]':
-                    timeLeft < 6,
+                  transform: `scaleX(${timeLeft / (quizStore.currentQuiz?.timeLimitSeconds || 30)})`,
                 }"
               ></div>
-              <p
-                class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1"
-              >
-                {{ t("game.timeLeft") }}
-              </p>
-              <div class="flex items-baseline gap-2">
-                <span
-                  class="text-5xl font-black tabular-nums transition-all"
-                  :class="
-                    timeLeft < 6
-                      ? 'text-red-500'
-                      : 'text-slate-800 dark:text-white'
-                  "
+
+              <div class="relative z-10">
+                <p
+                  class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1"
                 >
-                  {{ timeLeft }}
-                </span>
-                <span class="text-sm font-bold text-slate-400">sek</span>
+                  {{ t("game.timeLeft") }}
+                </p>
+                <div class="flex items-baseline gap-2">
+                  <span
+                    class="text-5xl font-black tabular-nums transition-all"
+                    :class="
+                      timeLeft < 6
+                        ? 'text-red-300 animate-pulse'
+                        : 'text-slate-800 dark:text-white'
+                    "
+                  >
+                    {{ timeLeft }}
+                  </span>
+                  <span
+                    class="text-2xl font-bold"
+                    :class="
+                      timeLeft < 6
+                        ? 'text-red-300 animate-pulse'
+                        : 'text-slate-800 dark:text-white'
+                    "
+                    >{{ t("game.sec") }}</span
+                  >
+                </div>
               </div>
             </div>
 

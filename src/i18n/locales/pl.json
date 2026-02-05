@@ -169,7 +169,8 @@
     "question": "Pytanie",
     "yourScore": "Twój wynik to",
     "scoreSaved": "Wynik został zapisany pomyślnie!",
-    "errorSaving": "Wystąpił błąd podczas zapisywania wyniku."
+    "errorSaving": "Wystąpił błąd podczas zapisywania wyniku.",
+    "sec": "S"
   },
   "lobby": {
     "questionCount": "Wybierz liczbę pytań",

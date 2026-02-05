@@ -11,6 +11,8 @@ const isVisible = ref(false);
 
 const shouldHideBg = computed(() => route.meta.hideHexBg === true);
 
+const isPlayPage = computed(() => route.path.includes("/play"));
+
 const updateGlow = (e: MouseEvent) => {
   glowPosition.value = { x: e.clientX, y: e.clientY };
   if (!isVisible.value) isVisible.value = true;
@@ -58,12 +60,21 @@ onUnmounted(() => {
 
     <div class="relative z-10 flex flex-col grow">
       <Navbar />
+
       <main
-        class="flex flex-col grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8"
+        class="flex flex-col grow w-full mx-auto transition-all duration-500 ease-in-out px-4 sm:px-6 lg:px-8 py-8"
+        :class="[isPlayPage ? 'max-w-none' : 'max-w-7xl']"
       >
         <slot />
       </main>
+
       <Footer />
     </div>
   </div>
 </template>
+
+<style scoped>
+main {
+  will-change: max-width, padding;
+}
+</style>

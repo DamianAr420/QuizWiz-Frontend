@@ -169,7 +169,8 @@
     "scoreSaved": "Score saved successfully!",
     "errorSaving": "Error occurred while saving the score.",
     "solo": "Single-player game",
-    "multiplayer": "Multiplayer game"
+    "multiplayer": "Multiplayer game",
+    "sec": "S"
   },
   "lobby": {
     "questionCount": "Select number of questions",
