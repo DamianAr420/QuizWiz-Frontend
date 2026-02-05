@@ -2,11 +2,15 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import api from "@/services/api";
 import type { Quiz, CreateQuizDto, UpdateQuizDto } from "@/types/quiz";
+import { useToastStore } from "./toast";
+import i18n from "@/i18n/index";
 
 export const useQuizStore = defineStore("quiz", () => {
   const quizzes = ref<Quiz[]>([]);
   const currentQuiz = ref<Quiz | null>(null);
   const loading = ref(false);
+  const toast = useToastStore();
+  const t = i18n.global.t;
 
   const fetchQuizzes = async (isOfficial?: boolean) => {
     loading.value = true;
@@ -35,6 +39,9 @@ export const useQuizStore = defineStore("quiz", () => {
     loading.value = true;
     try {
       await api.post("/quizzes", quizData);
+      toast.show(t("quiz.createSuccess"), "success");
+    } catch (err: any) {
+      toast.show(t("quiz.createError"), "error");
     } finally {
       loading.value = false;
     }
@@ -54,6 +61,9 @@ export const useQuizStore = defineStore("quiz", () => {
     try {
       await api.delete(`/quizzes/${id}`);
       quizzes.value = quizzes.value.filter((q) => q.id !== id);
+      toast.show(t("quiz.deleteSuccess"), "success");
+    } catch (err: any) {
+      toast.show(t("quiz.deleteError"), "error");
     } finally {
       loading.value = false;
     }
@@ -65,12 +75,10 @@ export const useQuizStore = defineStore("quiz", () => {
     totalQuestions: number,
   ) => {
     try {
-      await api.post(`/quizzes/${quizId}/submit`, {
-        score,
-        totalQuestions,
-      });
+      await api.post(`/quizzes/${quizId}/submit`, { score, totalQuestions });
+      toast.show(t("game.scoreSaved"), "success");
     } catch (error) {
-      console.error("Failed to submit quiz result", error);
+      toast.show(t("game.errorSaving"), "error");
     }
   };
 

@@ -4,6 +4,7 @@ import { RouterView } from "vue-router";
 import { onMounted } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import { useUserStore } from "@/stores/user";
+import Toast from "./components/Notifications/Toast.vue";
 
 const authStore = useAuthStore();
 const userStore = useUserStore();
@@ -17,6 +18,7 @@ onMounted(async () => {
 
 <template>
   <MainLayout>
+    <Toast />
     <RouterView v-slot="{ Component }">
       <transition name="fade" mode="out-in">
         <component :is="Component" v-if="Component" />

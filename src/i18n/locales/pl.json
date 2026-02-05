@@ -21,7 +21,12 @@
       "identifier": "Twój email lub nick",
       "email": "twoj@email.com",
       "password": "Hasło"
-    }
+    },
+    "loginSuccess": "Witaj ponownie, {name}!",
+    "logoutSuccess": "Wylogowano pomyślnie",
+    "registerSuccess": "Konto utworzone pomyślnie!",
+    "loginError": "Błąd logowania",
+    "registerError": "Błąd rejestracji"
   },
   "footer": {
     "rules": "Regulamin",
@@ -70,7 +75,8 @@
       "accuracy": "Skuteczność",
       "correct": "Poprawne",
       "streak": "Streak (dni)"
-    }
+    },
+    "deleteSuccess": "Konto zostało usunięte"
   },
   "common": {
     "backToHome": "Wróć do strony głównej",
@@ -80,7 +86,9 @@
     "update": "Aktualizuj",
     "cancel": "Anuluj",
     "delete": "Usuń teraz",
-    "error": "Wystąpił błąd"
+    "error": "Wystąpił błąd",
+    "deleteSuccess": "Usunięto pomyślnie",
+    "deleteError": "Nie udało się usunąć elementu"
   },
   "leaderboard": {
     "title": "Ranking Graczy",
@@ -139,7 +147,11 @@
     "stats": {
       "questions": "pytań",
       "perQuestion": "pyt."
-    }
+    },
+    "createSuccess": "Quiz został utworzony!",
+    "createError": "Nie udało się utworzyć quizu",
+    "deleteSuccess": "Quiz został usunięty",
+    "deleteError": "Błąd podczas usuwania quizu"
   },
   "game": {
     "score": "Wynik",
@@ -155,7 +167,9 @@
     "multiplayer": "Tryb Wieloosobowy",
     "loading": "Ładowanie",
     "question": "Pytanie",
-    "yourScore": "Twój wynik to"
+    "yourScore": "Twój wynik to",
+    "scoreSaved": "Wynik został zapisany pomyślnie!",
+    "errorSaving": "Wystąpił błąd podczas zapisywania wyniku."
   },
   "lobby": {
     "questionCount": "Wybierz liczbę pytań",

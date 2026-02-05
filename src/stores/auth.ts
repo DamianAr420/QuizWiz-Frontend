@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
 import api from "@/services/api";
 import type { AuthState, AuthResponse } from "@/types/user";
+import { useToastStore } from "./toast";
+import i18n from "@/i18n/index";
 
 export const useAuthStore = defineStore("auth", {
   state: (): AuthState => ({
@@ -16,14 +18,22 @@ export const useAuthStore = defineStore("auth", {
   actions: {
     async login(identifier: string, passwordHash: string) {
       this.loading = true;
+      const toast = useToastStore();
+      const t = i18n.global.t;
       try {
         const response = await api.post<AuthResponse>("/auth/login", {
           identifier,
           password: passwordHash,
         });
         this.setAuth(response.data);
+        toast.show(
+          t("auth.loginSuccess", { name: response.data.user.displayName }),
+          "success",
+        );
       } catch (error: any) {
-        throw error.response?.data?.message || "Błąd logowania";
+        const msg = error.response?.data?.message || "Błąd logowania";
+        toast.show(msg, "error");
+        throw msg;
       } finally {
         this.loading = false;
       }
@@ -31,6 +41,8 @@ export const useAuthStore = defineStore("auth", {
 
     async register(displayName: string, email: string, passwordHash: string) {
       this.loading = true;
+      const toast = useToastStore();
+      const t = i18n.global.t;
       try {
         const response = await api.post<AuthResponse>("/auth/register", {
           displayName,
@@ -38,8 +50,11 @@ export const useAuthStore = defineStore("auth", {
           password: passwordHash,
         });
         this.setAuth(response.data);
+        toast.show(t("auth.registerSuccess"), "success");
       } catch (error: any) {
-        throw error.response?.data?.message || "Błąd rejestracji";
+        const msg = error.response?.data?.message || "Błąd rejestracji";
+        toast.show(t("auth.registerError"), "error");
+        throw msg;
       } finally {
         this.loading = false;
       }
@@ -53,10 +68,13 @@ export const useAuthStore = defineStore("auth", {
     },
 
     logout() {
+      const toast = useToastStore();
+      const t = i18n.global.t;
       this.user = null;
       this.token = null;
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+      toast.show(t("auth.logoutSuccess"), "info");
     },
   },
 });

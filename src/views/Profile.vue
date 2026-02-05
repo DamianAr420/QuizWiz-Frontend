@@ -5,6 +5,7 @@ import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
 import { useQuizStore } from "@/stores/quiz";
 import { useAuthStore } from "@/stores/auth";
+import { useToastStore } from "@/stores/toast";
 import QuizCard from "@/components/Cards/QuizCard.vue";
 import ConfirmModal from "@/components/Modals/Confirm.vue";
 
@@ -13,12 +14,12 @@ const router = useRouter();
 const userStore = useUserStore();
 const quizStore = useQuizStore();
 const authStore = useAuthStore();
+const toast = useToastStore();
 
 const isEditing = ref(false);
 const isDeleteModalOpen = ref(false);
 const isQuizDeleteModalOpen = ref(false);
 const quizToDelete = ref<number | null>(null);
-const message = ref({ type: "", text: "" });
 const form = ref({ displayName: "" });
 
 const accuracy = computed(() => {
@@ -51,16 +52,12 @@ const formatDate = (dateString?: string) => {
 };
 
 const handleUpdate = async () => {
-  message.value = { type: "", text: "" };
   try {
     await userStore.updateProfile(form.value.displayName);
     isEditing.value = false;
-    message.value = { type: "success", text: t("profile.updateSuccess") };
+    toast.show(t("profile.updateSuccess"), "success");
   } catch (error: any) {
-    message.value = {
-      type: "error",
-      text: userStore.error || t("profile.updateError"),
-    };
+    toast.show(userStore.error || t("profile.updateError"), "error");
   }
 };
 
@@ -69,10 +66,7 @@ const handleDeleteAccount = async () => {
     await userStore.deleteAccount();
   } catch (error: any) {
     isDeleteModalOpen.value = false;
-    message.value = {
-      type: "error",
-      text: userStore.error || t("profile.deleteError"),
-    };
+    toast.show(userStore.error || t("profile.deleteError"), "error");
   }
 };
 
@@ -83,9 +77,14 @@ const openQuizDelete = (id: number) => {
 
 const confirmQuizDelete = async () => {
   if (quizToDelete.value) {
-    await quizStore.deleteQuiz(quizToDelete.value);
-    isQuizDeleteModalOpen.value = false;
-    quizToDelete.value = null;
+    try {
+      await quizStore.deleteQuiz(quizToDelete.value);
+      isQuizDeleteModalOpen.value = false;
+      quizToDelete.value = null;
+      toast.show(t("common.deleteSuccess"), "success");
+    } catch (e) {
+      toast.show(t("common.deleteError"), "error");
+    }
   }
 };
 </script>

@@ -2,6 +2,8 @@ import { defineStore } from "pinia";
 import api from "@/services/api";
 import { useAuthStore } from "./auth";
 import type { User, UserStats } from "@/types/user";
+import { useToastStore } from "./toast";
+import i18n from "@/i18n/index";
 
 export const useUserStore = defineStore("user", {
   state: () => ({
@@ -48,22 +50,24 @@ export const useUserStore = defineStore("user", {
 
     async updateProfile(displayName: string) {
       this.loading = true;
+      const toast = useToastStore();
+      const t = i18n.global.t;
       try {
         const response = await api.put<User>("/users/update-profile", {
           displayName,
         });
-
-        if (this.profile) {
-          this.profile.displayName = response.data.displayName;
-        }
+        if (this.profile) this.profile.displayName = response.data.displayName;
 
         const authStore = useAuthStore();
         if (authStore.user) {
           authStore.user.displayName = response.data.displayName;
           localStorage.setItem("user", JSON.stringify(authStore.user));
         }
+
+        toast.show(t("profile.updateSuccess"), "success");
       } catch (err: any) {
-        this.error = err.response?.data?.message || "Błąd podczas aktualizacji";
+        this.error = err.response?.data?.message || t("profile.updateError");
+        toast.show(this.error as string, "error");
         throw err;
       } finally {
         this.loading = false;
@@ -72,15 +76,18 @@ export const useUserStore = defineStore("user", {
 
     async deleteAccount() {
       this.loading = true;
+      const toast = useToastStore();
+      const t = i18n.global.t;
       try {
         await api.delete("/users/delete-account");
         const authStore = useAuthStore();
         authStore.logout();
         this.profile = null;
         this.stats = null;
+        toast.show(t("profile.deleteSuccess"), "info");
       } catch (err: any) {
-        this.error =
-          err.response?.data?.message || "Błąd podczas usuwania konta";
+        this.error = err.response?.data?.message || t("profile.deleteError");
+        toast.show(this.error as string, "error");
         throw err;
       } finally {
         this.loading = false;

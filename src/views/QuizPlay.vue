@@ -4,12 +4,14 @@ import { useRoute, useRouter } from "vue-router";
 import { useQuizStore } from "@/stores/quiz";
 import { useI18n } from "vue-i18n";
 import { useUserStore } from "@/stores/user";
+import { useToastStore } from "@/stores/toast";
 
 const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const quizStore = useQuizStore();
 const userStore = useUserStore();
+const toast = useToastStore();
 
 const quizContainer = ref<HTMLElement | null>(null);
 const gameQuestions = ref<any[]>([]);
@@ -80,12 +82,17 @@ const nextQuestion = async () => {
     isGameOver.value = true;
 
     const quizId = Number(route.params.id);
-    await quizStore.submitQuizResult(
-      quizId,
-      score.value,
-      gameQuestions.value.length,
-    );
-    await userStore.fetchStats();
+    try {
+      await quizStore.submitQuizResult(
+        quizId,
+        score.value,
+        gameQuestions.value.length,
+      );
+      await userStore.fetchStats();
+      toast.show(t("game.scoreSaved"), "success");
+    } catch (e) {
+      toast.show(t("game.errorSaving"), "error");
+    }
 
     scrollToContent();
   }

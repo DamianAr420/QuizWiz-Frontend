@@ -21,7 +21,12 @@
       "identifier": "Your email or nick",
       "email": "your@email.com",
       "password": "Password"
-    }
+    },
+    "loginSuccess": "Welcome back, {name}!",
+    "logoutSuccess": "Logged out successfully",
+    "registerSuccess": "Account created successfully!",
+    "loginError": "Login failed",
+    "registerError": "Registration failed"
   },
   "footer": {
     "rules": "Terms of Service",
@@ -70,7 +75,8 @@
       "accuracy": "Accuracy",
       "correct": "Correct",
       "streak": "Streak (days)"
-    }
+    },
+    "deleteSuccess": "Account has been deleted"
   },
   "common": {
     "backToHome": "Back to home",
@@ -80,7 +86,9 @@
     "update": "Update",
     "cancel": "Cancel",
     "delete": "Delete Now",
-    "error": "An error occurred"
+    "error": "An error occurred",
+    "deleteSuccess": "Deleted successfully",
+    "deleteError": "Failed to delete item"
   },
   "leaderboard": {
     "title": "Leaderboard",
@@ -139,7 +147,11 @@
     "stats": {
       "questions": "questions",
       "perQuestion": "ques."
-    }
+    },
+    "createSuccess": "Quiz created successfully!",
+    "createError": "Failed to create quiz",
+    "deleteSuccess": "Quiz deleted successfully",
+    "deleteError": "Error deleting quiz"
   },
   "game": {
     "score": "Score",
@@ -153,7 +165,11 @@
     "wrong": "Wrong!",
     "loading": "Loading",
     "question": "Question",
-    "yourScore": "Your score is"
+    "yourScore": "Your score is",
+    "scoreSaved": "Score saved successfully!",
+    "errorSaving": "Error occurred while saving the score.",
+    "solo": "Single-player game",
+    "multiplayer": "Multiplayer game"
   },
   "lobby": {
     "questionCount": "Select number of questions",
