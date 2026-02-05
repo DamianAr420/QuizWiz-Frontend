@@ -93,8 +93,8 @@ onUnmounted(() => window.removeEventListener("click", closeDropdown));
     >
       <router-link to="/" class="flex items-center gap-2 group shrink-0">
         <span class="text-2xl transition-transform group-hover:rotate-12"
-          >🧙‍♂️</span
-        >
+          ><img src="/QuizWizLogo.png" alt="Logo" class="h-8 w-8"
+        /></span>
         <span class="text-xl font-bold tracking-tight">QuizWiz</span>
       </router-link>
 
