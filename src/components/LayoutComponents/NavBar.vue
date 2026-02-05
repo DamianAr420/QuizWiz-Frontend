@@ -1,19 +1,23 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch } from "vue";
+import { ref, onMounted, onUnmounted, watch, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/stores/auth";
 import AuthModal from "@/components/Modals/Auth.vue";
+import { useUserStore } from "@/stores/user";
 
 const { t, locale } = useI18n();
 const authStore = useAuthStore();
 const route = useRoute();
 const router = useRouter();
+const userStore = useUserStore();
 
 const isModalOpen = ref(false);
 const isLangMenuOpen = ref(false);
 const isMobileMenuOpen = ref(false);
 const isDark = ref(false);
+
+const API_URL = "https://localhost:7225";
 
 const languages = [
   { code: "pl", name: "Polski", flag: "https://flagcdn.com/w40/pl.png" },
@@ -55,6 +59,13 @@ const closeDropdown = (e: MouseEvent) => {
     isLangMenuOpen.value = false;
   }
 };
+
+const avatarUrl = computed(() => {
+  if (!userStore.profile?.avatarUrl) return null;
+  return userStore.profile.avatarUrl.startsWith("http")
+    ? userStore.profile.avatarUrl
+    : `${API_URL}${userStore.profile.avatarUrl}`;
+});
 
 watch(
   () => route.path,
@@ -172,7 +183,13 @@ onUnmounted(() => window.removeEventListener("click", closeDropdown));
               <div
                 class="w-8 h-8 rounded-full bg-green-500 dark:bg-green-600 flex items-center justify-center text-xs border border-green-400 shadow-inner group-hover:scale-110 transition-transform"
               >
-                👤
+                <img
+                  v-if="avatarUrl"
+                  :src="avatarUrl"
+                  alt="avatar"
+                  class="w-full h-full rounded-full object-cover transition-transform group-hover:scale-110"
+                />
+                <span v-else>👤</span>
               </div>
               <span class="text-sm font-bold tracking-wide max-w-25 truncate">{{
                 authStore.user?.displayName
