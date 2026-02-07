@@ -8,6 +8,7 @@ import { useAuthStore } from "@/stores/auth";
 import { useToastStore } from "@/stores/toast";
 import QuizCard from "@/components/Cards/QuizCard.vue";
 import ConfirmModal from "@/components/Modals/Confirm.vue";
+import { useCloudinary } from "@/composables/useCloudinary";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -15,6 +16,7 @@ const userStore = useUserStore();
 const quizStore = useQuizStore();
 const authStore = useAuthStore();
 const toast = useToastStore();
+const { getAvatarUrl } = useCloudinary();
 
 const isEditing = ref(false);
 const isDeleteModalOpen = ref(false);
@@ -22,8 +24,6 @@ const isQuizDeleteModalOpen = ref(false);
 const quizToDelete = ref<number | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
 const form = ref({ displayName: "" });
-
-const API_URL = "https://localhost:7225";
 
 const accuracy = computed(() => {
   const s = userStore.stats;
@@ -37,12 +37,9 @@ const myQuizzes = computed(() => {
   );
 });
 
-const avatarUrl = computed(() => {
-  if (!userStore.profile?.avatarUrl) return null;
-  return userStore.profile.avatarUrl.startsWith("http")
-    ? userStore.profile.avatarUrl
-    : `${API_URL}${userStore.profile.avatarUrl}`;
-});
+const avatarUrl = computed(() =>
+  getAvatarUrl(userStore.profile?.cloudinaryPublicId, 200),
+);
 
 const roleBadgeClass = computed(() => {
   const role = userStore.profile?.role?.toLowerCase();
@@ -132,7 +129,7 @@ const confirmQuizDelete = async () => {
 
       <div class="px-5 sm:px-8 pb-8">
         <div
-          class="relative flex flex-row xs:flex-row justify-between items-center -mt-10 sm:-mt-12 mb-6 sm:mb-8 gap-4"
+          class="relative flex flex-row justify-between items-center -mt-10 sm:-mt-12 mb-6 sm:mb-8 gap-4"
         >
           <div class="relative group cursor-pointer" @click="triggerFileInput">
             <div
@@ -406,14 +403,12 @@ const confirmQuizDelete = async () => {
           {{ t("profile.comingSoon") }}
         </span>
       </div>
-
       <div
         class="relative group overflow-hidden rounded-[2.5rem] border-2 border-dashed border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 p-8 sm:p-12 text-center transition-all hover:border-amber-200 dark:hover:border-amber-900/50"
       >
         <div
           class="absolute inset-0 bg-linear-to-br from-amber-500/5 via-transparent to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
         ></div>
-
         <div class="relative z-10 flex flex-col items-center">
           <div
             class="flex gap-4 mb-6 opacity-20 grayscale group-hover:grayscale-0 group-hover:opacity-50 transition-all duration-700"
@@ -434,7 +429,6 @@ const confirmQuizDelete = async () => {
               💎
             </div>
           </div>
-
           <h4
             class="text-xl sm:text-2xl font-black text-slate-400 dark:text-slate-600 mb-2 uppercase tracking-tight"
           >
@@ -445,14 +439,6 @@ const confirmQuizDelete = async () => {
           >
             {{ t("profile.achievementsDesc") }}
           </p>
-
-          <div
-            class="mt-8 w-full max-w-xs h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden"
-          >
-            <div
-              class="h-full bg-linear-to-r from-amber-400 to-orange-500 w-1/5 animate-pulse"
-            ></div>
-          </div>
         </div>
       </div>
     </section>

@@ -4,7 +4,7 @@ export interface User {
   email: string;
   createdAt: string;
   role: string;
-  avatarUrl?: string;
+  cloudinaryPublicId: string | null;
 }
 
 export interface AuthResponse {

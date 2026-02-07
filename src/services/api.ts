@@ -17,7 +17,6 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      console.warn("Dostałem 401 - wylogowuję i czyszczę storage!");
       const authStore = useAuthStore();
       authStore.logout();
     }

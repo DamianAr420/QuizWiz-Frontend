@@ -5,19 +5,19 @@ import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/stores/auth";
 import AuthModal from "@/components/Modals/Auth.vue";
 import { useUserStore } from "@/stores/user";
+import { useCloudinary } from "@/composables/useCloudinary";
 
 const { t, locale } = useI18n();
 const authStore = useAuthStore();
 const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
+const { getAvatarUrl } = useCloudinary();
 
 const isModalOpen = ref(false);
 const isLangMenuOpen = ref(false);
 const isMobileMenuOpen = ref(false);
 const isDark = ref(false);
-
-const API_URL = "https://localhost:7225";
 
 const languages = [
   { code: "pl", name: "Polski", flag: "https://flagcdn.com/w40/pl.png" },
@@ -60,12 +60,9 @@ const closeDropdown = (e: MouseEvent) => {
   }
 };
 
-const avatarUrl = computed(() => {
-  if (!userStore.profile?.avatarUrl) return null;
-  return userStore.profile.avatarUrl.startsWith("http")
-    ? userStore.profile.avatarUrl
-    : `${API_URL}${userStore.profile.avatarUrl}`;
-});
+const avatarUrl = computed(() =>
+  getAvatarUrl(userStore.profile?.cloudinaryPublicId, 80),
+);
 
 watch(
   () => route.path,
@@ -156,7 +153,7 @@ onUnmounted(() => window.removeEventListener("click", closeDropdown));
             >
               <img
                 :src="languages.find((l) => l.code === locale)?.flag"
-                class="w-4 h-3 object-cover rounded-xs"
+                class="w-4 h-3 object-cover rounded-sm"
                 alt=""
               />
               <span
@@ -311,7 +308,6 @@ onUnmounted(() => window.removeEventListener("click", closeDropdown));
             :to="link.path"
             class="block px-4 py-3 rounded-xl text-base font-bold transition-all"
             active-class="bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 pl-6"
-            inactive-class="text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
           >
             {{ t(link.name) }}
           </router-link>

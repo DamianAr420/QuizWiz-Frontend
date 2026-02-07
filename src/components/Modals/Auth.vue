@@ -69,7 +69,6 @@ const handleSubmit = async () => {
   }
 };
 
-// Klasy Tailwind v4 z obsługą Dark Mode
 const inputClasses =
   "w-full px-4 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-green-500 outline-none transition-all text-slate-800 dark:text-slate-100 placeholder-transparent peer";
 

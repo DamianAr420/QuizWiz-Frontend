@@ -98,28 +98,25 @@ export const useUserStore = defineStore("user", {
       this.loading = true;
       const toast = useToastStore();
       const t = i18n.global.t;
-
       const formData = new FormData();
       formData.append("file", file);
 
       try {
-        const response = await api.post<{ url: string }>(
+        const response = await api.post<{ publicId: string }>(
           "/users/upload-avatar",
           formData,
-          {
-            headers: { "Content-Type": "multipart/form-data" },
-          },
+          { headers: { "Content-Type": "multipart/form-data" } },
         );
 
         if (this.profile) {
-          this.profile.avatarUrl = response.data.url;
+          this.profile.cloudinaryPublicId = response.data.publicId;
         }
 
         toast.show(
           t("profile.avatarSuccess") || "Avatar zaktualizowany!",
           "success",
         );
-        return response.data.url;
+        return response.data.publicId;
       } catch (err: any) {
         this.error = err.response?.data || "Błąd podczas przesyłania zdjęcia";
         toast.show(this.error as string, "error");
