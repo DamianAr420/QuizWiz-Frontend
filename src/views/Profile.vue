@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
@@ -25,6 +25,14 @@ const quizToDelete = ref<number | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
 const form = ref({ displayName: "" });
 
+watch(
+  () => userStore.profile?.displayName,
+  (newVal) => {
+    if (newVal) form.value.displayName = newVal;
+  },
+  { immediate: true },
+);
+
 const accuracy = computed(() => {
   const s = userStore.stats;
   if (!s || s.totalQuestionsAnswered === 0) return 0;
@@ -45,7 +53,7 @@ const roleBadgeClass = computed(() => {
   const role = userStore.profile?.role?.toLowerCase();
   if (role === "admin")
     return "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 border-amber-200 dark:border-amber-800";
-  return "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border-blue-200 dark:border-blue-800";
+  return "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800";
 });
 
 onMounted(async () => {
@@ -54,10 +62,6 @@ onMounted(async () => {
     userStore.fetchStats(),
     quizStore.fetchQuizzes(false),
   ]);
-
-  if (userStore.profile) {
-    form.value.displayName = userStore.profile.displayName;
-  }
 });
 
 const formatDate = (dateString?: string) => {
@@ -69,6 +73,7 @@ const handleUpdate = async () => {
   try {
     await userStore.updateProfile(form.value.displayName);
     isEditing.value = false;
+    toast.show(t("common.saveSuccess"), "success");
   } catch (error: any) {
     console.error(error);
   }
@@ -118,22 +123,24 @@ const confirmQuizDelete = async () => {
 
 <template>
   <div
-    class="max-w-7xl mx-auto px-4 py-8 sm:py-12 transition-colors duration-300"
+    class="max-w-7xl mx-auto px-4 py-6 sm:py-12 transition-colors duration-300"
   >
     <div
-      class="max-w-4xl mx-auto bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-xl dark:shadow-none overflow-hidden border border-slate-100 dark:border-slate-800 mb-12"
+      class="max-w-4xl mx-auto bg-white dark:bg-slate-900 rounded-4xl sm:rounded-[2.5rem] shadow-xl dark:shadow-none overflow-hidden border border-slate-100 dark:border-slate-800 mb-8 sm:mb-12"
     >
       <div
-        class="bg-green-600 dark:bg-green-700 h-24 sm:h-32 w-full opacity-90"
-      ></div>
+        class="relative bg-linear-to-br from-emerald-500 via-emerald-600 to-green-700 h-24 sm:h-36 w-full"
+      >
+        <div class="absolute inset-0 bg-black/5"></div>
+      </div>
 
-      <div class="px-5 sm:px-8 pb-8">
+      <div class="px-4 sm:px-10 pb-8 sm:pb-10">
         <div
-          class="relative flex flex-row justify-between items-center -mt-10 sm:-mt-12 mb-6 sm:mb-8 gap-4"
+          class="relative flex flex-col sm:flex-row justify-between items-center sm:items-end -mt-12 sm:-mt-16 mb-6 sm:mb-8 gap-4 text-center sm:text-left"
         >
           <div class="relative group cursor-pointer" @click="triggerFileInput">
             <div
-              class="bg-slate-200 dark:bg-slate-800 h-20 w-20 sm:h-24 sm:w-24 rounded-2xl border-4 border-white dark:border-slate-900 flex items-center justify-center text-3xl sm:text-4xl shadow-sm overflow-hidden relative"
+              class="bg-slate-200 dark:bg-slate-800 h-24 w-24 sm:h-32 sm:w-32 rounded-3xl border-4 border-white dark:border-slate-900 flex items-center justify-center text-4xl shadow-2xl overflow-hidden relative ring-4 ring-black/5"
             >
               <img
                 v-if="avatarUrl"
@@ -141,22 +148,20 @@ const confirmQuizDelete = async () => {
                 class="w-full h-full object-cover transition-transform group-hover:scale-110"
               />
               <span v-else>🧙‍♂️</span>
-
               <div
                 class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
               >
                 <span
-                  class="text-[10px] font-black text-white uppercase tracking-tighter"
+                  class="text-[10px] font-black text-white uppercase tracking-wider"
                   >Zmień</span
                 >
               </div>
-
               <div
                 v-if="userStore.loading"
                 class="absolute inset-0 bg-white/60 dark:bg-slate-900/60 flex items-center justify-center"
               >
                 <div
-                  class="w-5 h-5 border-2 border-green-500 border-t-transparent rounded-full animate-spin"
+                  class="w-6 h-6 border-2 border-green-500 border-t-transparent rounded-full animate-spin"
                 ></div>
               </div>
             </div>
@@ -171,205 +176,193 @@ const confirmQuizDelete = async () => {
 
           <button
             @click="isEditing = !isEditing"
-            class="px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer shadow-sm active:scale-95"
+            class="w-full sm:w-auto px-6 py-2.5 rounded-xl font-black text-xs sm:text-sm transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2"
             :class="
               isEditing
-                ? 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
-                : 'bg-green-50 shadow-lg shadow-emerald-500 dark:bg-green-900 text-green-700 hover:text-green-900 dark:text-green-400 hover:bg-green-100 dark:hover:bg-emerald-500'
+                ? 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 shadow-none'
+                : 'bg-white dark:bg-green-600 text-green-600 dark:text-white hover:bg-green-50 dark:hover:bg-green-500'
             "
           >
-            {{ isEditing ? t("common.cancel") : t("profile.editBtn") }}
+            {{
+              isEditing
+                ? "❌ " + t("common.cancel")
+                : "✏️ " + t("profile.editBtn")
+            }}
           </button>
         </div>
 
-        <header class="mb-6 sm:mb-8">
-          <div class="flex flex-wrap items-center gap-3 mb-1">
+        <header class="mb-8 text-center sm:text-left">
+          <div
+            class="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 mb-2"
+          >
             <h1
-              class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight"
+              class="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight"
             >
-              {{ t("profile.title") }}
+              {{ userStore.profile?.displayName }}
             </h1>
             <span
               v-if="userStore.profile?.role"
-              class="px-3 py-1 rounded-full text-[10px] font-black uppercase border tracking-widest"
+              class="px-3 py-1 rounded-lg text-[9px] font-black uppercase border tracking-widest shadow-xs"
               :class="roleBadgeClass"
             >
               {{ userStore.profile.role }}
             </span>
           </div>
-          <p class="text-sm sm:text-base text-slate-500 dark:text-slate-400">
-            {{ t("profile.subtitle") }}
+          <p
+            class="text-xs sm:text-base text-slate-500 dark:text-slate-400 flex items-center justify-center sm:justify-start gap-2"
+          >
+            <span
+              class="w-2 h-2 rounded-full bg-green-500 animate-pulse"
+            ></span>
+            {{ userStore.profile?.email }}
           </p>
         </header>
 
         <div
           v-if="userStore.loading && !userStore.profile"
-          class="py-12 text-center text-slate-400"
+          class="py-12 text-center"
         >
           <div
-            class="animate-spin inline-block w-6 h-6 border-4 border-green-500 border-t-transparent rounded-full mb-2"
+            class="animate-spin inline-block w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full"
           ></div>
-          <p>{{ t("auth.loading") }}...</p>
         </div>
 
-        <div v-else class="grid gap-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="space-y-1">
+        <div v-else>
+          <form
+            v-if="isEditing"
+            @submit.prevent="handleUpdate"
+            class="space-y-4 sm:space-y-6 animate-in fade-in slide-in-from-top-2"
+          >
+            <div class="space-y-2">
               <label
-                class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase ml-1"
-                >{{ t("auth.email") }}</label
-              >
-              <div
-                class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-xl text-slate-500 dark:text-slate-400 text-sm sm:text-base"
-              >
-                {{ userStore.profile?.email }}
-              </div>
-            </div>
-            <div class="space-y-1">
-              <label
-                class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase ml-1"
-                >Rola Systemowa</label
-              >
-              <div
-                class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-200 font-bold text-sm sm:text-base capitalize"
-              >
-                {{ userStore.profile?.role }}
-              </div>
-            </div>
-          </div>
-
-          <form @submit.prevent="handleUpdate" class="space-y-6">
-            <div class="space-y-1">
-              <label
-                class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase ml-1"
+                class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase ml-1"
                 >{{ t("auth.displayName") }}</label
               >
               <input
                 v-model="form.displayName"
-                :disabled="!isEditing || userStore.loading"
                 type="text"
-                class="w-full px-4 py-3 border rounded-xl outline-none transition-all text-sm sm:text-base"
-                :class="
-                  isEditing
-                    ? 'bg-white dark:bg-slate-800 border-green-200 dark:border-green-900 focus:ring-2 focus:ring-green-500 text-slate-900 dark:text-white shadow-sm'
-                    : 'bg-slate-50 dark:bg-slate-800/50 border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-400'
-                "
+                class="w-full px-4 sm:px-5 py-3 sm:py-4 bg-white dark:bg-slate-800 border-2 border-green-100 dark:border-slate-700 rounded-xl sm:rounded-2xl outline-none focus:border-green-500 transition-all text-slate-900 dark:text-white font-bold text-sm sm:text-base"
               />
             </div>
-
-            <div
-              class="pt-4 border-t border-slate-50 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-4"
+            <button
+              type="submit"
+              :disabled="userStore.loading"
+              class="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-black px-10 py-3 sm:py-4 rounded-xl sm:rounded-2xl transition-all shadow-xl shadow-green-200 dark:shadow-none flex items-center justify-center gap-2"
             >
-              <span class="text-xs text-slate-400 dark:text-slate-500 italic">
-                {{ t("profile.memberSince") }}:
-                {{ formatDate(userStore.profile?.createdAt) }}
-              </span>
-              <button
-                v-if="isEditing"
-                type="submit"
-                :disabled="userStore.loading"
-                class="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-black px-8 py-3 rounded-xl transition-all shadow-lg shadow-green-100 dark:shadow-none"
-              >
-                {{ userStore.loading ? t("auth.loading") : t("common.save") }}
-              </button>
-            </div>
+              <span v-if="!userStore.loading">💾 {{ t("common.save") }}</span>
+              <div
+                v-else
+                class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"
+              ></div>
+            </button>
           </form>
+
+          <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            <div
+              class="p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 transition-all hover:border-green-200"
+            >
+              <p
+                class="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase mb-1"
+              >
+                {{ t("auth.displayName") }}
+              </p>
+              <p
+                class="font-bold text-base sm:text-lg text-slate-900 dark:text-white"
+              >
+                {{ userStore.profile?.displayName }}
+              </p>
+            </div>
+            <div
+              class="p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 transition-all hover:border-green-200"
+            >
+              <p
+                class="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase mb-1"
+              >
+                {{ t("profile.memberSince") }}
+              </p>
+              <p
+                class="font-bold text-base sm:text-lg text-slate-900 dark:text-white"
+              >
+                {{ formatDate(userStore.profile?.createdAt) }}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <section
       v-if="userStore.stats"
-      class="mb-12 grid grid-cols-2 md:grid-cols-4 gap-4"
+      class="mb-10 sm:mb-12 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6"
     >
       <div
-        class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-6 rounded-4xl flex flex-col items-center justify-center gap-2 transition-transform hover:scale-105 shadow-sm"
+        v-for="(stat, index) in [
+          {
+            label: t('profile.stats.played'),
+            value: userStore.stats.quizzesPlayed,
+            icon: '📚',
+          },
+          {
+            label: t('profile.stats.accuracy'),
+            value: accuracy + '%',
+            icon: '🎯',
+          },
+          {
+            label: t('profile.stats.correct'),
+            value: userStore.stats.correctAnswers,
+            icon: '✅',
+          },
+          {
+            label: t('profile.stats.streak'),
+            value: userStore.stats.bestStreak,
+            icon: '🔥',
+          },
+        ]"
+        :key="index"
+        class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-4 sm:p-8 rounded-3xl sm:rounded-4xl flex flex-col items-center gap-1 sm:gap-3 transition-all hover:scale-105 shadow-sm"
       >
-        <span class="text-2xl">📚</span>
+        <span class="text-2xl sm:text-4xl mb-1">{{ stat.icon }}</span>
         <div class="text-center">
-          <p class="text-xl font-black text-slate-900 dark:text-white">
-            {{ userStore.stats.quizzesPlayed }}
+          <p
+            class="text-lg sm:text-2xl font-black text-slate-900 dark:text-white"
+          >
+            {{ stat.value }}
           </p>
           <p
-            class="text-[10px] uppercase font-bold text-slate-400 tracking-wider"
+            class="text-[8px] sm:text-[10px] uppercase font-black text-slate-400 tracking-widest leading-none"
           >
-            {{ t("profile.stats.played") }}
-          </p>
-        </div>
-      </div>
-      <div
-        class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-6 rounded-4xl flex flex-col items-center justify-center gap-2 transition-transform hover:scale-105 shadow-sm"
-      >
-        <span class="text-2xl">🎯</span>
-        <div class="text-center">
-          <p class="text-xl font-black text-slate-900 dark:text-white">
-            {{ accuracy }}%
-          </p>
-          <p
-            class="text-[10px] uppercase font-bold text-slate-400 tracking-wider"
-          >
-            {{ t("profile.stats.accuracy") }}
-          </p>
-        </div>
-      </div>
-      <div
-        class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-6 rounded-4xl flex flex-col items-center justify-center gap-2 transition-transform hover:scale-105 shadow-sm"
-      >
-        <span class="text-2xl">✅</span>
-        <div class="text-center">
-          <p class="text-xl font-black text-slate-900 dark:text-white">
-            {{ userStore.stats.correctAnswers }}
-          </p>
-          <p
-            class="text-[10px] uppercase font-bold text-slate-400 tracking-wider"
-          >
-            {{ t("profile.stats.correct") }}
-          </p>
-        </div>
-      </div>
-      <div
-        class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-6 rounded-4xl flex flex-col items-center justify-center gap-2 transition-transform hover:scale-105 shadow-sm"
-      >
-        <span class="text-2xl">🔥</span>
-        <div class="text-center">
-          <p class="text-xl font-black text-slate-900 dark:text-white">
-            {{ userStore.stats.bestStreak }}
-          </p>
-          <p
-            class="text-[10px] uppercase font-bold text-slate-400 tracking-wider"
-          >
-            {{ t("profile.stats.streak") }}
+            {{ stat.label }}
           </p>
         </div>
       </div>
     </section>
 
-    <section class="mb-12">
-      <div class="flex items-center justify-between mb-8">
+    <section class="mb-10 sm:mb-12">
+      <div class="flex items-center justify-between mb-6 sm:mb-8">
         <h3
-          class="text-3xl font-black text-slate-900 dark:text-white tracking-tight"
+          class="text-xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight"
         >
           🚀 {{ t("profile.myQuizzes") }}
         </h3>
         <span
-          class="px-4 py-1.5 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-full font-black text-sm border border-green-100 dark:border-green-900/30"
+          class="px-3 sm:px-5 py-1 sm:py-2 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-xl sm:rounded-2xl font-black text-xs sm:text-sm border border-green-100"
         >
           {{ myQuizzes.length }}
         </span>
       </div>
       <div
         v-if="quizStore.loading"
-        class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8"
+        class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8"
       >
         <div
           v-for="i in 3"
           :key="i"
-          class="h-64 bg-slate-100 dark:bg-slate-800 animate-pulse rounded-[2.5rem]"
+          class="h-64 bg-slate-100 dark:bg-slate-800 animate-pulse rounded-4xl"
         ></div>
       </div>
       <div
         v-else-if="myQuizzes.length"
-        class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8"
+        class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8"
       >
         <QuizCard
           v-for="quiz in myQuizzes"
@@ -384,79 +377,38 @@ const confirmQuizDelete = async () => {
       </div>
       <div
         v-else
-        class="text-center py-12 bg-slate-50 dark:bg-slate-800/30 rounded-4xl border border-dashed border-slate-200 dark:border-slate-700"
+        class="text-center py-12 sm:py-16 bg-slate-50 dark:bg-slate-800/30 rounded-4xl sm:rounded-[3rem] border-4 border-dashed border-slate-100 dark:border-slate-800"
       >
-        <p class="text-slate-400">{{ t("profile.noQuizzes") }}</p>
-      </div>
-    </section>
-
-    <section class="mb-12">
-      <div class="flex items-center justify-between mb-8">
-        <h3
-          class="text-3xl font-black text-slate-900 dark:text-white tracking-tight"
+        <p class="text-slate-400 font-bold sm:text-lg mb-4">
+          {{ t("profile.noQuizzes") }}
+        </p>
+        <button
+          @click="router.push('/quiz/create')"
+          class="text-green-600 font-black uppercase text-[10px] sm:text-xs tracking-widest hover:underline"
         >
-          🏆 {{ t("profile.myBadges") }}
-        </h3>
-        <span
-          class="px-3 py-1 bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[10px] font-black uppercase tracking-widest rounded-lg border border-amber-500/20"
-        >
-          {{ t("profile.comingSoon") }}
-        </span>
-      </div>
-      <div
-        class="relative group overflow-hidden rounded-[2.5rem] border-2 border-dashed border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 p-8 sm:p-12 text-center transition-all hover:border-amber-200 dark:hover:border-amber-900/50"
-      >
-        <div
-          class="absolute inset-0 bg-linear-to-br from-amber-500/5 via-transparent to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-        ></div>
-        <div class="relative z-10 flex flex-col items-center">
-          <div
-            class="flex gap-4 mb-6 opacity-20 grayscale group-hover:grayscale-0 group-hover:opacity-50 transition-all duration-700"
-          >
-            <div
-              class="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-2xl shadow-inner"
-            >
-              🥇
-            </div>
-            <div
-              class="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-2xl shadow-inner rotate-12"
-            >
-              🔥
-            </div>
-            <div
-              class="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-2xl shadow-inner -rotate-12"
-            >
-              💎
-            </div>
-          </div>
-          <h4
-            class="text-xl sm:text-2xl font-black text-slate-400 dark:text-slate-600 mb-2 uppercase tracking-tight"
-          >
-            {{ t("profile.achievementsLocked") }}
-          </h4>
-          <p
-            class="max-w-md mx-auto text-sm sm:text-base text-slate-400 dark:text-slate-500 font-medium leading-relaxed"
-          >
-            {{ t("profile.achievementsDesc") }}
-          </p>
-        </div>
+          Stwórz swój pierwszy quiz
+        </button>
       </div>
     </section>
 
     <div
-      class="bg-red-50 dark:bg-red-900/10 rounded-4xl p-6 sm:p-8 border border-red-100 dark:border-red-900/30 flex flex-col md:flex-row justify-between items-center gap-6"
+      class="bg-red-50 dark:bg-red-900/10 rounded-4xl sm:rounded-[3rem] p-6 sm:p-10 border border-red-100 dark:border-red-900/30 flex flex-col md:flex-row justify-between items-center gap-6 sm:gap-8"
     >
       <div class="text-center md:text-left">
-        <h4 class="text-red-800 dark:text-red-400 font-black text-lg">
+        <h4
+          class="text-red-800 dark:text-red-400 font-black text-xl sm:text-2xl mb-1"
+        >
           {{ t("profile.dangerZone") }}
         </h4>
-        <p class="text-red-600/70 dark:text-red-400/60 text-sm">
+        <p
+          class="text-red-600/70 dark:text-red-400/60 font-medium text-xs sm:text-sm max-w-sm"
+        >
           {{ t("profile.deleteDesc") }}
         </p>
       </div>
       <button
         @click="isDeleteModalOpen = true"
-        class="w-full md:w-auto bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-xl font-bold text-sm"
+        class="w-full md:w-auto bg-red-600 hover:bg-red-700 text-white px-8 sm:px-10 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black text-sm transition-transform active:scale-95 shadow-lg shadow-red-200 dark:shadow-none"
       >
         {{ t("profile.deleteBtn") }}
       </button>
@@ -484,13 +436,3 @@ const confirmQuizDelete = async () => {
     />
   </div>
 </template>
-
-<style scoped>
-.slide-up-enter-active {
-  transition: all 0.3s ease-out;
-}
-.slide-up-enter-from {
-  opacity: 0;
-  transform: translateY(10px);
-}
-</style>
