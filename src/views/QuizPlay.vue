@@ -4,6 +4,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useQuizStore } from "@/stores/quiz";
 import { useI18n } from "vue-i18n";
 import { useUserStore } from "@/stores/user";
+import QuizResult from "@/components/Cards/QuizResult.vue";
 
 const { t } = useI18n();
 const route = useRoute();
@@ -19,6 +20,11 @@ const timeLeft = ref(0);
 const isGameOver = ref(false);
 const selectedAnswer = ref<string | null>(null);
 const answerState = ref<"correct" | "wrong" | null>(null);
+
+const earnedExp = ref(0);
+const earnedPoints = ref(0);
+const isLevelUp = ref(false);
+
 let timerInterval: number | null = null;
 
 const currentQuestion = computed(
@@ -72,23 +78,31 @@ const handleAnswer = (answer: string | null) => {
 
 const nextQuestion = async () => {
   selectedAnswer.value = null;
+
   if (currentQuestionIndex.value + 1 < gameQuestions.value.length) {
     currentQuestionIndex.value++;
     startTimer();
     scrollToContent();
   } else {
-    isGameOver.value = true;
-
     const quizId = Number(route.params.id);
+
     try {
-      await quizStore.submitQuizResult(
+      const result = await quizStore.submitQuizResult(
         quizId,
         score.value,
         gameQuestions.value.length,
       );
+
+      earnedPoints.value = result.pointsGained;
+      earnedExp.value = result.xpGained;
+      isLevelUp.value = result.isLevelUp;
+
       await userStore.fetchStats();
+      isGameOver.value = true;
     } catch (e) {
-      router.push("/quiz");
+      console.error("Błąd podczas wysyłania wyniku:", e);
+      earnedPoints.value = score.value * 10;
+      earnedExp.value = score.value * 25;
     }
 
     scrollToContent();
@@ -98,7 +112,9 @@ const nextQuestion = async () => {
 onMounted(async () => {
   const id = Number(route.params.id);
   const countLimit = Number(route.query.count) || 10;
+
   await quizStore.fetchQuizById(id);
+
   if (quizStore.currentQuiz) {
     const shuffled = [...quizStore.currentQuiz.questions].sort(
       () => Math.random() - 0.5,
@@ -127,15 +143,11 @@ const playAgain = () => router.go(0);
       <div
         class="absolute top-0 left-1/2 -translate-x-1/2 w-150 h-100 bg-emerald-500/40 rounded-full blur-[120px] animate-blob animation-delay-2000"
       ></div>
-
       <div
         class="absolute top-40 left-0 translate-y-1/2 w-96 h-96 bg-emerald-500/40 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob"
       ></div>
       <div
         class="absolute top-40 right-0 translate-y-1/2 w-96 h-96 bg-emerald-500/40 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob"
-      ></div>
-      <div
-        class="absolute bottom-0 left-1/2 -translate-x-1/2 w-150 h-100 bg-emerald-500/40 rounded-full blur-[120px] animate-blob animation-delay-2000"
       ></div>
     </div>
 
@@ -166,16 +178,15 @@ const playAgain = () => router.go(0);
             >
               <div
                 class="absolute inset-0 z-0 transition-all duration-1000 ease-linear origin-left"
-                :class="[
+                :class="
                   timeLeft < 6
                     ? 'bg-red-500/30 dark:bg-red-500/60'
-                    : 'bg-emerald-500/40 dark:bg-emerald-500/80',
-                ]"
+                    : 'bg-emerald-500/40 dark:bg-emerald-500/80'
+                "
                 :style="{
                   transform: `scaleX(${timeLeft / (quizStore.currentQuiz?.timeLimitSeconds || 30)})`,
                 }"
               ></div>
-
               <div class="relative z-10">
                 <p
                   class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1"
@@ -187,7 +198,7 @@ const playAgain = () => router.go(0);
                     class="text-5xl font-black tabular-nums transition-all"
                     :class="
                       timeLeft < 6
-                        ? 'text-red-300 animate-pulse'
+                        ? 'text-red-500 animate-pulse'
                         : 'text-slate-800 dark:text-white'
                     "
                   >
@@ -197,11 +208,12 @@ const playAgain = () => router.go(0);
                     class="text-2xl font-bold"
                     :class="
                       timeLeft < 6
-                        ? 'text-red-300 animate-pulse'
+                        ? 'text-red-500'
                         : 'text-slate-800 dark:text-white'
                     "
-                    >{{ t("game.sec") }}</span
                   >
+                    {{ t("game.sec") }}
+                  </span>
                 </div>
               </div>
             </div>
@@ -314,57 +326,15 @@ const playAgain = () => router.go(0);
       </transition>
 
       <transition name="fade">
-        <div
+        <QuizResult
           v-if="!quizStore.loading && isGameOver"
-          class="max-w-3xl mx-auto w-full py-4"
-        >
-          <div
-            class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-3xl p-10 rounded-[4rem] shadow-2xl border border-white/50 dark:border-white/10 text-center relative overflow-hidden"
-          >
-            <div
-              class="absolute top-0 left-0 w-full h-2 bg-linear-to-r from-emerald-400 via-yellow-400 to-rose-500"
-            ></div>
-            <div class="relative z-10 flex flex-col items-center">
-              <div class="text-8xl mb-6 animate-bounce-custom">🏆</div>
-              <h2
-                class="text-5xl md:text-7xl font-black text-slate-900 dark:text-white mb-8 tracking-tighter"
-              >
-                {{ t("game.gameOver") }}
-              </h2>
-
-              <div
-                class="px-12 py-6 bg-white dark:bg-slate-800 rounded-[3rem] border border-slate-100 dark:border-slate-700 flex flex-col items-center shadow-inner"
-              >
-                <span
-                  class="text-sm font-bold text-slate-400 uppercase tracking-[0.3em] mb-2"
-                  >{{ t("game.yourScore") }}</span
-                >
-                <span
-                  class="text-6xl font-black bg-clip-text text-transparent bg-linear-to-r from-emerald-500 to-teal-600"
-                >
-                  {{ score }} / {{ gameQuestions.length }}
-                </span>
-              </div>
-
-              <div
-                class="flex flex-col sm:flex-row gap-4 w-full max-w-lg mt-12"
-              >
-                <button
-                  @click="router.push('/quiz')"
-                  class="flex-1 py-5 px-8 bg-slate-100 dark:bg-slate-800 rounded-full font-black hover:bg-slate-200 transition-all"
-                >
-                  {{ t("game.backToList") }}
-                </button>
-                <button
-                  @click="playAgain"
-                  class="flex-1 py-5 px-8 bg-emerald-500 text-white rounded-full font-black shadow-xl hover:bg-emerald-400 transition-all"
-                >
-                  {{ t("game.playAgain") }}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+          :score="score"
+          :total-questions="gameQuestions.length"
+          :earned-exp="earnedExp"
+          :earned-points="earnedPoints"
+          :is-level-up="isLevelUp"
+          @play-again="playAgain"
+        />
       </transition>
     </div>
   </div>
@@ -433,19 +403,6 @@ const playAgain = () => router.go(0);
   40%,
   60% {
     transform: translate3d(4px, 0, 0);
-  }
-}
-
-.animate-bounce-custom {
-  animation: bounce-custom 2s infinite;
-}
-@keyframes bounce-custom {
-  0%,
-  100% {
-    transform: translateY(-5%);
-  }
-  50% {
-    transform: translateY(0);
   }
 }
 

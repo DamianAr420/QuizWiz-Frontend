@@ -125,5 +125,12 @@ export const useUserStore = defineStore("user", {
         this.loading = false;
       }
     },
+
+    updateWallet(points: number, xp: number) {
+      if (this.profile) {
+        this.profile.points = points;
+        this.profile.experience = xp;
+      }
+    },
   },
 });

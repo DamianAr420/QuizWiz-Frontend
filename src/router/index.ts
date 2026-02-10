@@ -11,6 +11,7 @@ import QuizDetail from "@/views/QuizDetail.vue";
 import QuizPlay from "@/views/QuizPlay.vue";
 import QuizForm from "@/views/QuizForm.vue";
 import { useAuthStore } from "@/stores/auth";
+import Shop from "@/views/Shop.vue";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -60,6 +61,12 @@ const routes: RouteRecordRaw[] = [
     component: QuizPlay,
     props: true,
     meta: { requiresAuth: true, hideHexBg: true },
+  },
+  {
+    path: "/shop",
+    name: "shop",
+    component: Shop,
+    meta: { requiresAuth: true },
   },
 ];
 

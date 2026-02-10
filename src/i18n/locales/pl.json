@@ -3,8 +3,13 @@
     "start": "Start",
     "play": "Graj",
     "ranking": "Ranking",
+    "shop": "Sklep",
     "login": "Zaloguj się",
-    "logout": "Wyloguj"
+    "logout": "Wyloguj",
+    "theme": {
+      "light": "Jasny",
+      "dark": "Ciemny"
+    }
   },
   "auth": {
     "welcome": "Witaj w QuizWiz",
@@ -56,32 +61,40 @@
     }
   },
   "profile": {
-    "title": "Mój Profil",
-    "subtitle": "Zarządzaj swoimi danymi i postępami",
+    "changeAvatar": "Zmień",
     "editBtn": "Edytuj profil",
-    "memberSince": "Dołączono",
-    "updateSuccess": "Profil został zaktualizowany!",
-    "updateError": "Nie udało się zaktualizować profilu.",
-    "dangerZone": "Strefa niebezpieczna",
-    "deleteDesc": "Usunięcie konta jest nieodwracalne. Wszystkie Twoje statystyki zostaną skasowane.",
-    "deleteBtn": "Usuń konto",
-    "deleteConfirmTitle": "Czy na pewno chcesz nas opuścić?",
-    "deleteConfirmDesc": "To działanie całkowicie usunie Twoje dane z serwerów QuizWiz. Nie będziesz mógł cofnąć tej operacji.",
-    "deleteError": "Wystąpił błąd podczas usuwania konta.",
-    "myQuizzes": "Moje Quizy",
-    "noQuizzes": "Nie stworzyłeś jeszcze żadnego quizu.",
+    "memberSince": "Dołączył(a)",
+    "levelShort": "lvl",
     "stats": {
+      "title": "Statystyki",
+      "xp": "Doświadczenie",
+      "xpLeft": "Brakuje {xp} XP do poziomu",
+      "wallet": "Portfel",
       "played": "Rozegrane",
-      "accuracy": "Skuteczność",
+      "accuracy": "Celność",
       "correct": "Poprawne",
-      "streak": "Streak (dni)"
+      "streak": "Seria dni",
+      "points": "Punkty"
     },
-    "deleteSuccess": "Konto zostało usunięte",
-    "avatarSuccess": "Avatar został zmieniony",
-    "myBadges": "Moje Osiągnięcia",
-    "comingSoon": "Wkrótce",
-    "achievementsLocked": "System osiągnięć w drodze",
-    "achievementsDesc": "Pracujemy nad systemem wyzwań i unikalnych odznak. Już niedługo będziesz mógł pochwalić się swoimi wynikami przed innymi!"
+    "inventory": {
+      "title": "Ekwipunek",
+      "goToShop": "Idź do sklepu",
+      "empty": "Twój plecak jest pusty..."
+    },
+    "quizzes": {
+      "title": "Twoje Quizy",
+      "create": "Stwórz Quiz",
+      "createFirst": "Stwórz swój pierwszy quiz",
+      "emptyTitle": "Brak quizów",
+      "emptyDesc": "Jeszcze nie stworzyłeś żadnego quizu. Podziel się swoją wiedzą i rzuć wyzwanie innym!"
+    },
+    "danger": {
+      "title": "Strefa Zagrożenia",
+      "desc": "Usuń konto i wszystkie dane",
+      "deleteBtn": "Usuń konto",
+      "deleteTitle": "Czy na pewno?",
+      "deleteConfirmDesc": "Twoje konto zostanie trwale usunięte wraz ze wszystkimi postępami, quizami i przedmiotami. Tej akcji nie można cofnąć."
+    }
   },
   "common": {
     "backToHome": "Wróć do strony głównej",
@@ -175,7 +188,10 @@
     "yourScore": "Twój wynik to",
     "scoreSaved": "Wynik został zapisany pomyślnie!",
     "errorSaving": "Wystąpił błąd podczas zapisywania wyniku.",
-    "sec": "S"
+    "sec": "S",
+    "greatJob": "Dobra robota",
+    "points": "Punkty",
+    "levelUp": "Nowy Poziom! 🎉"
   },
   "lobby": {
     "questionCount": "Wybierz liczbę pytań",
@@ -185,5 +201,40 @@
     "multiMode": "Multiplayer",
     "multiDesc": "Rywalizuj z innymi w czasie rzeczywistym.",
     "soon": "Wkrótce"
+  },
+  "shop": {
+    "title": "Skarbiec",
+    "subtitle": "Maga",
+    "description": "Wymieniaj ciężko zarobione punkty na unikalne przedmioty kolekcjonerskie i ulepszenia.",
+    "yourPoints": "Twoje Saldo",
+    "level": "Poz.",
+    "currency": "PKT",
+    "owned": "Posiadasz",
+    "lowLevel": "Zbyt niski poziom",
+    "buyNow": "Kup teraz",
+    "empty": "Sklep jest obecnie pusty. Wróć później!",
+    "purchaseSuccess": "Przedmiot został dodany do Twojego ekwipunku!"
+  },
+  "items": {
+    "gold_aura": {
+      "title": "Złota Aura",
+      "desc": "Ekskluzywna złota ramka dla mistrzów wiedzy."
+    },
+    "dark_knight": {
+      "title": "Mroczny Rycerz",
+      "desc": "Mroczna, stalowa ramka z kolcami."
+    },
+    "mage_library": {
+      "title": "Biblioteka Maga",
+      "desc": "Zmień tło swojego profilu na antyczną bibliotekę pełną zwojów."
+    },
+    "rescue_ticket": {
+      "title": "Bilet Ratunkowy",
+      "desc": "Pozwala na jedną pomyłkę w quizie bez utraty punktów."
+    },
+    "dragon_slayer": {
+      "title": "Pogromca Smoków",
+      "desc": "Unikalna odznaka za ukończenie 50 quizów bez błędu."
+    }
   }
 }

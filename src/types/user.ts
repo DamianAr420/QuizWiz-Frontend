@@ -5,6 +5,9 @@ export interface User {
   createdAt: string;
   role: string;
   cloudinaryPublicId: string | null;
+  points: number;
+  experience: number;
+  level: number;
 }
 
 export interface AuthResponse {

@@ -51,6 +51,7 @@ const navLinks = [
   { name: "nav.start", path: "/" },
   { name: "nav.play", path: "/quiz" },
   { name: "nav.ranking", path: "/leaderboard" },
+  { name: "nav.shop", path: "/shop" },
 ];
 
 const dropdownRef = ref<HTMLElement | null>(null);
@@ -63,6 +64,11 @@ const closeDropdown = (e: MouseEvent) => {
 const avatarUrl = computed(() =>
   getAvatarUrl(userStore.profile?.cloudinaryPublicId, 80),
 );
+
+const miniProgress = computed(() => {
+  if (!userStore.profile) return 0;
+  return (userStore.profile.experience % 1000) / 10;
+});
 
 watch(
   () => route.path,
@@ -87,6 +93,9 @@ onMounted(() => {
   }
 
   window.addEventListener("click", closeDropdown);
+  if (authStore.isAuthenticated) {
+    userStore.fetchProfile();
+  }
 });
 
 onUnmounted(() => window.removeEventListener("click", closeDropdown));
@@ -94,144 +103,179 @@ onUnmounted(() => window.removeEventListener("click", closeDropdown));
 
 <template>
   <nav
-    class="sticky top-0 z-50 w-full border-b border-slate-200/50 dark:border-slate-800/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md transition-all duration-300"
+    class="sticky top-0 z-50 w-full bg-white/70 dark:bg-[#0f172a]/70 backdrop-blur-xl border-b border-slate-200/60 dark:border-slate-800/60 transition-all duration-300 supports-backdrop-filter:bg-white/60"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16 sm:h-20">
-        <router-link to="/" class="flex items-center gap-3 group shrink-0">
-          <div
-            class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-green-50 dark:bg-green-900/20 group-hover:bg-green-100 dark:group-hover:bg-green-900/40 transition-colors"
-          >
-            <img
-              src="/QuizWizLogo.png"
-              alt="Logo"
-              class="h-7 w-7 transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110"
-            />
-          </div>
-          <span
-            class="text-xl font-black tracking-tight bg-clip-text text-transparent bg-linear-to-r from-green-600 to-emerald-800 dark:from-green-400 dark:to-emerald-200"
-          >
-            QuizWiz
-          </span>
-        </router-link>
-
-        <div
-          class="hidden md:flex items-center gap-1 bg-slate-100/50 dark:bg-slate-800/50 p-1 rounded-full border border-slate-200/50 dark:border-slate-700/50"
-        >
-          <router-link
-            v-for="link in navLinks"
-            :key="link.path"
-            :to="link.path"
-            class="px-5 py-2 rounded-full text-sm font-bold transition-all duration-300"
-            :class="[
-              route.path === link.path
-                ? 'bg-white dark:bg-slate-700 text-green-600 dark:text-green-400 shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-green-600 dark:hover:text-green-300 hover:bg-white/50 dark:hover:bg-slate-700/50',
-            ]"
-          >
-            {{ t(link.name) }}
-          </router-link>
-        </div>
-
-        <div class="flex items-center gap-3">
-          <button
-            @click="toggleDarkMode"
-            class="w-9 h-9 flex items-center justify-center rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-            :title="isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
-          >
-            <span
-              class="text-lg transform transition-transform duration-500 hover:rotate-90"
-            >
-              {{ isDark ? "☀️" : "🌙" }}
-            </span>
-          </button>
-
-          <div class="relative" ref="dropdownRef">
-            <button
-              @click.stop="isLangMenuOpen = !isLangMenuOpen"
-              class="flex items-center gap-2 h-9 px-3 rounded-full border border-slate-200 dark:border-slate-700 hover:border-green-500 dark:hover:border-green-500 transition-colors bg-white dark:bg-slate-900"
+        <div class="flex items-center gap-6 lg:gap-10">
+          <router-link to="/" class="flex items-center gap-3 group shrink-0">
+            <div
+              class="relative flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-linear-to-br from-green-400/20 to-emerald-600/20 dark:from-green-400/10 dark:to-emerald-500/10 border border-green-500/20 dark:border-green-400/20 group-hover:scale-105 group-hover:shadow-[0_0_20px_-5px_rgba(16,185,129,0.4)] transition-all duration-300"
             >
               <img
-                :src="languages.find((l) => l.code === locale)?.flag"
-                class="w-4 h-3 object-cover rounded-sm"
-                alt=""
+                src="/QuizWizLogo.png"
+                alt="Logo"
+                class="h-7 w-7 sm:h-8 sm:w-8 drop-shadow-sm transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110"
               />
-              <span
-                class="hidden sm:block text-xs font-bold uppercase text-slate-700 dark:text-slate-300"
-              >
-                {{ locale }}
-              </span>
-              <span
-                class="text-[10px] text-slate-400 transition-transform duration-300"
-                :class="{ 'rotate-180': isLangMenuOpen }"
-                >▼</span
-              >
+            </div>
+            <span
+              class="hidden lg:block text-2xl font-black tracking-tighter bg-clip-text text-transparent bg-linear-to-r from-green-600 via-emerald-600 to-teal-700 dark:from-green-400 dark:via-emerald-400 dark:to-teal-300 drop-shadow-sm"
+            >
+              QuizWiz
+            </span>
+          </router-link>
+
+          <div
+            class="hidden md:flex items-center p-1.5 rounded-full bg-slate-100/60 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/60 backdrop-blur-sm"
+          >
+            <router-link
+              v-for="link in navLinks"
+              :key="link.path"
+              :to="link.path"
+              class="relative px-5 py-2 rounded-full text-xs lg:text-sm font-bold transition-all duration-300 ease-out"
+              :class="[
+                route.path === link.path
+                  ? 'text-green-700 dark:text-green-300 bg-white dark:bg-slate-700 shadow-md shadow-slate-200/50 dark:shadow-none'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-white/50 dark:hover:bg-slate-700/50',
+              ]"
+            >
+              {{ t(link.name) }}
+            </router-link>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3 sm:gap-5">
+          <div
+            class="hidden md:flex items-center gap-1.5 p-1 rounded-full border border-transparent hover:border-slate-200 dark:hover:border-slate-800 transition-colors"
+          >
+            <button
+              @click="toggleDarkMode"
+              class="w-9 h-9 flex items-center justify-center rounded-full text-slate-500 hover:text-amber-500 dark:hover:text-yellow-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all active:scale-90"
+              :title="t(`${isDark ? 'nav.theme.light' : 'nav.theme.dark'}`)"
+            >
+              <span class="text-lg transition-transform hover:rotate-45">{{
+                isDark ? "☀️" : "🌙"
+              }}</span>
             </button>
 
-            <transition name="pop">
-              <div
-                v-if="isLangMenuOpen"
-                class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 p-1.5 z-50 overflow-hidden"
+            <div class="relative" ref="dropdownRef">
+              <button
+                @click.stop="isLangMenuOpen = !isLangMenuOpen"
+                class="flex items-center gap-2 h-9 pl-2 pr-3 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               >
-                <button
-                  v-for="lang in languages"
-                  :key="lang.code"
-                  @click="setLanguage(lang.code)"
-                  class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all"
-                  :class="
-                    locale === lang.code
-                      ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 font-bold'
-                      : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
-                  "
+                <img
+                  :src="languages.find((l) => l.code === locale)?.flag"
+                  class="w-5 h-3.5 object-cover rounded shadow-sm"
+                />
+                <span
+                  class="text-[10px] font-bold text-slate-400 transition-transform duration-300"
+                  :class="{ 'rotate-180': isLangMenuOpen }"
+                  >▼</span
                 >
-                  <img :src="lang.flag" class="w-5 h-auto rounded shadow-sm" />
-                  <span>{{ lang.name }}</span>
-                  <span
-                    v-if="locale === lang.code"
-                    class="ml-auto text-green-500"
-                    >✓</span
+              </button>
+
+              <transition name="pop">
+                <div
+                  v-if="isLangMenuOpen"
+                  class="absolute right-0 mt-3 w-44 bg-white dark:bg-[#1a2236] rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50 border border-slate-100 dark:border-slate-700/50 p-2 z-50 overflow-hidden"
+                >
+                  <button
+                    v-for="lang in languages"
+                    :key="lang.code"
+                    @click="setLanguage(lang.code)"
+                    class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all hover:bg-slate-50 dark:hover:bg-slate-800/80"
+                    :class="{
+                      'bg-green-50 dark:bg-green-900/10 text-green-700 dark:text-green-400':
+                        locale === lang.code,
+                      'text-slate-600 dark:text-slate-300':
+                        locale !== lang.code,
+                    }"
                   >
-                </button>
-              </div>
-            </transition>
+                    <img
+                      :src="lang.flag"
+                      class="w-5 h-auto rounded shadow-sm"
+                    />
+                    <span>{{ lang.name }}</span>
+                    <span
+                      v-if="locale === lang.code"
+                      class="ml-auto text-green-500"
+                      >✓</span
+                    >
+                  </button>
+                </div>
+              </transition>
+            </div>
           </div>
 
           <div
-            class="h-6 w-px bg-slate-200 dark:bg-slate-800 hidden sm:block"
+            class="hidden md:block w-px h-8 bg-slate-200 dark:bg-slate-800 mx-1"
           ></div>
 
-          <div class="hidden sm:flex items-center gap-3">
-            <template v-if="authStore.isAuthenticated">
-              <router-link
-                to="/profile"
-                class="flex items-center gap-2 pl-1 pr-3 py-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-all border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+          <template v-if="authStore.isAuthenticated">
+            <div class="flex items-center gap-3">
+              <div
+                class="relative group flex items-center gap-3 pl-4 pr-1.5 py-1.5 rounded-[1.2rem] bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 hover:border-green-300 dark:hover:border-green-700 hover:shadow-lg hover:shadow-green-500/5 dark:hover:shadow-green-900/10 transition-all duration-300"
               >
-                <div class="relative">
-                  <img
-                    v-if="avatarUrl"
-                    :src="avatarUrl"
-                    class="w-8 h-8 rounded-full object-cover ring-2 ring-white dark:ring-slate-900"
-                  />
+                <div class="hidden sm:flex flex-col items-end gap-0.5">
+                  <div class="flex items-center gap-1.5 leading-none">
+                    <span
+                      class="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest"
+                      >{{ t("profile.stats.points") }}</span
+                    >
+                    <span
+                      class="text-sm font-black text-slate-800 dark:text-slate-100"
+                      >{{ userStore.profile?.points ?? 0 }}</span
+                    >
+                  </div>
+
+                  <div class="flex items-center gap-2 leading-none">
+                    <span
+                      class="text-[9px] font-black text-green-600 dark:text-green-400 uppercase tracking-wider"
+                      >{{ t("profile.levelShort") }}
+                      {{ userStore.profile?.level ?? 1 }}</span
+                    >
+                    <div
+                      class="w-20 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden ring-1 ring-slate-200/50 dark:ring-slate-700/50"
+                    >
+                      <div
+                        class="h-full bg-linear-to-r from-green-400 to-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] relative overflow-hidden"
+                        :style="{ width: `${miniProgress}%` }"
+                      >
+                        <div
+                          class="absolute inset-0 bg-white/30 w-full animate-[shimmer_2s_infinite]"
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <router-link to="/profile" class="relative shrink-0">
                   <div
-                    v-else
-                    class="w-8 h-8 rounded-full bg-linear-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white text-xs shadow-md"
+                    class="w-10 h-10 rounded-xl overflow-hidden ring-2 ring-white dark:ring-slate-900 shadow-md group-hover:ring-green-400 dark:group-hover:ring-green-500 transition-all duration-300"
                   >
-                    🧙‍♂️
+                    <img
+                      v-if="avatarUrl"
+                      :src="avatarUrl"
+                      class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div
+                      v-else
+                      class="w-full h-full bg-linear-to-br from-green-500 to-emerald-700 flex items-center justify-center text-white text-lg"
+                    >
+                      🧙‍♂️
+                    </div>
                   </div>
                   <div
-                    class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white dark:border-slate-900 rounded-full"
-                  ></div>
-                </div>
-                <span
-                  class="text-sm font-bold text-slate-700 dark:text-slate-200 max-w-25 truncate"
-                >
-                  {{ authStore.user?.displayName }}
-                </span>
-              </router-link>
+                    class="sm:hidden absolute -bottom-1.5 -right-1.5 w-5 h-5 bg-linear-to-r from-amber-500 to-orange-600 rounded-full ring-2 ring-white dark:ring-slate-900 flex items-center justify-center text-[9px] font-black text-white shadow-sm"
+                  >
+                    {{ userStore.profile?.level }}
+                  </div>
+                </router-link>
+              </div>
 
               <button
                 @click="handleLogout"
-                class="text-slate-400 hover:text-red-500 dark:hover:text-red-400 transition-colors p-2"
+                class="hidden md:flex w-10 h-10 items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-xl transition-all duration-200 group"
                 :title="t('nav.logout')"
               >
                 <svg
@@ -241,56 +285,52 @@ onUnmounted(() => window.removeEventListener("click", closeDropdown));
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  stroke-width="2"
+                  stroke-width="2.5"
                   stroke-linecap="round"
                   stroke-linejoin="round"
+                  class="group-hover:-translate-x-0.5 transition-transform"
                 >
                   <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                   <polyline points="16 17 21 12 16 7"></polyline>
                   <line x1="21" y1="12" x2="9" y2="12"></line>
                 </svg>
               </button>
-            </template>
+            </div>
+          </template>
 
-            <template v-else>
-              <button
-                @click="isModalOpen = true"
-                class="group relative px-5 py-2.5 rounded-xl font-bold text-sm text-white shadow-lg shadow-green-500/30 overflow-hidden transition-transform active:scale-95"
-              >
-                <div
-                  class="absolute inset-0 bg-linear-to-r from-green-500 to-emerald-600 transition-transform group-hover:scale-105"
-                ></div>
-                <span class="relative flex items-center gap-2">
-                  {{ t("nav.login") }}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="w-4 h-4"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-                    <polyline points="10 17 15 12 10 7" />
-                    <line x1="15" y1="12" x2="3" y2="12" />
-                  </svg>
-                </span>
-              </button>
-            </template>
-          </div>
+          <template v-else>
+            <button
+              @click="isModalOpen = true"
+              class="relative px-6 py-2.5 rounded-xl font-bold text-sm text-white shadow-lg shadow-green-500/30 overflow-hidden hover:shadow-green-500/50 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
+            >
+              <div
+                class="absolute inset-0 bg-linear-to-r from-green-500 via-emerald-500 to-teal-500 bg-size-[200%_auto] animate-[gradient_3s_infinite]"
+              ></div>
+              <span class="relative flex items-center gap-2">
+                {{ t("nav.login") }}
+                <span class="text-xs opacity-70">➔</span>
+              </span>
+            </button>
+          </template>
 
           <button
             @click="isMobileMenuOpen = !isMobileMenuOpen"
-            class="sm:hidden p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+            class="md:hidden p-2.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl active:scale-95 transition-all"
           >
-            <span
-              class="text-2xl leading-none block transform transition-transform duration-300"
-              :class="{ 'rotate-90': isMobileMenuOpen }"
-            >
-              {{ isMobileMenuOpen ? "✕" : "☰" }}
-            </span>
+            <div class="w-6 h-5 relative flex flex-col justify-between">
+              <span
+                class="w-full h-0.5 bg-current rounded-full transition-all duration-300"
+                :class="isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''"
+              ></span>
+              <span
+                class="w-full h-0.5 bg-current rounded-full transition-all duration-300"
+                :class="isMobileMenuOpen ? 'opacity-0' : ''"
+              ></span>
+              <span
+                class="w-full h-0.5 bg-current rounded-full transition-all duration-300"
+                :class="isMobileMenuOpen ? '-rotate-45 -translate-y-2.5' : ''"
+              ></span>
+            </div>
           </button>
         </div>
       </div>
@@ -299,78 +339,123 @@ onUnmounted(() => window.removeEventListener("click", closeDropdown));
     <transition name="slide-down">
       <div
         v-if="isMobileMenuOpen"
-        class="md:hidden absolute top-full left-0 w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 shadow-2xl z-40"
+        class="md:hidden absolute top-full left-0 w-full bg-white/95 dark:bg-[#0f172a] backdrop-blur-2xl border-b border-slate-200 dark:border-slate-800 shadow-2xl z-40 overflow-hidden"
       >
-        <div class="p-4 space-y-2">
+        <div
+          class="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800/50"
+        >
+          <button
+            @click="toggleDarkMode"
+            class="flex items-center gap-2.5 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-sm font-bold text-slate-600 dark:text-slate-300"
+          >
+            <span class="text-lg">{{ isDark ? "☀️" : "🌙" }}</span>
+            {{ isDark ? t("nav.theme.light") : t("nav.theme.dark") }}
+          </button>
+
+          <div class="flex gap-2">
+            <button
+              v-for="lang in languages"
+              :key="lang.code"
+              @click="setLanguage(lang.code)"
+              class="w-8 h-8 flex items-center justify-center rounded-lg border text-[10px] font-black uppercase transition-colors"
+              :class="
+                locale === lang.code
+                  ? 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-600'
+                  : 'border-slate-200 dark:border-slate-700 text-slate-400'
+              "
+            >
+              {{ lang.code }}
+            </button>
+          </div>
+        </div>
+
+        <div
+          v-if="authStore.isAuthenticated"
+          class="mx-4 mt-4 p-5 rounded-2xl bg-linear-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 border border-slate-100 dark:border-slate-700 shadow-inner"
+        >
+          <div class="flex items-center gap-4 mb-4">
+            <img
+              v-if="avatarUrl"
+              :src="avatarUrl"
+              class="w-14 h-14 rounded-2xl object-cover ring-4 ring-white dark:ring-slate-800 shadow-lg"
+            />
+            <div class="flex-1 min-w-0">
+              <p
+                class="font-black text-lg text-slate-800 dark:text-white truncate"
+              >
+                {{ authStore.user?.displayName }}
+              </p>
+              <div
+                class="flex items-center gap-4 mt-1 text-[11px] font-bold uppercase tracking-wide text-slate-500"
+              >
+                <span
+                  class="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2 py-0.5 rounded-md"
+                  >{{ t("profile.levelShort") }}
+                  {{ userStore.profile?.level }}</span
+                >
+                <span class="text-amber-500 flex items-center gap-1"
+                  >💰 {{ userStore.profile?.points }}</span
+                >
+              </div>
+            </div>
+          </div>
+          <div
+            class="relative w-full h-2.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden shadow-inner"
+          >
+            <div
+              class="absolute top-0 left-0 h-full bg-linear-to-r from-green-400 to-emerald-500"
+              :style="{ width: `${miniProgress}%` }"
+            ></div>
+          </div>
+        </div>
+
+        <div class="p-4 space-y-1">
           <router-link
-            v-for="link in navLinks"
+            v-for="(link, index) in navLinks"
             :key="link.path"
             :to="link.path"
-            class="block px-4 py-3 rounded-xl text-base font-bold transition-all"
-            active-class="bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 pl-6"
+            class="group flex items-center justify-between px-5 py-3.5 rounded-xl text-[15px] font-bold transition-all duration-200 hover:scale-[1.02]"
+            :class="
+              route.path === link.path
+                ? 'bg-green-50 dark:bg-green-900/10 text-green-700 dark:text-green-400'
+                : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+            "
+            :style="{ transitionDelay: `${index * 50}ms` }"
           >
             {{ t(link.name) }}
+            <span v-if="route.path === link.path" class="text-green-500"
+              >●</span
+            >
+            <span
+              v-else
+              class="text-slate-300 dark:text-slate-700 opacity-0 group-hover:opacity-100 transition-opacity"
+              >➔</span
+            >
           </router-link>
 
-          <div class="h-px bg-slate-100 dark:bg-slate-800 my-4"></div>
+          <div
+            class="h-px bg-linear-to-r from-transparent via-slate-200 dark:via-slate-800 to-transparent my-4"
+          ></div>
 
-          <template v-if="authStore.isAuthenticated">
-            <router-link
-              to="/profile"
-              class="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          <button
+            @click="handleLogout"
+            class="w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl text-red-500 font-bold hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
             >
-              <img
-                v-if="avatarUrl"
-                :src="avatarUrl"
-                class="w-10 h-10 rounded-full object-cover"
-              />
-              <div
-                v-else
-                class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white text-lg"
-              >
-                🧙‍♂️
-              </div>
-              <div class="flex flex-col">
-                <span class="font-bold text-slate-900 dark:text-white">{{
-                  authStore.user?.displayName
-                }}</span>
-                <span class="text-xs text-slate-500">Zobacz profil</span>
-              </div>
-            </router-link>
-            <button
-              @click="handleLogout"
-              class="w-full mt-2 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 font-bold transition-colors"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                <polyline points="16 17 21 12 16 7"></polyline>
-                <line x1="21" y1="12" x2="9" y2="12"></line>
-              </svg>
-              {{ t("nav.logout") }}
-            </button>
-          </template>
-
-          <template v-else>
-            <button
-              @click="
-                isModalOpen = true;
-                isMobileMenuOpen = false;
-              "
-              class="w-full mt-4 bg-linear-to-r from-green-600 to-emerald-600 text-white px-4 py-3.5 rounded-xl font-bold shadow-lg shadow-green-500/20 active:scale-95 transition-transform"
-            >
-              {{ t("nav.login") }}
-            </button>
-          </template>
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            {{ t("nav.logout") }}
+          </button>
         </div>
       </div>
     </transition>
@@ -383,22 +468,44 @@ onUnmounted(() => window.removeEventListener("click", closeDropdown));
 .pop-enter-active,
 .pop-leave-active {
   transition:
-    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
     opacity 0.2s ease;
 }
 .pop-enter-from,
 .pop-leave-to {
   opacity: 0;
-  transform: translateY(-10px) scale(0.95);
+  transform: translateY(-8px) scale(0.9);
 }
 
 .slide-down-enter-active,
 .slide-down-leave-active {
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: top;
 }
 .slide-down-enter-from,
 .slide-down-leave-to {
-  transform: translateY(-20px);
+  transform: scaleY(0.95) translateY(-10px);
   opacity: 0;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 </style>

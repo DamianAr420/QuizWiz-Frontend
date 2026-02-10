@@ -4,6 +4,7 @@ import api from "@/services/api";
 import type { Quiz, CreateQuizDto, UpdateQuizDto } from "@/types/quiz";
 import { useToastStore } from "./toast";
 import i18n from "@/i18n/index";
+import { useUserStore } from "./user";
 
 export const useQuizStore = defineStore("quiz", () => {
   const quizzes = ref<Quiz[]>([]);
@@ -75,10 +76,19 @@ export const useQuizStore = defineStore("quiz", () => {
     totalQuestions: number,
   ) => {
     try {
-      await api.post(`/quizzes/${quizId}/submit`, { score, totalQuestions });
+      const { data } = await api.post(`/quizzes/${quizId}/submit`, {
+        score,
+        totalQuestions,
+      });
+
+      const userStore = useUserStore();
+      userStore.updateWallet(data.newTotalPoints, data.newExperience);
+
       toast.show(t("game.scoreSaved"), "success");
+      return data;
     } catch (error) {
       toast.show(t("game.errorSaving"), "error");
+      throw error;
     }
   };
 

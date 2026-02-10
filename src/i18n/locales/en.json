@@ -3,8 +3,13 @@
     "start": "Home",
     "play": "Play",
     "ranking": "Leaderboard",
+    "shop": "Shop",
     "login": "Login",
-    "logout": "Logout"
+    "logout": "Logout",
+    "theme": {
+      "light": "Light",
+      "dark": "Dark"
+    }
   },
   "auth": {
     "welcome": "Welcome to QuizWiz",
@@ -56,32 +61,41 @@
     }
   },
   "profile": {
-    "title": "My Profile",
-    "subtitle": "Manage your details and progress",
-    "editBtn": "Edit profile",
-    "memberSince": "Member since",
-    "updateSuccess": "Profile updated successfully!",
-    "updateError": "Failed to update profile.",
-    "dangerZone": "Danger Zone",
-    "deleteDesc": "Deleting your account is permanent. All your statistics will be wiped.",
-    "deleteBtn": "Delete Account",
-    "deleteConfirmTitle": "Are you sure you want to leave?",
-    "deleteConfirmDesc": "This action will completely remove your data from QuizWiz servers. You cannot undo this operation.",
-    "deleteError": "An error occurred while deleting your account.",
-    "myQuizzes": "My Quizzes",
-    "noQuizzes": "You haven't created any quizzes yet.",
+    "changeAvatar": "Change",
+    "editBtn": "Edit Profile",
+    "memberSince": "Member Since",
+    "levelShort": "lvl",
     "stats": {
+      "title": "Statistics",
+      "xp": "Experience",
+      "xpLeft": "{xp} XP to next level",
+      "wallet": "Wallet",
       "played": "Played",
       "accuracy": "Accuracy",
       "correct": "Correct",
-      "streak": "Streak (days)"
+      "streak": "Streak",
+      "points": "Points"
     },
-    "deleteSuccess": "Account has been deleted",
-    "avatarSuccess": "Avatar has been changed",
-    "myBadges": "My Achievements",
-    "comingSoon": "Coming Soon",
-    "achievementsLocked": "Achievements system is on its way",
-    "achievementsDesc": "We are working on a system of challenges and unique badges. Soon you will be able to show off your results to others!"
+    "inventory": {
+      "title": "Inventory",
+      "goToShop": "Go to Shop",
+      "empty": "Your backpack is empty..."
+    },
+    "quizzes": {
+      "title": "Your Quizzes",
+      "create": "Create Quiz",
+      "createFirst": "Create your first quiz",
+      "emptyTitle": "No Quizzes Yet",
+      "emptyDesc": "You haven't created any quizzes yet. Share your knowledge and challenge others!",
+      "deleteWarning": "Are you sure you want to delete this quiz?"
+    },
+    "danger": {
+      "title": "Danger Zone",
+      "desc": "Delete account and all data",
+      "deleteBtn": "Delete Account",
+      "deleteTitle": "Are you sure?",
+      "deleteConfirmDesc": "Your account will be permanently deleted along with all progress, quizzes, and items. This action cannot be undone."
+    }
   },
   "common": {
     "backToHome": "Back to home",
@@ -175,7 +189,10 @@
     "errorSaving": "Error occurred while saving the score.",
     "solo": "Single-player game",
     "multiplayer": "Multiplayer game",
-    "sec": "S"
+    "sec": "S",
+    "greatJob": "Great job",
+    "points": "Points",
+    "levelUp": "Level Up! 🎉"
   },
   "lobby": {
     "questionCount": "Select number of questions",
@@ -185,5 +202,40 @@
     "multiMode": "Multiplayer",
     "multiDesc": "Compete with others in real-time.",
     "soon": "Soon"
+  },
+  "shop": {
+    "title": "Mage's",
+    "subtitle": "Vault",
+    "description": "Exchange your hard-earned quiz points for unique collectables and boosts.",
+    "yourPoints": "Your Balance",
+    "level": "Lv.",
+    "currency": "PTS",
+    "owned": "Owned",
+    "lowLevel": "Level too low",
+    "buyNow": "Buy Now",
+    "empty": "The shop is currently empty. Check back later!",
+    "purchaseSuccess": "Item successfully added to your inventory!"
+  },
+  "items": {
+    "gold_aura": {
+      "title": "Golden Aura",
+      "desc": "An exclusive golden frame for masters of knowledge."
+    },
+    "dark_knight": {
+      "title": "Dark Knight",
+      "desc": "A dark, steel frame with spikes."
+    },
+    "mage_library": {
+      "title": "Mage's Library",
+      "desc": "Change your profile background to an ancient library full of scrolls."
+    },
+    "rescue_ticket": {
+      "title": "Rescue Ticket",
+      "desc": "Allows one mistake in a quiz without losing your streak."
+    },
+    "dragon_slayer": {
+      "title": "Dragon Slayer",
+      "desc": "A unique badge for completing 50 quizzes without a single error."
+    }
   }
 }
