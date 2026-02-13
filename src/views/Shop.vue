@@ -5,6 +5,7 @@ import { useShopStore } from "@/stores/shop";
 import { useUserStore } from "@/stores/user";
 import { useToastStore } from "@/stores/toast";
 import { ItemRarity, ItemRarityLabels } from "@/types/shop";
+import AnimatedNumber from "@/components/AnimatedNumber.vue";
 
 const { t } = useI18n();
 const shopStore = useShopStore();
@@ -40,6 +41,9 @@ const handlePurchase = async (itemId: number) => {
   const result = await shopStore.purchaseItem(itemId);
   if (result.success) {
     toast.show(t("shop.purchaseSuccess"), "success");
+    // Po zakupie profil w userStore powinien się zaktualizować,
+    // co automatycznie wywoła animację w AnimatedNumber
+    await userStore.fetchProfile();
   } else {
     toast.show(result.message, "error");
   }
@@ -75,7 +79,7 @@ const handlePurchase = async (itemId: number) => {
               {{ t("shop.yourPoints") }}
             </p>
             <p class="text-xl font-black text-slate-900 dark:text-white">
-              {{ userPoints }}
+              <AnimatedNumber :value="userPoints" />
             </p>
           </div>
         </div>
@@ -164,8 +168,8 @@ const handlePurchase = async (itemId: number) => {
               {{ t("shop.level") }} {{ item.requiredLevel }}
             </span>
             <span class="text-slate-900 dark:text-white font-black text-lg">
-              {{ item.price }}
-              <span class="text-xs text-green-600">{{
+              <AnimatedNumber :value="item.price" />
+              <span class="text-xs text-green-600 ml-1">{{
                 t("shop.currency")
               }}</span>
             </span>

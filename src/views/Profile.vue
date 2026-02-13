@@ -10,6 +10,7 @@ import QuizCard from "@/components/Cards/QuizCard.vue";
 import ConfirmModal from "@/components/Modals/Confirm.vue";
 import { useCloudinary } from "@/composables/useCloudinary";
 import { ItemRarity } from "@/types/shop";
+import AnimatedNumber from "@/components/AnimatedNumber.vue";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -325,8 +326,9 @@ const confirmQuizDelete = async () => {
                     >
                     <span
                       class="text-2xl font-black text-amber-600 dark:text-amber-500"
-                      >{{ userStore.profile?.points }}</span
                     >
+                      <AnimatedNumber :value="userStore.profile?.points ?? 0" />
+                    </span>
                   </div>
                   <div
                     class="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/20 flex items-center justify-center text-2xl"
@@ -359,7 +361,8 @@ const confirmQuizDelete = async () => {
                   },
                   {
                     label: t('profile.stats.accuracy'),
-                    value: accuracy + '%',
+                    value: accuracy,
+                    suffix: '%',
                     icon: '🎯',
                     color: 'text-purple-500 bg-purple-50 dark:bg-purple-900/20',
                   },
@@ -387,9 +390,10 @@ const confirmQuizDelete = async () => {
                   </div>
                 </div>
                 <div
-                  class="text-2xl font-black text-slate-800 dark:text-white group-hover:scale-110 origin-left transition-transform"
+                  class="text-2xl font-black text-slate-800 dark:text-white group-hover:scale-110 origin-left transition-transform flex items-center"
                 >
-                  {{ stat.value }}
+                  <AnimatedNumber :value="stat.value" />
+                  <span v-if="stat.suffix">{{ stat.suffix }}</span>
                 </div>
                 <div
                   class="text-[10px] font-bold text-slate-400 uppercase tracking-wider"

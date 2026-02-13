@@ -3,6 +3,8 @@ import { ref, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import confetti from "canvas-confetti";
+import AnimatedNumber from "../AnimatedNumber.vue";
+import { useUserStore } from "@/stores/user";
 
 const props = defineProps<{
   score: number;
@@ -17,32 +19,7 @@ const emit = defineEmits(["playAgain"]);
 const { t } = useI18n();
 const router = useRouter();
 
-const displayPoints = ref(0);
-const displayExp = ref(0);
 const showLevelUp = ref(false);
-
-const animateValue = (
-  start: number,
-  end: number,
-  duration: number,
-  callback: (val: number) => void,
-) => {
-  const range = end - start;
-  if (range <= 0 && end === 0) return;
-
-  let startTime: number | null = null;
-
-  const step = (timestamp: number) => {
-    if (!startTime) startTime = timestamp;
-    const progress = Math.min((timestamp - startTime) / duration, 1);
-    callback(Math.floor(progress * range + start));
-    if (progress < 1) {
-      window.requestAnimationFrame(step);
-    }
-  };
-
-  window.requestAnimationFrame(step);
-};
 
 const fireConfetti = () => {
   const duration = 3 * 1000;
@@ -76,13 +53,12 @@ const closeLevelUp = () => {
 };
 
 onMounted(() => {
-  animateValue(0, props.earnedPoints, 1500, (v) => (displayPoints.value = v));
-  animateValue(0, props.earnedExp, 1500, (v) => (displayExp.value = v));
-
   if (props.isLevelUp) {
     setTimeout(() => {
       showLevelUp.value = true;
       fireConfetti();
+      useUserStore().fetchStats();
+      useUserStore().fetchProfile();
 
       setTimeout(() => {
         showLevelUp.value = false;
@@ -145,10 +121,8 @@ const handlePlayAgain = () => emit("playAgain");
               {{ t("game.yourScore") }}
             </span>
             <span class="text-4xl font-black text-slate-800 dark:text-white">
-              {{ score
-              }}<span class="text-xl text-slate-400"
-                >/{{ totalQuestions }}</span
-              >
+              {{ score }}
+              <span class="text-xl text-slate-400">/{{ totalQuestions }}</span>
             </span>
           </div>
 
@@ -161,7 +135,7 @@ const handlePlayAgain = () => emit("playAgain");
               {{ t("game.points") }}
             </span>
             <span class="text-4xl font-black text-amber-500 tabular-nums">
-              +{{ displayPoints }}
+              +<AnimatedNumber :value="earnedPoints" :duration="1500" />
             </span>
           </div>
 
@@ -174,7 +148,7 @@ const handlePlayAgain = () => emit("playAgain");
               EXP
             </span>
             <span class="text-4xl font-black text-indigo-500 tabular-nums">
-              +{{ displayExp }}
+              +<AnimatedNumber :value="earnedExp" :duration="1500" />
             </span>
           </div>
         </div>

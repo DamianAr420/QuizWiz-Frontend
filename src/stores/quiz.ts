@@ -85,7 +85,7 @@ export const useQuizStore = defineStore("quiz", () => {
       });
 
       const userStore = useUserStore();
-      userStore.updateWallet(data.pointsGained, data.xpGained);
+      userStore.updateWallet(data.totalPoints, data.totalExperience);
 
       toast.show(t("game.scoreSaved"), "success");
       return data;
