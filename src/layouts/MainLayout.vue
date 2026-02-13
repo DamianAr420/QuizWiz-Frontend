@@ -43,7 +43,7 @@ onUnmounted(() => {
 
 <template>
   <div
-    class="relative min-h-screen flex flex-col transition-colors duration-300 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 overflow-hidden"
+    class="relative min-h-screen flex flex-col transition-colors duration-300 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100"
   >
     <template v-if="!shouldHideBg">
       <div
