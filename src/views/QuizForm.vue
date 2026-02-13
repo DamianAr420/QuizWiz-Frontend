@@ -180,7 +180,7 @@ const handleSubmit = async () => {
           <h3
             class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4"
           >
-            {{ t("quiz.form.questionsList") || "Lista pytań" }}
+            {{ t("quiz.form.questionsList") }}
           </h3>
 
           <div

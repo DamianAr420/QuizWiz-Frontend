@@ -166,6 +166,7 @@
       "update": "Update Quiz",
       "verified": "Verified (Admin)",
       "statusVerified": "Only Admin",
+      "questionsList": "Questions List",
       "validation": {
         "emptyHeader": "Error: Title and description cannot be empty.",
         "emptyQuestion": "Question {number}: Question text is empty.",

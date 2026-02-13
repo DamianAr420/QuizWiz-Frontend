@@ -165,6 +165,7 @@
       "update": "Zaktualizuj quiz",
       "verified": "Zweryfikowany (Admin)",
       "statusVerified": "Tylko dla admina",
+      "questionsList": "Lista pytań",
       "validation": {
         "emptyHeader": "Błąd: Tytuł i opis nie mogą być puste.",
         "emptyQuestion": "Pytanie {number}: Treść pytania jest pusta.",
