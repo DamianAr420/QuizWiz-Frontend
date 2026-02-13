@@ -26,7 +26,16 @@ const languages = [
   { code: "en", name: "English", flag: "https://flagcdn.com/w40/gb.png" },
 ];
 
+const isPlayPage = computed(() => route.path.includes("/quiz"));
+
 const isGameEnded = computed(() => route.query.ended === "true");
+
+const isNavbarSticky = computed(() => {
+  if (isPlayPage.value && !isGameEnded.value) {
+    return false;
+  }
+  return true;
+});
 
 const setLanguage = (code: string) => {
   locale.value = code;
@@ -118,7 +127,7 @@ onUnmounted(() => window.removeEventListener("click", closeDropdown));
 <template>
   <nav
     class="w-full bg-white/70 dark:bg-[#0f172a]/70 backdrop-blur-xl border-b border-slate-200/60 dark:border-slate-800/60 transition-all duration-300"
-    :class="{ 'sticky top-0 z-50': isGameEnded, relative: !isGameEnded }"
+    :class="{ 'sticky top-0 z-50': isNavbarSticky, relative: !isNavbarSticky }"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16 sm:h-20">
