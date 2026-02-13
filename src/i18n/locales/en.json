@@ -165,7 +165,13 @@
       "save": "Save & Publish",
       "update": "Update Quiz",
       "verified": "Verified (Admin)",
-      "statusVerified": "Only Admin"
+      "statusVerified": "Only Admin",
+      "validation": {
+        "emptyHeader": "Error: Title and description cannot be empty.",
+        "emptyQuestion": "Question {number}: Question text is empty.",
+        "emptyCorrect": "Question {number}: Correct answer is empty.",
+        "emptyDistractors": "Question {number}: Fill in all wrong answers."
+      }
     },
     "stats": {
       "questions": "questions",

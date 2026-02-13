@@ -164,7 +164,13 @@
       "save": "Zapisz i opublikuj",
       "update": "Zaktualizuj quiz",
       "verified": "Zweryfikowany (Admin)",
-      "statusVerified": "Tylko dla admina"
+      "statusVerified": "Tylko dla admina",
+      "validation": {
+        "emptyHeader": "Błąd: Tytuł i opis nie mogą być puste.",
+        "emptyQuestion": "Pytanie {number}: Treść pytania jest pusta.",
+        "emptyCorrect": "Pytanie {number}: Poprawna odpowiedź jest pusta.",
+        "emptyDistractors": "Pytanie {number}: Uzupełnij wszystkie błędne odpowiedzi."
+      }
     },
     "stats": {
       "questions": "pytań",
