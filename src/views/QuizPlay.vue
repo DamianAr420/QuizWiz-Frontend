@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, onUnmounted, nextTick } from "vue";
+import { ref, onMounted, computed, watch, onUnmounted, nextTick } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useQuizStore } from "@/stores/quiz";
 import { useI18n } from "vue-i18n";
@@ -109,9 +109,27 @@ const nextQuestion = async () => {
   }
 };
 
+watch(isGameOver, (nval) => {
+  if (nval === true) {
+    router.push({
+      query: {
+        ...route.query,
+        ended: "true",
+      },
+    });
+  }
+});
+
 onMounted(async () => {
   const id = Number(route.params.id);
   const countLimit = Number(route.query.count) || 10;
+
+  router.push({
+    query: {
+      ...route.query,
+      ended: "false",
+    },
+  });
 
   await quizStore.fetchQuizById(id);
 

@@ -24,7 +24,7 @@ const startSoloGame = () => {
   router.push({
     name: "quiz-play",
     params: { id: quiz.value?.id },
-    query: { count: selectedQuestionCount.value },
+    query: { count: selectedQuestionCount.value, ended: "false" },
   });
 };
 </script>

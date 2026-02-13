@@ -26,6 +26,8 @@ const languages = [
   { code: "en", name: "English", flag: "https://flagcdn.com/w40/gb.png" },
 ];
 
+const isGameEnded = computed(() => route.query.ended === "true");
+
 const setLanguage = (code: string) => {
   locale.value = code;
   isLangMenuOpen.value = false;
@@ -67,7 +69,6 @@ const avatarUrl = computed(() =>
   getAvatarUrl(userStore.profile?.cloudinaryPublicId, 80),
 );
 
-// Obliczanie procentu postępu (0-100)
 const miniProgress = computed(() => {
   if (!userStore.profile) return 0;
   return (userStore.profile.experience % 1000) / 10;
@@ -80,7 +81,6 @@ watch(
   },
 );
 
-// Animacja "skoku" punktów przy zmianie
 watch(
   () => userStore.profile?.points,
   () => {
@@ -117,7 +117,8 @@ onUnmounted(() => window.removeEventListener("click", closeDropdown));
 
 <template>
   <nav
-    class="sticky top-0 z-50 w-full bg-white/70 dark:bg-[#0f172a]/70 backdrop-blur-xl border-b border-slate-200/60 dark:border-slate-800/60 transition-all duration-300"
+    class="w-full bg-white/70 dark:bg-[#0f172a]/70 backdrop-blur-xl border-b border-slate-200/60 dark:border-slate-800/60 transition-all duration-300"
+    :class="{ 'sticky top-0 z-50': isGameEnded, relative: !isGameEnded }"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16 sm:h-20">

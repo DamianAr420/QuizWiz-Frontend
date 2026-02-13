@@ -41,8 +41,6 @@ const handlePurchase = async (itemId: number) => {
   const result = await shopStore.purchaseItem(itemId);
   if (result.success) {
     toast.show(t("shop.purchaseSuccess"), "success");
-    // Po zakupie profil w userStore powinien się zaktualizować,
-    // co automatycznie wywoła animację w AnimatedNumber
     await userStore.fetchProfile();
   } else {
     toast.show(result.message, "error");
