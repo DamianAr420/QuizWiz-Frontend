@@ -142,7 +142,9 @@
     "status": {
       "private": "Private",
       "comingSoon": "Soon",
-      "yours": "Yours"
+      "yours": "Yours",
+      "official": "Official",
+      "verified": "Verified"
     },
     "form": {
       "createTitle": "Create New Quiz",
@@ -161,7 +163,9 @@
       "wrongAnswers": "Wrong Answers",
       "addQuestion": "Add another question",
       "save": "Save & Publish",
-      "update": "Update Quiz"
+      "update": "Update Quiz",
+      "verified": "Verified (Admin)",
+      "statusVerified": "Only Admin"
     },
     "stats": {
       "questions": "questions",

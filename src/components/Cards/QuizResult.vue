@@ -44,7 +44,6 @@ const animateValue = (
   window.requestAnimationFrame(step);
 };
 
-// Funkcja strzelająca fajerwerkami
 const fireConfetti = () => {
   const duration = 3 * 1000;
   const end = Date.now() + duration;

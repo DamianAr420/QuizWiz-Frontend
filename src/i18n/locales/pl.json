@@ -141,7 +141,9 @@
     "status": {
       "private": "Prywatny",
       "comingSoon": "Wkrótce",
-      "yours": "Twój"
+      "yours": "Twój",
+      "official": "Oficjalny",
+      "verified": "Zweryfikowany"
     },
     "form": {
       "createTitle": "Stwórz Nowy Quiz",
@@ -160,7 +162,9 @@
       "wrongAnswers": "Błędne odpowiedzi",
       "addQuestion": "Dodaj kolejne pytanie",
       "save": "Zapisz i opublikuj",
-      "update": "Zaktualizuj quiz"
+      "update": "Zaktualizuj quiz",
+      "verified": "Zweryfikowany (Admin)",
+      "statusVerified": "Tylko dla admina"
     },
     "stats": {
       "questions": "pytań",

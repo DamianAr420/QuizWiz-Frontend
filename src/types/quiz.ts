@@ -17,13 +17,26 @@ export interface Quiz {
   isVisible: boolean;
   isPlayable: boolean;
   authorId?: string;
+  isVerified: boolean;
+  createdAt?: string;
 }
 
 export interface CreateQuizDto extends Omit<
   Quiz,
-  "id" | "questionsCount" | "questions"
+  "id" | "questionsCount" | "questions" | "isVerified" | "isOfficial"
 > {
   questions: Omit<Question, "id">[];
+  isOfficial?: boolean;
+  isVerified?: boolean;
 }
 
 export interface UpdateQuizDto extends CreateQuizDto {}
+
+export interface QuizSubmitResult {
+  pointsGained: number;
+  xpGained: number;
+  isLevelUp: boolean;
+  currentLevel: number;
+  newTotalPoints?: number;
+  newExperience?: number;
+}

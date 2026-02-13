@@ -52,6 +52,9 @@ export const useQuizStore = defineStore("quiz", () => {
     loading.value = true;
     try {
       await api.put(`/quizzes/${id}`, quizData);
+      toast.show(t("quiz.updateSuccess"), "success");
+    } catch (err: any) {
+      toast.show(t("quiz.updateError"), "error");
     } finally {
       loading.value = false;
     }
@@ -82,13 +85,26 @@ export const useQuizStore = defineStore("quiz", () => {
       });
 
       const userStore = useUserStore();
-      userStore.updateWallet(data.newTotalPoints, data.newExperience);
+      userStore.updateWallet(data.pointsGained, data.xpGained);
 
       toast.show(t("game.scoreSaved"), "success");
       return data;
     } catch (error) {
       toast.show(t("game.errorSaving"), "error");
       throw error;
+    }
+  };
+
+  const verifyQuiz = async (id: number, status: boolean) => {
+    try {
+      await api.patch(`/quizzes/${id}/verify`, status, {
+        headers: { "Content-Type": "application/json" },
+      });
+      const quiz = quizzes.value.find((q) => q.id === id);
+      if (quiz) quiz.isVerified = status;
+      toast.show(t("quiz.verifySuccess"), "success");
+    } catch (err) {
+      toast.show(t("quiz.verifyError"), "error");
     }
   };
 
@@ -102,5 +118,6 @@ export const useQuizStore = defineStore("quiz", () => {
     updateQuiz,
     deleteQuiz,
     submitQuizResult,
+    verifyQuiz,
   };
 });

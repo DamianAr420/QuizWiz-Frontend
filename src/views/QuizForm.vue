@@ -20,10 +20,19 @@ const form = ref({
   timeLimitSeconds: 30,
   maxQuestions: 10,
   isOfficial: false,
+  isVerified: false,
   isVisible: true,
   isPlayable: true,
   questions: [{ text: "", correctAnswer: "", distractors: ["", "", ""] }],
 });
+
+const toggleOfficial = () => {
+  if (form.value.isOfficial) {
+    form.value.isVerified = true;
+  } else {
+    form.value.isVerified = false;
+  }
+};
 
 onMounted(async () => {
   if (isEditMode.value) {
@@ -36,6 +45,7 @@ onMounted(async () => {
         timeLimitSeconds: data.timeLimitSeconds,
         maxQuestions: data.maxQuestions,
         isOfficial: data.isOfficial,
+        isVerified: data.isVerified,
         isVisible: data.isVisible,
         isPlayable: data.isPlayable,
         questions: data.questions.map((q) => ({
@@ -172,10 +182,30 @@ const handleSubmit = async () => {
 
           <label
             v-if="isAdmin"
+            class="flex items-center gap-3 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-2xl cursor-pointer hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors border border-blue-100 dark:border-blue-900/50"
+          >
+            <input
+              v-model="form.isVerified"
+              type="checkbox"
+              class="w-5 h-5 rounded border-blue-300 text-blue-600 focus:ring-blue-500"
+            />
+            <div class="flex flex-col">
+              <span class="text-sm font-bold text-blue-700 dark:text-blue-400">
+                {{ t("quiz.form.verified") || "Zweryfikowany" }}
+              </span>
+              <span class="text-[10px] text-blue-400/80 uppercase font-black">
+                {{ t("quiz.form.statusVerified") || "100% Nagród" }}
+              </span>
+            </div>
+          </label>
+
+          <label
+            v-if="isAdmin"
             class="flex items-center gap-3 p-4 bg-green-50 dark:bg-green-900/20 rounded-2xl cursor-pointer hover:bg-green-100 dark:hover:bg-green-900/40 transition-colors border border-green-100 dark:border-green-900/50"
           >
             <input
               v-model="form.isOfficial"
+              @change="toggleOfficial"
               type="checkbox"
               class="w-5 h-5 rounded border-green-300 text-green-600 focus:ring-green-500"
             />
