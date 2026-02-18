@@ -24,7 +24,8 @@ export const useUserStore = defineStore("user", {
         const authStore = useAuthStore();
         if (authStore.user) {
           authStore.user.displayName = response.data.displayName;
-          localStorage.setItem("user", JSON.stringify(authStore.user));
+          authStore.user.cloudinaryPublicId = response.data.cloudinaryPublicId;
+          localStorage.setItem("user", JSON.stringify(response.data));
         }
       } catch (err: any) {
         this.error =
@@ -48,20 +49,27 @@ export const useUserStore = defineStore("user", {
       }
     },
 
-    async updateProfile(displayName: string) {
+    async updateProfile(payload: {
+      displayName: string;
+      selectedFrame?: string | null;
+      selectedBackground?: string | null;
+    }) {
       this.loading = true;
       const toast = useToastStore();
       const t = i18n.global.t;
       try {
         const response = await api.put<User>("/users/update-profile", {
-          displayName,
+          DisplayName: payload.displayName,
+          SelectedFrame: payload.selectedFrame,
+          SelectedBackground: payload.selectedBackground,
         });
-        if (this.profile) this.profile.displayName = response.data.displayName;
+
+        this.profile = response.data;
 
         const authStore = useAuthStore();
         if (authStore.user) {
           authStore.user.displayName = response.data.displayName;
-          localStorage.setItem("user", JSON.stringify(authStore.user));
+          localStorage.setItem("user", JSON.stringify(response.data));
         }
 
         toast.show(t("profile.updateSuccess"), "success");

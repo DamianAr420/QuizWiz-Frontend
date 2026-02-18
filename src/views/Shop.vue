@@ -5,6 +5,7 @@ import { useShopStore } from "@/stores/shop";
 import { useUserStore } from "@/stores/user";
 import { useToastStore } from "@/stores/toast";
 import { ItemRarity, ItemRarityLabels } from "@/types/shop";
+import { SHOP_PRESETS } from "@/components/shop/shopPresets";
 import AnimatedNumber from "@/components/AnimatedNumber.vue";
 
 const { t } = useI18n();
@@ -22,6 +23,16 @@ const userLevel = computed(() => userStore.profile?.level || 1);
 
 const isOwned = (itemId: number) => {
   return shopStore.inventory.some((ui) => ui.shopItemId === itemId);
+};
+
+// POPRAWKA: Zmiana typu argumentu na string | null | undefined
+const isRealImage = (url: string | null | undefined) => {
+  if (!url) return false;
+  return (
+    url.startsWith("http") ||
+    url.startsWith("/") ||
+    url.startsWith("data:image")
+  );
 };
 
 const getRarityClass = (rarity: ItemRarity) => {
@@ -84,44 +95,7 @@ const handlePurchase = async (itemId: number) => {
       </div>
     </header>
 
-    <div
-      v-if="shopStore.loading && shopStore.items.length === 0"
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-    >
-      <div
-        v-for="i in 8"
-        :key="i"
-        class="bg-white dark:bg-slate-900 rounded-3xl p-5 border-2 border-slate-100 dark:border-slate-800 flex flex-col h-100"
-      >
-        <div
-          class="aspect-square bg-slate-200 dark:bg-slate-800 animate-pulse rounded-2xl mb-4"
-        ></div>
-        <div
-          class="h-6 bg-slate-200 dark:bg-slate-800 animate-pulse rounded-md w-3/4 mb-4"
-        ></div>
-        <div class="space-y-2 mb-auto">
-          <div
-            class="h-3 bg-slate-100 dark:bg-slate-800 animate-pulse rounded-md w-full"
-          ></div>
-          <div
-            class="h-3 bg-slate-100 dark:bg-slate-800 animate-pulse rounded-md w-5/6"
-          ></div>
-        </div>
-        <div
-          class="h-12 bg-slate-100 dark:bg-slate-800 animate-pulse rounded-xl w-full mt-4"
-        ></div>
-      </div>
-    </div>
-
-    <div
-      v-else-if="!shopStore.loading && shopStore.items.length === 0"
-      class="text-center py-20 bg-slate-50 dark:bg-slate-900/50 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-800"
-    >
-      <div class="text-6xl mb-4">📦</div>
-      <p class="text-xl font-bold text-slate-500">{{ t("shop.empty") }}</p>
-    </div>
-
-    <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       <div
         v-for="item in shopStore.items"
         :key="item.id"
@@ -129,21 +103,36 @@ const handlePurchase = async (itemId: number) => {
         :class="getRarityClass(item.rarity)"
       >
         <div
-          class="aspect-square bg-slate-50 dark:bg-slate-800 rounded-2xl mb-4 flex items-center justify-center overflow-hidden relative border border-slate-100 dark:border-slate-800"
+          class="aspect-square rounded-2xl mb-4 flex items-center justify-center overflow-hidden relative border shadow-inner"
+          :class="[
+            !isRealImage(item.imageUrl)
+              ? SHOP_PRESETS.getClassName(item.imageUrl!)
+              : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-800',
+          ]"
+          :style="
+            !isRealImage(item.imageUrl)
+              ? SHOP_PRESETS.getInlineStyle(item.imageUrl!)
+              : {}
+          "
         >
           <img
-            v-if="item.imageUrl"
-            :src="item.imageUrl"
+            v-if="isRealImage(item.imageUrl)"
+            :src="item.imageUrl!"
             class="w-full h-full object-cover transition-transform group-hover:scale-110"
           />
-          <span
-            v-else
-            class="text-5xl group-hover:scale-110 transition-transform"
-            >🎁</span
-          >
+
+          <div v-else class="text-center z-10">
+            <span v-if="item.type === 1" class="text-4xl drop-shadow-md"
+              >🖼️</span
+            >
+            <span v-else-if="item.type === 0" class="text-4xl drop-shadow-md"
+              >👤</span
+            >
+            <span v-else class="text-4xl">🎁</span>
+          </div>
 
           <div
-            class="absolute top-2 right-2 bg-white/90 dark:bg-slate-800/90 px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider backdrop-blur-sm shadow-sm"
+            class="absolute top-2 right-2 bg-white/90 dark:bg-slate-800/90 px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider backdrop-blur-sm shadow-sm text-slate-900 dark:text-white"
           >
             {{ ItemRarityLabels[item.rarity] }}
           </div>
@@ -163,7 +152,7 @@ const handlePurchase = async (itemId: number) => {
         <div class="mt-auto space-y-3">
           <div class="flex items-center justify-between text-sm">
             <span class="font-black flex items-center gap-1 text-slate-400">
-              {{ t("shop.level") }} {{ item.requiredLevel }}
+              Lvl {{ item.requiredLevel }}
             </span>
             <span class="text-slate-900 dark:text-white font-black text-lg">
               <AnimatedNumber :value="item.price" />
@@ -183,14 +172,14 @@ const handlePurchase = async (itemId: number) => {
             class="w-full py-3 rounded-xl font-black uppercase text-xs tracking-widest transition-all active:scale-95 disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed border-b-4"
             :class="[
               isOwned(item.id)
-                ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed'
+                ? 'bg-slate-100 text-slate-400 border-slate-200'
                 : 'bg-green-600 hover:bg-green-500 text-white border-green-800 shadow-lg shadow-green-900/20 active:border-b-0 active:mt-1',
             ]"
           >
             <template v-if="isOwned(item.id)">{{ t("shop.owned") }}</template>
-            <template v-else-if="userLevel < item.requiredLevel">
-              {{ t("shop.lowLevel") }}
-            </template>
+            <template v-else-if="userLevel < item.requiredLevel">{{
+              t("shop.lowLevel")
+            }}</template>
             <template v-else>{{ t("shop.buyNow") }}</template>
           </button>
         </div>
@@ -208,5 +197,20 @@ const handlePurchase = async (itemId: number) => {
 }
 .border-blue-500 {
   box-shadow: 0 10px 20px -10px rgba(59, 130, 246, 0.4);
+}
+
+@keyframes shop-rainbow-scroll {
+  to {
+    background-position: 200% center;
+  }
+}
+@keyframes shop-move-gradient {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 </style>

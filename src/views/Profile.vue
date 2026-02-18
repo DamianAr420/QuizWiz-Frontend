@@ -9,8 +9,9 @@ import { useShopStore } from "@/stores/shop";
 import QuizCard from "@/components/Cards/QuizCard.vue";
 import ConfirmModal from "@/components/Modals/Confirm.vue";
 import { useCloudinary } from "@/composables/useCloudinary";
-import { ItemRarity } from "@/types/shop";
+import { ItemRarity, ItemType } from "@/types/shop";
 import AnimatedNumber from "@/components/AnimatedNumber.vue";
+import { SHOP_PRESETS } from "@/components/shop/shopPresets";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -25,14 +26,50 @@ const isDeleteModalOpen = ref(false);
 const isQuizDeleteModalOpen = ref(false);
 const quizToDelete = ref<number | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
-const form = ref({ displayName: "" });
+
+const form = ref({
+  displayName: "",
+  selectedFrame: null as string | null,
+  selectedBackground: null as string | null,
+});
 
 watch(
-  () => userStore.profile?.displayName,
-  (newVal) => {
-    if (newVal) form.value.displayName = newVal;
+  () => userStore.profile,
+  (profile) => {
+    if (profile) {
+      form.value.displayName = profile.displayName;
+      form.value.selectedFrame = profile.selectedFrame;
+      form.value.selectedBackground = profile.selectedBackground;
+    }
   },
   { immediate: true },
+);
+
+const ownedFrames = computed(() =>
+  shopStore.inventory.filter((i) => i.shopItem.type === ItemType.AvatarFrame),
+);
+
+const ownedBackgrounds = computed(() =>
+  shopStore.inventory.filter((i) => i.shopItem.type === ItemType.Background),
+);
+
+const getItemClasses = (imageUrl: string | null | undefined) => {
+  const presetClass = SHOP_PRESETS.getClassName(imageUrl ?? null);
+  let classes =
+    "aspect-square rounded-xl relative overflow-hidden transition-all duration-300 ";
+  if (presetClass) classes += presetClass;
+  else
+    classes +=
+      "bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700";
+  return classes;
+};
+
+const getItemStyle = (imageUrl: string | null | undefined) => {
+  return SHOP_PRESETS.getInlineStyle(imageUrl ?? null);
+};
+
+const avatarUrl = computed(() =>
+  getAvatarUrl(userStore.profile?.cloudinaryPublicId, 200),
 );
 
 const levelProgress = computed(() => {
@@ -57,10 +94,6 @@ const myQuizzes = computed(() => {
   );
 });
 
-const avatarUrl = computed(() =>
-  getAvatarUrl(userStore.profile?.cloudinaryPublicId, 200),
-);
-
 const roleBadgeClass = computed(() => {
   const role = userStore.profile?.role?.toLowerCase();
   if (role === "admin")
@@ -77,16 +110,15 @@ onMounted(async () => {
   ]);
 });
 
-const formatDate = (dateString?: string) => {
-  if (!dateString) return "";
-  return new Date(dateString).toLocaleDateString();
-};
-
 const handleUpdate = async () => {
   try {
-    await userStore.updateProfile(form.value.displayName);
+    await userStore.updateProfile({
+      displayName: form.value.displayName,
+      selectedFrame: form.value.selectedFrame,
+      selectedBackground: form.value.selectedBackground,
+    });
     isEditing.value = false;
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
   }
 };
@@ -109,7 +141,7 @@ const handleDeleteAccount = async () => {
     await userStore.deleteAccount();
     isDeleteModalOpen.value = false;
     router.push("/");
-  } catch (error: any) {
+  } catch (error) {
     isDeleteModalOpen.value = false;
   }
 };
@@ -136,10 +168,25 @@ const confirmQuizDelete = async () => {
   <div class="min-h-screen py-8 sm:py-12 px-4 transition-colors duration-300">
     <div class="max-w-7xl mx-auto space-y-8">
       <div
-        class="relative overflow-hidden rounded-[2.5rem] bg-white dark:bg-[#151e32] shadow-xl shadow-slate-200/50 dark:shadow-black/20 border border-slate-100 dark:border-slate-800"
+        class="relative overflow-visible sm:overflow-hidden rounded-[2.5rem] bg-white dark:bg-[#151e32] shadow-xl shadow-slate-200/50 dark:shadow-black/20 border border-slate-100 dark:border-slate-800"
       >
         <div
-          class="h-32 sm:h-48 w-full bg-linear-to-r from-green-400 via-emerald-500 to-teal-600 dark:from-green-600 dark:via-emerald-800 dark:to-teal-900 relative"
+          class="h-32 sm:h-48 w-full relative transition-all duration-700 ease-in-out overflow-hidden rounded-t-[2.5rem]"
+          :class="
+            SHOP_PRESETS.getClassName(
+              isEditing
+                ? form.selectedBackground
+                : userStore.profile?.selectedBackground,
+            )
+          "
+          :style="
+            SHOP_PRESETS.getInlineStyle(
+              isEditing
+                ? form.selectedBackground
+                : userStore.profile?.selectedBackground,
+            ) ||
+            'background: linear-gradient(to right, #4ade80, #10b981, #0d9488)'
+          "
         >
           <div
             class="absolute inset-0 bg-[url('/noise.png')] opacity-20 mix-blend-overlay"
@@ -151,46 +198,64 @@ const confirmQuizDelete = async () => {
 
         <div class="px-6 sm:px-12 pb-8">
           <div class="flex flex-col lg:flex-row gap-6 lg:gap-10 items-start">
-            <div class="-mt-16 sm:-mt-20 relative group">
+            <div class="-mt-16 sm:-mt-24 relative group z-20">
               <div
-                class="w-32 h-32 sm:w-40 sm:h-40 rounded-4xl p-1.5 bg-white dark:bg-[#151e32] shadow-2xl transition-transform duration-300 group-hover:scale-105"
-                @click="triggerFileInput"
+                class="w-32 h-32 sm:w-44 sm:h-44 rounded-3xl p-1 bg-white dark:bg-[#151e32] shadow-2xl shadow-black/20 transition-transform duration-300 group-hover:scale-105 relative"
               >
                 <div
-                  class="w-full h-full rounded-[1.7rem] overflow-hidden relative cursor-pointer bg-slate-100 dark:bg-slate-800"
+                  class="w-full h-full rounded-[1.4rem] overflow-hidden relative cursor-pointer z-99"
+                  @click="triggerFileInput"
                 >
                   <img
                     v-if="avatarUrl"
                     :src="avatarUrl"
                     class="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+                    alt="User Avatar"
                   />
                   <div
                     v-else
-                    class="w-full h-full flex items-center justify-center text-4xl bg-linear-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900"
+                    class="w-full h-full flex items-center justify-center text-5xl sm:text-6xl"
                   >
                     🧙‍♂️
                   </div>
 
                   <div
-                    class="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300"
+                    class="absolute inset-0 bg-black/40 backdrop-blur-[1px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20"
                   >
                     <span
-                      class="text-xs font-bold text-white uppercase tracking-wider border border-white/30 px-3 py-1 rounded-full bg-white/10"
+                      class="text-[10px] sm:text-xs font-bold text-white uppercase tracking-wider border border-white/30 px-3 py-1.5 rounded-full bg-white/10"
                     >
                       {{ t("profile.changeAvatar") }}
                     </span>
                   </div>
+                </div>
 
+                <div
+                  v-if="
+                    isEditing
+                      ? form.selectedFrame
+                      : userStore.profile?.selectedFrame
+                  "
+                  class="absolute inset-0 z-50 pointer-events-none drop-shadow-2xl transition-all duration-500 rounded-[1.6rem] w-full h-full"
+                  :class="
+                    SHOP_PRESETS.getClassName(
+                      isEditing
+                        ? form.selectedFrame
+                        : userStore.profile?.selectedFrame,
+                    )
+                  "
+                ></div>
+
+                <div
+                  v-if="userStore.loading"
+                  class="absolute inset-0 bg-white/80 dark:bg-slate-900/80 flex items-center justify-center z-60 rounded-3xl"
+                >
                   <div
-                    v-if="userStore.loading"
-                    class="absolute inset-0 bg-white/80 dark:bg-slate-900/80 flex items-center justify-center z-20"
-                  >
-                    <div
-                      class="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"
-                    ></div>
-                  </div>
+                    class="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"
+                  ></div>
                 </div>
               </div>
+
               <input
                 ref="fileInput"
                 type="file"
@@ -205,14 +270,14 @@ const confirmQuizDelete = async () => {
                 class="flex flex-col sm:flex-row justify-between items-start gap-4 mb-6"
               >
                 <div>
-                  <div class="flex items-center gap-3 mb-1">
+                  <div class="flex items-center gap-3 mb-1 flex-wrap">
                     <h1
                       class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight"
                     >
                       {{ userStore.profile?.displayName }}
                     </h1>
                     <span
-                      class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase border tracking-widest"
+                      class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase border tracking-widest shadow-sm"
                       :class="roleBadgeClass"
                     >
                       {{ userStore.profile?.role }}
@@ -230,51 +295,147 @@ const confirmQuizDelete = async () => {
 
                 <button
                   @click="isEditing = !isEditing"
-                  class="group px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all duration-300 border"
+                  class="group px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all duration-300 border flex items-center gap-2"
                   :class="
                     isEditing
                       ? 'bg-red-50 text-red-600 border-red-100 hover:bg-red-100 dark:bg-red-900/10 dark:text-red-400 dark:border-red-900/30'
-                      : 'bg-white text-slate-600 border-slate-200 hover:border-green-400 hover:text-green-600 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700 dark:hover:border-green-500/50 dark:hover:text-green-400 shadow-sm'
+                      : 'bg-white text-slate-600 border-slate-200 hover:border-green-400 hover:text-green-600 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700 shadow-sm'
                   "
                 >
+                  <span v-if="isEditing">✕</span>
+                  <span v-else>✎</span>
                   {{ isEditing ? t("common.cancel") : t("profile.editBtn") }}
                 </button>
               </div>
 
               <div
                 v-if="isEditing"
-                class="mb-8 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700 animate-in slide-in-from-top-2 fade-in"
+                class="mb-8 p-6 bg-slate-50 dark:bg-slate-800/50 rounded-4xl border-2 border-dashed border-slate-200 dark:border-slate-700 animate-in slide-in-from-top-4 duration-500"
               >
-                <form
-                  @submit.prevent="handleUpdate"
-                  class="flex flex-col sm:flex-row gap-3"
-                >
-                  <div class="flex-1">
+                <form @submit.prevent="handleUpdate" class="space-y-6">
+                  <div>
                     <label
-                      class="text-[10px] font-bold text-slate-400 uppercase ml-1 mb-1 block"
+                      class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 mb-2 block"
                       >{{ t("auth.displayName") }}</label
                     >
                     <input
                       v-model="form.displayName"
                       type="text"
-                      class="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/10 transition-all font-bold text-slate-800 dark:text-slate-100"
+                      class="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/10 transition-all font-bold"
                     />
                   </div>
-                  <div class="flex items-end">
-                    <button
-                      type="submit"
-                      :disabled="userStore.loading"
-                      class="h-12.5 px-8 bg-green-600 hover:bg-green-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-green-500/20 active:scale-95 flex items-center justify-center min-w-30"
-                    >
-                      <span v-if="!userStore.loading">{{
-                        t("common.save")
-                      }}</span>
-                      <div
-                        v-else
-                        class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"
-                      ></div>
-                    </button>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                      <label
+                        class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block"
+                        >Twoje Ramki</label
+                      >
+                      <div class="flex flex-wrap gap-3">
+                        <button
+                          type="button"
+                          @click="form.selectedFrame = null"
+                          :class="
+                            !form.selectedFrame
+                              ? 'border-green-500 ring-4 ring-green-500/10 bg-green-50 dark:bg-green-900/20 text-green-600'
+                              : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-400 hover:border-green-300'
+                          "
+                          class="w-16 h-16 rounded-2xl border-2 flex items-center justify-center text-xl transition-all"
+                          title="Brak ramki"
+                        >
+                          🚫
+                        </button>
+                        <button
+                          v-for="item in ownedFrames"
+                          :key="item.id"
+                          type="button"
+                          @click="
+                            form.selectedFrame = item.shopItem.imageUrl ?? null
+                          "
+                          class="w-16 h-16 rounded-2xl border-2 transition-all relative group"
+                          :class="[
+                            form.selectedFrame === item.shopItem.imageUrl
+                              ? 'border-green-500 ring-4 ring-green-500/10 bg-white dark:bg-slate-900 z-10'
+                              : 'border-transparent bg-slate-100 dark:bg-slate-800 hover:bg-white hover:shadow-lg',
+                          ]"
+                        >
+                          <div
+                            class="absolute inset-[-15%]"
+                            :class="
+                              SHOP_PRESETS.getClassName(item.shopItem.imageUrl)
+                            "
+                            :style="
+                              SHOP_PRESETS.getInlineStyle(
+                                item.shopItem.imageUrl,
+                              )
+                            "
+                          ></div>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label
+                        class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block"
+                        >Twoje Tła Profilu</label
+                      >
+                      <div class="flex flex-wrap gap-3">
+                        <button
+                          type="button"
+                          @click="form.selectedBackground = null"
+                          :class="
+                            !form.selectedBackground
+                              ? 'border-green-500 ring-4 ring-green-500/10 bg-green-50 dark:bg-green-900/20 text-green-600'
+                              : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-400 hover:border-green-300'
+                          "
+                          class="px-4 h-14 rounded-xl border-2 font-black text-[10px] uppercase transition-all"
+                        >
+                          Default
+                        </button>
+                        <button
+                          v-for="item in ownedBackgrounds"
+                          :key="item.id"
+                          type="button"
+                          @click="
+                            form.selectedBackground =
+                              item.shopItem.imageUrl ?? null
+                          "
+                          class="w-24 h-14 rounded-xl border-2 transition-all overflow-hidden relative group"
+                          :class="[
+                            form.selectedBackground === item.shopItem.imageUrl
+                              ? 'border-green-500 ring-4 ring-green-500/10 scale-105 shadow-lg z-10'
+                              : 'border-transparent hover:scale-105',
+                          ]"
+                        >
+                          <div
+                            class="absolute inset-0"
+                            :class="
+                              SHOP_PRESETS.getClassName(item.shopItem.imageUrl)
+                            "
+                            :style="
+                              SHOP_PRESETS.getInlineStyle(
+                                item.shopItem.imageUrl,
+                              )
+                            "
+                          ></div>
+                        </button>
+                      </div>
+                    </div>
                   </div>
+
+                  <button
+                    type="submit"
+                    :disabled="userStore.loading"
+                    class="w-full py-4 bg-green-600 hover:bg-green-500 text-white font-black uppercase rounded-xl transition-all shadow-lg shadow-green-500/20 hover:shadow-green-500/40 active:scale-[0.99] flex items-center justify-center gap-2"
+                  >
+                    <span v-if="!userStore.loading">{{
+                      t("common.save")
+                    }}</span>
+                    <div
+                      v-else
+                      class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"
+                    ></div>
+                  </button>
                 </form>
               </div>
 
@@ -382,18 +543,18 @@ const confirmQuizDelete = async () => {
                 :key="index"
                 class="p-4 rounded-2xl bg-white dark:bg-[#151e32] border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-all duration-300 group"
               >
-                <div class="flex justify-between items-start mb-2">
-                  <div
-                    :class="`w-8 h-8 rounded-lg flex items-center justify-center text-lg ${stat.color}`"
-                  >
-                    {{ stat.icon }}
-                  </div>
+                <div
+                  :class="`w-8 h-8 rounded-lg flex items-center justify-center text-lg mb-2 ${stat.color}`"
+                >
+                  {{ stat.icon }}
                 </div>
                 <div
                   class="text-2xl font-black text-slate-800 dark:text-white group-hover:scale-110 origin-left transition-transform flex items-center"
                 >
-                  <AnimatedNumber :value="stat.value" />
-                  <span v-if="stat.suffix">{{ stat.suffix }}</span>
+                  <AnimatedNumber :value="stat.value" /><span
+                    v-if="stat.suffix"
+                    >{{ stat.suffix }}</span
+                  >
                 </div>
                 <div
                   class="text-[10px] font-bold text-slate-400 uppercase tracking-wider"
@@ -401,19 +562,6 @@ const confirmQuizDelete = async () => {
                   {{ stat.label }}
                 </div>
               </div>
-            </div>
-
-            <div
-              class="mt-3 p-4 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-between"
-            >
-              <span
-                class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide"
-                >{{ t("profile.memberSince") }}</span
-              >
-              <span
-                class="text-sm font-black text-slate-700 dark:text-slate-200"
-                >{{ formatDate(userStore.profile?.createdAt) }}</span
-              >
             </div>
           </section>
 
@@ -432,7 +580,6 @@ const confirmQuizDelete = async () => {
                 {{ t("profile.inventory.goToShop") }}
               </button>
             </div>
-
             <div
               class="bg-white dark:bg-[#151e32] p-4 rounded-4xl border border-slate-100 dark:border-slate-800 shadow-sm"
             >
@@ -443,20 +590,10 @@ const confirmQuizDelete = async () => {
                 <div
                   v-for="item in shopStore.inventory.slice(0, 8)"
                   :key="item.id"
-                  class="aspect-square rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 relative group overflow-hidden"
+                  :class="getItemClasses(item.shopItem.imageUrl)"
+                  :style="getItemStyle(item.shopItem.imageUrl)"
                   :title="t(item.shopItem.title)"
                 >
-                  <img
-                    v-if="item.shopItem.imageUrl"
-                    :src="item.shopItem.imageUrl"
-                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                  />
-                  <span
-                    v-else
-                    class="absolute inset-0 flex items-center justify-center text-xl"
-                    >🎁</span
-                  >
-
                   <div
                     class="absolute bottom-0 inset-x-0 h-1"
                     :class="{
@@ -477,7 +614,6 @@ const confirmQuizDelete = async () => {
                 </div>
               </div>
               <div v-else class="text-center py-8">
-                <div class="text-4xl mb-2 opacity-30">🕸️</div>
                 <p class="text-xs font-bold text-slate-400">
                   {{ t("profile.inventory.empty") }}
                 </p>
@@ -486,30 +622,26 @@ const confirmQuizDelete = async () => {
           </section>
 
           <section class="pt-4">
-            <div
-              class="rounded-2xl border border-red-100 dark:border-red-900/30 bg-red-50/50 dark:bg-red-900/5 overflow-hidden transition-all hover:bg-red-50 dark:hover:bg-red-900/10"
+            <button
+              @click="isDeleteModalOpen = true"
+              class="w-full px-5 py-4 flex items-center justify-between rounded-2xl border border-red-100 dark:border-red-900/30 bg-red-50/50 dark:bg-red-900/5 group hover:bg-red-100 transition-all"
             >
-              <button
-                @click="isDeleteModalOpen = true"
-                class="w-full px-5 py-4 flex items-center justify-between group"
-              >
-                <div class="text-left">
-                  <span
-                    class="block text-sm font-black text-red-700 dark:text-red-400"
-                    >{{ t("profile.danger.title") }}</span
-                  >
-                  <span
-                    class="text-xs font-medium text-red-600/60 dark:text-red-400/50"
-                    >{{ t("profile.danger.desc") }}</span
-                  >
-                </div>
-                <div
-                  class="w-8 h-8 rounded-full bg-white dark:bg-red-900/30 flex items-center justify-center text-red-500 group-hover:scale-110 transition-transform"
+              <div class="text-left">
+                <span
+                  class="block text-sm font-black text-red-700 dark:text-red-400"
+                  >{{ t("profile.danger.title") }}</span
                 >
-                  🗑️
-                </div>
-              </button>
-            </div>
+                <span
+                  class="text-xs font-medium text-red-600/60 dark:text-red-400/50"
+                  >{{ t("profile.danger.desc") }}</span
+                >
+              </div>
+              <div
+                class="w-8 h-8 rounded-full bg-white dark:bg-red-900/30 flex items-center justify-center text-red-500 group-hover:scale-110 transition-transform"
+              >
+                🗑️
+              </div>
+            </button>
           </section>
         </div>
 
@@ -518,7 +650,8 @@ const confirmQuizDelete = async () => {
             <h3
               class="text-xl font-black text-slate-800 dark:text-white flex items-center gap-2"
             >
-              <span class="text-2xl">🚀</span> {{ t("profile.quizzes.title") }}
+              <span class="text-2xl">🚀</span>
+              {{ t("profile.quizzes.title") }}
             </h3>
             <button
               @click="router.push('/quiz/create')"
@@ -555,15 +688,15 @@ const confirmQuizDelete = async () => {
             />
             <button
               @click="router.push('/quiz/create')"
-              class="group min-h-62.5 rounded-4xl border-3 border-dashed border-slate-200 dark:border-slate-800 hover:border-green-400 dark:hover:border-green-500/50 bg-transparent flex flex-col items-center justify-center gap-4 transition-all duration-300 hover:bg-green-50/50 dark:hover:bg-green-900/10"
+              class="group min-h-62.5 rounded-4xl border-3 border-dashed border-slate-200 dark:border-slate-800 hover:border-green-400 bg-transparent flex flex-col items-center justify-center gap-4 transition-all"
             >
               <div
-                class="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 group-hover:bg-green-100 dark:group-hover:bg-green-500/20 flex items-center justify-center text-3xl text-slate-400 group-hover:text-green-500 transition-colors"
+                class="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 group-hover:bg-green-100 flex items-center justify-center text-3xl text-slate-400 group-hover:text-green-500 transition-colors"
               >
                 +
               </div>
               <span
-                class="font-black text-slate-400 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors"
+                class="font-black text-slate-400 group-hover:text-green-600 transition-colors"
                 >{{ t("profile.quizzes.create") }}</span
               >
             </button>
@@ -571,7 +704,7 @@ const confirmQuizDelete = async () => {
 
           <div
             v-else
-            class="rounded-[2.5rem] bg-white dark:bg-[#151e32] border border-slate-100 dark:border-slate-800 p-12 text-center shadow-sm"
+            class="rounded-[2.5rem] bg-white dark:bg-[#151e32] border border-slate-100 dark:border-slate-800 p-12 text-center"
           >
             <div
               class="w-24 h-24 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center text-5xl mx-auto mb-6"
@@ -581,12 +714,9 @@ const confirmQuizDelete = async () => {
             <h4 class="text-xl font-black text-slate-900 dark:text-white mb-2">
               {{ t("profile.quizzes.emptyTitle") }}
             </h4>
-            <p class="text-slate-500 dark:text-slate-400 mb-8 max-w-md mx-auto">
-              {{ t("profile.quizzes.emptyDesc") }}
-            </p>
             <button
               @click="router.push('/quiz/create')"
-              class="px-8 py-3 bg-linear-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white font-bold rounded-xl shadow-lg shadow-green-500/30 transition-all hover:-translate-y-1 active:translate-y-0"
+              class="px-8 py-3 bg-linear-to-r from-green-500 to-emerald-600 text-white font-bold rounded-xl shadow-lg hover:shadow-emerald-500/30 transition-shadow"
             >
               {{ t("profile.quizzes.createFirst") }}
             </button>
@@ -621,10 +751,26 @@ const confirmQuizDelete = async () => {
 <style scoped>
 @keyframes shimmer {
   0% {
-    transform: translateX(-150%) skewX(-15deg);
+    transform: translateX(-100%);
   }
   100% {
-    transform: translateX(150%) skewX(-15deg);
+    transform: translateX(100%);
+  }
+}
+
+.animate-in {
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+}
+
+@keyframes slide-in-from-top-4 {
+  from {
+    transform: translateY(-1rem);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
 }
 </style>

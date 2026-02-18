@@ -65,6 +65,8 @@
     "editBtn": "Edytuj profil",
     "memberSince": "Dołączył(a)",
     "levelShort": "lvl",
+    "updateError": "Nie udało się zaktualizować profilu",
+    "updateSuccess": "Profil zaktualizowany pomyślnie!",
     "stats": {
       "title": "Statystyki",
       "xp": "Doświadczenie",
@@ -230,25 +232,41 @@
     "purchaseSuccess": "Przedmiot został dodany do Twojego ekwipunku!"
   },
   "items": {
-    "gold_aura": {
-      "title": "Złota Aura",
-      "desc": "Ekskluzywna złota ramka dla mistrzów wiedzy."
+    "frame_emerald": {
+      "title": "Szmaragdowy Blask",
+      "desc": "Elegancka, promieniująca zielenią ramka dla miłośników natury."
     },
-    "dark_knight": {
-      "title": "Mroczny Rycerz",
-      "desc": "Mroczna, stalowa ramka z kolcami."
+    "frame_vaporwave": {
+      "title": "Vaporwave Retro",
+      "desc": "Przenieś się w lata 80. z neonowym, pulsującym gradientem."
     },
-    "mage_library": {
-      "title": "Biblioteka Maga",
-      "desc": "Zmień tło swojego profilu na antyczną bibliotekę pełną zwojów."
+    "frame_fire": {
+      "title": "Rdzeń Magmy",
+      "desc": "Gorąca ramka dla graczy o ognistym temperamencie."
     },
-    "rescue_ticket": {
-      "title": "Bilet Ratunkowy",
-      "desc": "Pozwala na jedną pomyłkę w quizie bez utraty punktów."
+    "frame_rainbow": {
+      "title": "Tęczowy Przelew",
+      "desc": "Legendarna, animowana ramka mieniąca się wszystkimi barwami."
     },
-    "dragon_slayer": {
-      "title": "Pogromca Smoków",
-      "desc": "Unikalna odznaka za ukończenie 50 quizów bez błędu."
+    "bg_deepsea": {
+      "title": "Głębia Oceanu",
+      "desc": "Uspokajające, ciemnoniebieskie tło Twojego profilu."
+    },
+    "bg_sunset": {
+      "title": "Kalifornijski Zachód",
+      "desc": "Ciepłe barwy zachodzącego słońca w Twoim dashboardzie."
+    },
+    "bg_space": {
+      "title": "Gwiezdna Otchłań",
+      "desc": "Kosmiczne tło z generowanymi przez CSS gwiazdami."
+    },
+    "badge_veteran": {
+      "title": "Weteran Serwisu",
+      "desc": "Odznaka przyznawana za staż i doświadczenie."
+    },
+    "ticket_reset": {
+      "title": "Bilet Resetu",
+      "desc": "Pozwala na jednorazowe zresetowanie statystyk quizu."
     }
   }
 }

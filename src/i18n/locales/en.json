@@ -13,17 +13,17 @@
   },
   "auth": {
     "welcome": "Welcome to QuizWiz",
-    "join": "Join the game",
-    "email": "Your email",
+    "join": "Join the Game",
+    "email": "Your Email",
     "displayName": "What's your name?",
     "loading": "Just a moment...",
     "submitLogin": "Login",
-    "submitRegister": "Create account",
+    "submitRegister": "Create Account",
     "noAccount": "Don't have an account? Sign up",
     "hasAccount": "Already have an account? Login",
     "placeholders": {
       "displayName": "e.g. QuizMaster99",
-      "identifier": "Your email or nick",
+      "identifier": "Email or nickname",
       "email": "your@email.com",
       "password": "Password"
     },
@@ -41,16 +41,16 @@
   },
   "home": {
     "title": "Become a master in",
-    "description": "Test your knowledge across hundreds of categories, compete with friends, and climb to the top of the leaderboard. The best way to learn and have fun starts here!",
+    "description": "Test your knowledge in hundreds of categories, compete with friends, and climb the leaderboard. The best way to learn and have fun starts here!",
     "cta": "Play Now",
     "readyToPlay": "Ready for a challenge?",
-    "ctaSub": "Join thousands of players and prove that you know it all.",
+    "ctaSub": "Join thousands of players and prove you know it all.",
     "startNow": "Start Adventure",
     "features": {
       "quizzes": "Thousands of Questions",
-      "quizzesDesc": "A constantly updated database with new challenges from every field of life.",
-      "ranking": "Global Leaderboard",
-      "rankingDesc": "Compare your scores with players worldwide and aim for number one.",
+      "quizzesDesc": "The database is constantly updated with new challenges from every field of life.",
+      "ranking": "Global Ranking",
+      "rankingDesc": "Compare your results with players from all over the world and be number one.",
       "speed": "Speed Mode",
       "speedDesc": "Play against the clock and earn extra points for your reflexes."
     },
@@ -63,17 +63,19 @@
   "profile": {
     "changeAvatar": "Change",
     "editBtn": "Edit Profile",
-    "memberSince": "Member Since",
+    "memberSince": "Member since",
     "levelShort": "lvl",
+    "updateError": "Failed to update profile",
+    "updateSuccess": "Profile updated successfully!",
     "stats": {
       "title": "Statistics",
       "xp": "Experience",
-      "xpLeft": "{xp} XP to next level",
+      "xpLeft": "{xp} XP left to next level",
       "wallet": "Wallet",
       "played": "Played",
       "accuracy": "Accuracy",
       "correct": "Correct",
-      "streak": "Streak",
+      "streak": "Day streak",
       "points": "Points"
     },
     "inventory": {
@@ -85,9 +87,8 @@
       "title": "Your Quizzes",
       "create": "Create Quiz",
       "createFirst": "Create your first quiz",
-      "emptyTitle": "No Quizzes Yet",
-      "emptyDesc": "You haven't created any quizzes yet. Share your knowledge and challenge others!",
-      "deleteWarning": "Are you sure you want to delete this quiz?"
+      "emptyTitle": "No quizzes found",
+      "emptyDesc": "You haven't created any quizzes yet. Share your knowledge and challenge others!"
     },
     "danger": {
       "title": "Danger Zone",
@@ -98,7 +99,7 @@
     }
   },
   "common": {
-    "backToHome": "Back to home",
+    "backToHome": "Back to Home",
     "confirmDelete": "Are you sure you want to delete this quiz?",
     "loading": "Loading...",
     "save": "Save",
@@ -110,33 +111,33 @@
     "deleteError": "Failed to delete item"
   },
   "leaderboard": {
-    "title": "Leaderboard",
+    "title": "Player Ranking",
     "subtitle": "Who is the biggest brain in QuizWiz?",
     "comingSoon": "Feature coming soon!",
-    "comingSoonDesc": "We are working on a global ranking system. Soon you will be able to compete with the best players!"
+    "comingSoonDesc": "We are working on the global ranking system. Soon you will be able to compete with the best!"
   },
   "quiz": {
     "listTitle": "Available Quizzes",
     "createTitle": "Create New Quiz",
     "editTitle": "Edit Quiz",
     "createNew": "New Quiz",
-    "searchPlaceholder": "Search by title or description...",
+    "searchPlaceholder": "Search by name or description...",
     "title": "Quiz Title",
     "description": "Description",
     "timeLimit": "Time Limit",
-    "maxQuestions": "Max Questions",
+    "maxQuestions": "Question Count",
     "addQuestion": "Add Question",
     "question": "Question",
     "correctAnswer": "Correct Answer",
     "wrongAnswers": "Wrong Answers",
     "playNow": "Play Now",
+    "deleteWarning": "Are you sure you want to delete this quiz? All data, statistics, and score history associated with this quiz will be permanently lost.",
     "locked": "Locked",
-    "deleteWarning": "Are you sure you want to delete this quiz? All data, statistics, and result history associated with this quiz will be permanently lost.",
     "noResults": "No quizzes found",
     "markAsOfficial": "Official Quiz",
     "adminOnly": "Admin Only",
     "alreadyDoneToday": "You have already played this quiz today",
-    "limitTitle": "Points Limit",
+    "limitTitle": "Point Limit",
     "multiplier": "Multiplier:",
     "filter": {
       "official": "Official",
@@ -155,7 +156,7 @@
       "title": "Quiz Title",
       "description": "Quiz Description",
       "visible": "Visibility",
-      "playable": "Playable Status",
+      "playable": "Playability",
       "official": "Official (Admin)",
       "statusPublic": "Public / Private",
       "statusPlay": "Play / Preview",
@@ -165,30 +166,30 @@
       "correctAnswer": "Correct Answer",
       "wrongAnswers": "Wrong Answers",
       "addQuestion": "Add another question",
-      "save": "Save & Publish",
+      "save": "Save and Publish",
       "update": "Update Quiz",
       "verified": "Verified (Admin)",
-      "statusVerified": "Only Admin",
-      "questionsList": "Questions List",
+      "statusVerified": "Admin only",
+      "questionsList": "Question List",
       "validation": {
         "emptyHeader": "Error: Title and description cannot be empty.",
         "emptyQuestion": "Question {number}: Question text is empty.",
         "emptyCorrect": "Question {number}: Correct answer is empty.",
-        "emptyDistractors": "Question {number}: Fill in all wrong answers."
+        "emptyDistractors": "Question {number}: Complete all wrong answers."
       }
     },
     "stats": {
       "questions": "questions",
-      "perQuestion": "ques."
+      "perQuestion": "q."
     },
-    "createSuccess": "Quiz created successfully!",
+    "createSuccess": "Quiz has been created!",
     "createError": "Failed to create quiz",
-    "deleteSuccess": "Quiz deleted successfully",
-    "deleteError": "Error deleting quiz"
+    "deleteSuccess": "Quiz has been deleted",
+    "deleteError": "Error while deleting quiz"
   },
   "game": {
     "score": "Score",
-    "timeLeft": "Time left",
+    "timeLeft": "Time Left",
     "next": "Next",
     "finish": "Finish",
     "gameOver": "Quiz Over!",
@@ -196,13 +197,13 @@
     "backToList": "Back to List",
     "correct": "Correct!",
     "wrong": "Wrong!",
+    "solo": "Play Solo",
+    "multiplayer": "Multiplayer Mode",
     "loading": "Loading",
     "question": "Question",
     "yourScore": "Your score is",
     "scoreSaved": "Score saved successfully!",
-    "errorSaving": "Error occurred while saving the score.",
-    "solo": "Single-player game",
-    "multiplayer": "Multiplayer game",
+    "errorSaving": "Error occurred while saving score.",
     "sec": "S",
     "greatJob": "Great job",
     "points": "Points",
@@ -212,44 +213,60 @@
     "questionCount": "Select number of questions",
     "max": "All",
     "soloMode": "Play Solo",
-    "soloDesc": "Practice your skills at your own pace.",
+    "soloDesc": "Train your skills at your own pace.",
     "multiMode": "Multiplayer",
     "multiDesc": "Compete with others in real-time.",
     "soon": "Soon"
   },
   "shop": {
-    "title": "Mage's",
-    "subtitle": "Vault",
-    "description": "Exchange your hard-earned quiz points for unique collectables and boosts.",
+    "title": "Vault",
+    "subtitle": "of the Mage",
+    "description": "Exchange your hard-earned points for unique collectibles and power-ups.",
     "yourPoints": "Your Balance",
-    "level": "Lv.",
+    "level": "Lvl.",
     "currency": "PTS",
     "owned": "Owned",
     "lowLevel": "Level too low",
     "buyNow": "Buy Now",
     "empty": "The shop is currently empty. Check back later!",
-    "purchaseSuccess": "Item successfully added to your inventory!"
+    "purchaseSuccess": "Item has been added to your inventory!"
   },
   "items": {
-    "gold_aura": {
-      "title": "Golden Aura",
-      "desc": "An exclusive golden frame for masters of knowledge."
+    "frame_emerald": {
+      "title": "Emerald Glow",
+      "desc": "An elegant, green-radiating frame for nature lovers."
     },
-    "dark_knight": {
-      "title": "Dark Knight",
-      "desc": "A dark, steel frame with spikes."
+    "frame_vaporwave": {
+      "title": "Vaporwave Retro",
+      "desc": "Travel back to the 80s with a neon, pulsing gradient."
     },
-    "mage_library": {
-      "title": "Mage's Library",
-      "desc": "Change your profile background to an ancient library full of scrolls."
+    "frame_fire": {
+      "title": "Magma Core",
+      "desc": "A hot frame for players with a fiery temperament."
     },
-    "rescue_ticket": {
-      "title": "Rescue Ticket",
-      "desc": "Allows one mistake in a quiz without losing your streak."
+    "frame_rainbow": {
+      "title": "Rainbow Flow",
+      "desc": "A legendary, animated frame shimmering with all colors."
     },
-    "dragon_slayer": {
-      "title": "Dragon Slayer",
-      "desc": "A unique badge for completing 50 quizzes without a single error."
+    "bg_deepsea": {
+      "title": "Ocean Depths",
+      "desc": "A calming, deep blue background for your profile."
+    },
+    "bg_sunset": {
+      "title": "California Sunset",
+      "desc": "Warm colors of the setting sun in your dashboard."
+    },
+    "bg_space": {
+      "title": "Starry Abyss",
+      "desc": "A cosmic background with CSS-generated stars."
+    },
+    "badge_veteran": {
+      "title": "Veteran Badge",
+      "desc": "Badge awarded for tenure and experience."
+    },
+    "ticket_reset": {
+      "title": "Reset Ticket",
+      "desc": "Allows a one-time reset of quiz statistics."
     }
   }
 }

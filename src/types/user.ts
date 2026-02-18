@@ -5,6 +5,8 @@ export interface User {
   createdAt: string;
   role: string;
   cloudinaryPublicId: string | null;
+  selectedFrame: string | null;
+  selectedBackground: string | null;
   points: number;
   experience: number;
   level: number;
