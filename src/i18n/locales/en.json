@@ -135,6 +135,9 @@
     "noResults": "No quizzes found",
     "markAsOfficial": "Official Quiz",
     "adminOnly": "Admin Only",
+    "alreadyDoneToday": "You have already played this quiz today",
+    "limitTitle": "Points Limit",
+    "multiplier": "Multiplier:",
     "filter": {
       "official": "Official",
       "users": "Community"

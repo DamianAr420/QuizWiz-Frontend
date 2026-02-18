@@ -19,6 +19,7 @@ export interface Quiz {
   authorId?: string;
   isVerified: boolean;
   createdAt?: string;
+  isCompletedToday: boolean;
 }
 
 export interface CreateQuizDto extends Omit<

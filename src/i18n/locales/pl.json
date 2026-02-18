@@ -134,6 +134,9 @@
     "noResults": "Nie znaleziono żadnych quizów",
     "markAsOfficial": "Oficjalny quiz",
     "adminOnly": "Tylko dla admina",
+    "alreadyDoneToday": "Już rozegrałeś/aś ten quiz dzisiaj",
+    "limitTitle": "Limit punktów",
+    "multiplier": "Mnożnik:",
     "filter": {
       "official": "Oficjalne",
       "users": "Społeczność"
