@@ -26,7 +26,7 @@ const languages = [
   { code: "en", name: "English", flag: "https://flagcdn.com/w40/gb.png" },
 ];
 
-const isPlayPage = computed(() => route.path.includes("/quiz"));
+const isPlayPage = computed(() => route.path.includes("/play"));
 
 const isGameEnded = computed(() => route.query.ended === "true");
 
