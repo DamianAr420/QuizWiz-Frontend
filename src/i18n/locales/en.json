@@ -24,7 +24,7 @@
     "placeholders": {
       "displayName": "e.g. QuizMaster99",
       "identifier": "Email or nickname",
-      "email": "your@email.com",
+      "email": "your{'@'}email.com",
       "password": "Password"
     },
     "loginSuccess": "Welcome back, {name}!",

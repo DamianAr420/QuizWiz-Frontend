@@ -151,6 +151,9 @@ const labelClasses =
                   required
                   placeholder=" "
                   :class="[inputClasses, 'pr-12']"
+                  :autocomplete="
+                    isLoginMode ? 'current-password' : 'new-password'
+                  "
                 />
                 <label :class="labelClasses">{{
                   t("auth.placeholders.password")

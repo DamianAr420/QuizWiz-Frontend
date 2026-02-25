@@ -24,7 +24,7 @@
     "placeholders": {
       "displayName": "np. MistrzQuizu99",
       "identifier": "Twój email lub nick",
-      "email": "twoj@email.com",
+      "email": "twoj{'@'}email.com",
       "password": "Hasło"
     },
     "loginSuccess": "Witaj ponownie, {name}!",
