@@ -15,7 +15,6 @@ export const useShopStore = defineStore("shop", {
       this.loading = true;
       try {
         const { data } = await api.get("/shop");
-        console.log(data);
         this.items = Array.isArray(data) ? data : [];
       } catch (e) {
         this.items = [];
