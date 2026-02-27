@@ -18,6 +18,7 @@ export interface Quiz {
   isPlayable: boolean;
   authorId?: string;
   isVerified: boolean;
+  isSubmitted?: boolean;
   createdAt?: string;
   isCompletedToday?: boolean;
 }

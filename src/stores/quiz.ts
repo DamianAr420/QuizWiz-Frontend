@@ -108,6 +108,26 @@ export const useQuizStore = defineStore("quiz", () => {
     }
   };
 
+  const submitQuizForVerification = async (id: number) => {
+    loading.value = true;
+    try {
+      await api.post(`/quizzes/${id}/sendVerifyReq`);
+
+      const quiz = quizzes.value.find((q) => q.id === id);
+      if (quiz) quiz.isSubmitted = true;
+      if (currentQuiz.value && currentQuiz.value.id === id) {
+        currentQuiz.value.isSubmitted = true;
+      }
+
+      toast.show(t("quiz.submitSuccess"), "success");
+    } catch (err: any) {
+      toast.show(t("quiz.submitError"), "error");
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  };
+
   return {
     quizzes,
     currentQuiz,
@@ -119,5 +139,6 @@ export const useQuizStore = defineStore("quiz", () => {
     deleteQuiz,
     submitQuizResult,
     verifyQuiz,
+    submitQuizForVerification,
   };
 });

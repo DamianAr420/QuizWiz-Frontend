@@ -65,6 +65,7 @@ const navLinks = [
   { name: "nav.play", path: "/quiz" },
   { name: "nav.ranking", path: "/leaderboard" },
   { name: "nav.shop", path: "/shop" },
+  { name: "nav.admin", path: "/admin" },
 ];
 
 const dropdownRef = ref<HTMLElement | null>(null);
@@ -122,6 +123,10 @@ onMounted(() => {
 });
 
 onUnmounted(() => window.removeEventListener("click", closeDropdown));
+
+const canSeeAdmin = computed(() => {
+  return authStore.user?.role === "Admin";
+});
 </script>
 
 <template>
@@ -152,19 +157,20 @@ onUnmounted(() => window.removeEventListener("click", closeDropdown));
           <div
             class="hidden md:flex items-center p-1.5 rounded-full bg-slate-100/60 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/60 backdrop-blur-sm"
           >
-            <router-link
-              v-for="link in navLinks"
-              :key="link.path"
-              :to="link.path"
-              class="relative px-5 py-2 rounded-full text-xs lg:text-sm font-bold transition-all duration-300 ease-out"
-              :class="[
-                route.path === link.path
-                  ? 'text-green-700 dark:text-green-300 bg-white dark:bg-slate-700 shadow-md'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-white/50 dark:hover:bg-slate-700/50',
-              ]"
-            >
-              {{ t(link.name) }}
-            </router-link>
+            <template v-for="link in navLinks" :key="link.path">
+              <router-link
+                v-if="link.path !== '/admin' || canSeeAdmin"
+                :to="link.path"
+                class="relative px-5 py-2 rounded-full text-xs lg:text-sm font-bold transition-all duration-300 ease-out"
+                :class="[
+                  route.path === link.path
+                    ? 'text-green-700 dark:text-green-300 bg-white dark:bg-slate-700 shadow-md'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-white/50 dark:hover:bg-slate-700/50',
+                ]"
+              >
+                {{ t(link.name) }}
+              </router-link>
+            </template>
           </div>
         </div>
 

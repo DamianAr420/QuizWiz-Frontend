@@ -4,6 +4,7 @@
     "play": "Graj",
     "ranking": "Ranking",
     "shop": "Sklep",
+    "admin": "Admin",
     "login": "Zaloguj się",
     "logout": "Wyloguj",
     "theme": {
@@ -102,13 +103,14 @@
     "backToHome": "Wróć do strony głównej",
     "confirmDelete": "Czy na pewno chcesz usunąć ten quiz?",
     "loading": "Ładowanie...",
-    "save": "Zapisz",
+    "save": "Zapisz zmiany",
     "update": "Aktualizuj",
     "cancel": "Anuluj",
     "delete": "Usuń teraz",
     "error": "Wystąpił błąd",
     "deleteSuccess": "Usunięto pomyślnie",
-    "deleteError": "Nie udało się usunąć elementu"
+    "deleteError": "Nie udało się usunąć elementu",
+    "confirm": "Zatwierdź"
   },
   "leaderboard": {
     "title": "Ranking Graczy",
@@ -139,6 +141,8 @@
     "alreadyDoneToday": "Już rozegrałeś/aś ten quiz dzisiaj",
     "limitTitle": "Limit punktów",
     "multiplier": "Mnożnik:",
+    "submitSuccess": "Quiz został zgłoszony do weryfikacji!",
+    "submitError": "Nie udało się zgłosić quizu do weryfikacji",
     "filter": {
       "official": "Oficjalne",
       "users": "Społeczność"
@@ -148,7 +152,8 @@
       "comingSoon": "Wkrótce",
       "yours": "Twój",
       "official": "Oficjalny",
-      "verified": "Zweryfikowany"
+      "verified": "Zweryfikowany",
+      "pending": "Oczekujący"
     },
     "form": {
       "createTitle": "Stwórz Nowy Quiz",
@@ -218,6 +223,93 @@
     "multiDesc": "Rywalizuj z innymi w czasie rzeczywistym.",
     "soon": "Wkrótce"
   },
+  "admin": {
+    "title": "Admin",
+    "subtitle": "Panel",
+    "version": "System zarządzania QuizWiz • Wersja 1.0",
+    "stats": {
+      "activeUsers": "Aktywnych Userów",
+      "syncing": "Synchronizacja danych..."
+    },
+    "tabs": {
+      "users": "Użytkownicy",
+      "shop": "Sklep",
+      "verifications": "Weryfikacje"
+    },
+    "users": {
+      "table": {
+        "user": "Użytkownik",
+        "role": "Rola",
+        "lvlPoints": "Poziom / Punkty",
+        "actions": "Akcje"
+      },
+      "modal": {
+        "title": "Edytuj Profil",
+        "labels": {
+          "displayName": "Nazwa wyświetlana",
+          "email": "Adres Email",
+          "role": "Rola Systemowa",
+          "levelCalculated": "Poziom (Obliczany)",
+          "points": "Waluta",
+          "experience": "Doświadczenie (XP)"
+        }
+      },
+      "edit": "Edytuj"
+    },
+    "shop": {
+      "sectionTitle": "Zasoby Sklepu",
+      "addItem": "+ DODAJ PRZEDMIOT",
+      "modal": {
+        "newTitle": "Nowy Przedmiot",
+        "editTitle": "Edytuj Przedmiot",
+        "labels": {
+          "title": "Tytuł przedmiotu",
+          "description": "Opis",
+          "price": "Cena",
+          "level": "Wymagany LVL",
+          "type": "Typ",
+          "rarity": "Rzadkość",
+          "image": "Źródło obrazu / Preset",
+          "stock": "Ilość w magazynie"
+        },
+        "placeholders": {
+          "title": "Wpisz nazwę...",
+          "description": "Krótki opis przedmiotu...",
+          "unlimited": "Puste = Nielimitowane"
+        }
+      },
+      "confirm": {
+        "deleteTitle": "Usuń przedmiot?",
+        "deleteDesc": "Czy na pewno chcesz bezpowrotnie usunąć ten przedmiot ze sklepu? Użytkownicy, którzy go zakupili, mogą stracić do niego dostęp."
+      }
+    },
+    "verifications": {
+      "empty": "Czysta karta!",
+      "emptyDesc": "Brak nowych zgłoszeń do moderacji.",
+      "status": "Oczekiwanie",
+      "details": "{count} pytań • {time}s limitu",
+      "actions": {
+        "preview": "Podgląd",
+        "reject": "Odrzuć",
+        "verify": "Zatwierdź"
+      },
+      "confirm": {
+        "verify": "Czy na pewno chcesz zatwierdzić ten quiz? Stanie się on publiczny.",
+        "reject": "Czy na pewno chcesz odrzucić ten quiz? Zostanie on usunięty.",
+        "verifyTitle": "Zatwierdzić quiz?",
+        "verifyDesc": "Quiz zostanie opublikowany i będzie dostępny dla wszystkich graczy w zakładce Społeczność.",
+        "rejectTitle": "Odrzucić ten projekt?",
+        "rejectDesc": "Quiz nie spełnia standardów i zostanie usunięty z kolejki weryfikacyjnej."
+      }
+    },
+    "preview": {
+      "question": "Pytanie",
+      "correct": "Poprawna",
+      "timeLimit": "Limit czasu",
+      "perQuestion": "pytanie",
+      "totalQuestions": "Łącznie pytań"
+    }
+  },
   "shop": {
     "title": "Skarbiec",
     "subtitle": "Maga",
@@ -229,7 +321,19 @@
     "lowLevel": "Zbyt niski poziom",
     "buyNow": "Kup teraz",
     "empty": "Sklep jest obecnie pusty. Wróć później!",
-    "purchaseSuccess": "Przedmiot został dodany do Twojego ekwipunku!"
+    "purchaseSuccess": "Przedmiot został dodany do Twojego ekwipunku!",
+    "types": {
+      "frame": "Ramka profilu",
+      "background": "Tło profilu",
+      "badge": "Odznaka",
+      "ticket": "Bilet specjalny"
+    },
+    "rarity": {
+      "common": "Pospolity",
+      "rare": "Rzadki",
+      "epic": "Epicki",
+      "legendary": "Legendarny"
+    }
   },
   "items": {
     "frame_emerald": {

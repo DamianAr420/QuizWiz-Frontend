@@ -15,7 +15,8 @@ const router = useRouter();
 const searchQuery = ref("");
 const activeFilter = ref("official");
 const isConfirmOpen = ref(false);
-const quizToDelete = ref<number | null>(null);
+const isSubmitConfirmOpen = ref(false);
+const quizToProcess = ref<number | null>(null);
 
 onMounted(() => quizStore.fetchQuizzes(activeFilter.value === "official"));
 
@@ -58,15 +59,28 @@ const setFilter = (type: string) => {
 };
 
 const openDeleteConfirm = (id: number) => {
-  quizToDelete.value = id;
+  quizToProcess.value = id;
   isConfirmOpen.value = true;
 };
 
+const openSubmitConfirm = (id: number) => {
+  quizToProcess.value = id;
+  isSubmitConfirmOpen.value = true;
+};
+
 const confirmDelete = async () => {
-  if (quizToDelete.value) {
-    await quizStore.deleteQuiz(quizToDelete.value);
+  if (quizToProcess.value) {
+    await quizStore.deleteQuiz(quizToProcess.value);
     isConfirmOpen.value = false;
-    quizToDelete.value = null;
+    quizToProcess.value = null;
+  }
+};
+
+const confirmSubmit = async () => {
+  if (quizToProcess.value) {
+    await quizStore.submitQuizForVerification(quizToProcess.value);
+    isSubmitConfirmOpen.value = false;
+    quizToProcess.value = null;
   }
 };
 </script>
@@ -185,10 +199,13 @@ const confirmDelete = async () => {
           :key="quiz.id"
           :quiz="quiz"
           :is-author="isAuthor(quiz.authorId)"
-          :has-full-access="isAuthor(quiz.authorId) || isAdmin"
+          :has-full-access="
+            (isAuthor(quiz.authorId) && !quiz.isSubmitted) || isAdmin
+          "
           @click="handleCardClick"
           @edit="(id) => router.push(`/quiz/edit/${id}`)"
           @delete="openDeleteConfirm"
+          @submit="openSubmitConfirm"
         />
       </div>
 
@@ -218,6 +235,17 @@ const confirmDelete = async () => {
       :loading="quizStore.loading"
       @confirm="confirmDelete"
       @close="isConfirmOpen = false"
+    />
+
+    <ConfirmModal
+      :is-open="isSubmitConfirmOpen"
+      title="Zgłosić quiz do weryfikacji?"
+      description="Po wysłaniu nie będziesz mógł edytować pytań do czasu podjęcia decyzji przez administratora."
+      confirm-text="Zgłoś teraz"
+      priority="Medium"
+      :loading="quizStore.loading"
+      @confirm="confirmSubmit"
+      @close="isSubmitConfirmOpen = false"
     />
   </div>
 </template>

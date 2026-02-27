@@ -4,6 +4,7 @@
     "play": "Play",
     "ranking": "Leaderboard",
     "shop": "Shop",
+    "admin": "Admin",
     "login": "Login",
     "logout": "Logout",
     "theme": {
@@ -13,12 +14,12 @@
   },
   "auth": {
     "welcome": "Welcome to QuizWiz",
-    "join": "Join the Game",
-    "email": "Your Email",
-    "displayName": "What's your name?",
+    "join": "Join the game",
+    "email": "Your email",
+    "displayName": "Display name",
     "loading": "Just a moment...",
     "submitLogin": "Login",
-    "submitRegister": "Create Account",
+    "submitRegister": "Create account",
     "noAccount": "Don't have an account? Sign up",
     "hasAccount": "Already have an account? Login",
     "placeholders": {
@@ -40,18 +41,18 @@
     "builtWith": "Built with"
   },
   "home": {
-    "title": "Become a master in",
-    "description": "Test your knowledge in hundreds of categories, compete with friends, and climb the leaderboard. The best way to learn and have fun starts here!",
-    "cta": "Play Now",
+    "title": "Become a master of",
+    "description": "Test your knowledge in hundreds of categories, compete with friends, and climb to the top of the leaderboard. The best way to learn and have fun starts here!",
+    "cta": "Play now",
     "readyToPlay": "Ready for a challenge?",
     "ctaSub": "Join thousands of players and prove you know it all.",
-    "startNow": "Start Adventure",
+    "startNow": "Start adventure",
     "features": {
-      "quizzes": "Thousands of Questions",
-      "quizzesDesc": "The database is constantly updated with new challenges from every field of life.",
-      "ranking": "Global Ranking",
+      "quizzes": "Thousands of questions",
+      "quizzesDesc": "The database is constantly updated with new challenges from every walk of life.",
+      "ranking": "Global Leaderboard",
       "rankingDesc": "Compare your results with players from all over the world and be number one.",
-      "speed": "Speed Mode",
+      "speed": "Fast Mode",
       "speedDesc": "Play against the clock and earn extra points for your reflexes."
     },
     "stats": {
@@ -62,8 +63,8 @@
   },
   "profile": {
     "changeAvatar": "Change",
-    "editBtn": "Edit Profile",
-    "memberSince": "Member since",
+    "editBtn": "Edit profile",
+    "memberSince": "Joined",
     "levelShort": "lvl",
     "updateError": "Failed to update profile",
     "updateSuccess": "Profile updated successfully!",
@@ -80,41 +81,42 @@
     },
     "inventory": {
       "title": "Inventory",
-      "goToShop": "Go to Shop",
+      "goToShop": "Go to shop",
       "empty": "Your backpack is empty..."
     },
     "quizzes": {
       "title": "Your Quizzes",
       "create": "Create Quiz",
       "createFirst": "Create your first quiz",
-      "emptyTitle": "No quizzes found",
+      "emptyTitle": "No quizzes",
       "emptyDesc": "You haven't created any quizzes yet. Share your knowledge and challenge others!"
     },
     "danger": {
       "title": "Danger Zone",
       "desc": "Delete account and all data",
-      "deleteBtn": "Delete Account",
+      "deleteBtn": "Delete account",
       "deleteTitle": "Are you sure?",
       "deleteConfirmDesc": "Your account will be permanently deleted along with all progress, quizzes, and items. This action cannot be undone."
     }
   },
   "common": {
-    "backToHome": "Back to Home",
+    "backToHome": "Back to home",
     "confirmDelete": "Are you sure you want to delete this quiz?",
     "loading": "Loading...",
-    "save": "Save",
+    "save": "Save changes",
     "update": "Update",
     "cancel": "Cancel",
-    "delete": "Delete Now",
+    "delete": "Delete now",
     "error": "An error occurred",
     "deleteSuccess": "Deleted successfully",
-    "deleteError": "Failed to delete item"
+    "deleteError": "Failed to delete item",
+    "confirm": "Confirm"
   },
   "leaderboard": {
     "title": "Player Ranking",
     "subtitle": "Who is the biggest brain in QuizWiz?",
     "comingSoon": "Feature coming soon!",
-    "comingSoonDesc": "We are working on the global ranking system. Soon you will be able to compete with the best!"
+    "comingSoonDesc": "We are working on the global ranking system. Soon you'll be able to compete with the best!"
   },
   "quiz": {
     "listTitle": "Available Quizzes",
@@ -122,23 +124,25 @@
     "editTitle": "Edit Quiz",
     "createNew": "New Quiz",
     "searchPlaceholder": "Search by name or description...",
-    "title": "Quiz Title",
+    "title": "Quiz title",
     "description": "Description",
-    "timeLimit": "Time Limit",
-    "maxQuestions": "Question Count",
-    "addQuestion": "Add Question",
+    "timeLimit": "Time limit",
+    "maxQuestions": "Question count",
+    "addQuestion": "Add question",
     "question": "Question",
-    "correctAnswer": "Correct Answer",
-    "wrongAnswers": "Wrong Answers",
-    "playNow": "Play Now",
-    "deleteWarning": "Are you sure you want to delete this quiz? All data, statistics, and score history associated with this quiz will be permanently lost.",
+    "correctAnswer": "Correct answer",
+    "wrongAnswers": "Wrong answers",
+    "playNow": "Play now",
+    "deleteWarning": "Are you sure you want to delete this quiz? All data, statistics, and result history associated with this quiz will be permanently lost.",
     "locked": "Locked",
     "noResults": "No quizzes found",
-    "markAsOfficial": "Official Quiz",
-    "adminOnly": "Admin Only",
-    "alreadyDoneToday": "You have already played this quiz today",
-    "limitTitle": "Point Limit",
+    "markAsOfficial": "Official quiz",
+    "adminOnly": "Admin only",
+    "alreadyDoneToday": "You already played this quiz today",
+    "limitTitle": "Points limit",
     "multiplier": "Multiplier:",
+    "submitSuccess": "Quiz submitted for verification!",
+    "submitError": "Failed to submit quiz for verification",
     "filter": {
       "official": "Official",
       "users": "Community"
@@ -148,13 +152,14 @@
       "comingSoon": "Soon",
       "yours": "Yours",
       "official": "Official",
-      "verified": "Verified"
+      "verified": "Verified",
+      "pending": "Pending"
     },
     "form": {
       "createTitle": "Create New Quiz",
       "editTitle": "Edit Quiz",
-      "title": "Quiz Title",
-      "description": "Quiz Description",
+      "title": "Quiz title",
+      "description": "Quiz description",
       "visible": "Visibility",
       "playable": "Playability",
       "official": "Official (Admin)",
@@ -162,39 +167,39 @@
       "statusPlay": "Play / Preview",
       "statusAdmin": "Admin Only",
       "questionNumber": "Question",
-      "questionPlaceholder": "Enter question text...",
-      "correctAnswer": "Correct Answer",
-      "wrongAnswers": "Wrong Answers",
+      "questionPlaceholder": "Enter question content...",
+      "correctAnswer": "Correct answer",
+      "wrongAnswers": "Wrong answers",
       "addQuestion": "Add another question",
-      "save": "Save and Publish",
-      "update": "Update Quiz",
+      "save": "Save and publish",
+      "update": "Update quiz",
       "verified": "Verified (Admin)",
       "statusVerified": "Admin only",
-      "questionsList": "Question List",
+      "questionsList": "Questions list",
       "validation": {
         "emptyHeader": "Error: Title and description cannot be empty.",
-        "emptyQuestion": "Question {number}: Question text is empty.",
+        "emptyQuestion": "Question {number}: Question content is empty.",
         "emptyCorrect": "Question {number}: Correct answer is empty.",
-        "emptyDistractors": "Question {number}: Complete all wrong answers."
+        "emptyDistractors": "Question {number}: Fill in all wrong answers."
       }
     },
     "stats": {
       "questions": "questions",
       "perQuestion": "q."
     },
-    "createSuccess": "Quiz has been created!",
+    "createSuccess": "Quiz created successfully!",
     "createError": "Failed to create quiz",
-    "deleteSuccess": "Quiz has been deleted",
-    "deleteError": "Error while deleting quiz"
+    "deleteSuccess": "Quiz deleted successfully",
+    "deleteError": "Error deleting quiz"
   },
   "game": {
     "score": "Score",
-    "timeLeft": "Time Left",
+    "timeLeft": "Time left",
     "next": "Next",
     "finish": "Finish",
     "gameOver": "Quiz Over!",
-    "playAgain": "Play Again",
-    "backToList": "Back to List",
+    "playAgain": "Play again",
+    "backToList": "Back to list",
     "correct": "Correct!",
     "wrong": "Wrong!",
     "solo": "Play Solo",
@@ -203,7 +208,7 @@
     "question": "Question",
     "yourScore": "Your score is",
     "scoreSaved": "Score saved successfully!",
-    "errorSaving": "Error occurred while saving score.",
+    "errorSaving": "Error saving score.",
     "sec": "S",
     "greatJob": "Great job",
     "points": "Points",
@@ -218,18 +223,117 @@
     "multiDesc": "Compete with others in real-time.",
     "soon": "Soon"
   },
+  "admin": {
+    "title": "Admin",
+    "subtitle": "Panel",
+    "version": "QuizWiz Management System • Version 1.0",
+    "stats": {
+      "activeUsers": "Active Users",
+      "syncing": "Syncing data..."
+    },
+    "tabs": {
+      "users": "Users",
+      "shop": "Shop",
+      "verifications": "Verifications"
+    },
+    "users": {
+      "table": {
+        "user": "User",
+        "role": "Role",
+        "lvlPoints": "Level / Points",
+        "actions": "Actions"
+      },
+      "modal": {
+        "title": "Edit Profile",
+        "labels": {
+          "displayName": "Display Name",
+          "email": "Email Address",
+          "role": "System Role",
+          "levelCalculated": "Level (Calculated)",
+          "points": "Currency",
+          "experience": "Experience (XP)"
+        }
+      },
+      "edit": "Edit"
+    },
+    "shop": {
+      "sectionTitle": "Shop Assets",
+      "addItem": "+ ADD ITEM",
+      "modal": {
+        "newTitle": "New Item",
+        "editTitle": "Edit Item",
+        "labels": {
+          "title": "Item title",
+          "description": "Description",
+          "price": "Price",
+          "level": "Required LVL",
+          "type": "Type",
+          "rarity": "Rarity",
+          "image": "Image Source / Preset",
+          "stock": "Stock quantity"
+        },
+        "placeholders": {
+          "title": "Enter name...",
+          "description": "Short item description...",
+          "unlimited": "Empty = Unlimited"
+        }
+      },
+      "confirm": {
+        "deleteTitle": "Delete item?",
+        "deleteDesc": "Are you sure you want to permanently delete this item from the shop? Users who purchased it might lose access."
+      }
+    },
+    "verifications": {
+      "empty": "Clean slate!",
+      "emptyDesc": "No new submissions for moderation.",
+      "status": "Pending",
+      "details": "{count} questions • {time}s limit",
+      "actions": {
+        "preview": "Preview",
+        "reject": "Reject",
+        "verify": "Verify"
+      },
+      "confirm": {
+        "verify": "Are you sure you want to verify this quiz? It will become public.",
+        "reject": "Are you sure you want to reject this quiz? It will be removed.",
+        "verifyTitle": "Verify quiz?",
+        "verifyDesc": "The quiz will be published and available to all players in the Community tab.",
+        "rejectTitle": "Reject this project?",
+        "rejectDesc": "The quiz does not meet standards and will be removed from the verification queue."
+      }
+    },
+    "preview": {
+      "question": "Question",
+      "correct": "Correct",
+      "timeLimit": "Time limit",
+      "perQuestion": "question",
+      "totalQuestions": "Total questions"
+    }
+  },
   "shop": {
     "title": "Vault",
     "subtitle": "of the Mage",
-    "description": "Exchange your hard-earned points for unique collectibles and power-ups.",
+    "description": "Exchange your hard-earned points for unique collectibles and upgrades.",
     "yourPoints": "Your Balance",
     "level": "Lvl.",
     "currency": "PTS",
     "owned": "Owned",
     "lowLevel": "Level too low",
-    "buyNow": "Buy Now",
+    "buyNow": "Buy now",
     "empty": "The shop is currently empty. Check back later!",
-    "purchaseSuccess": "Item has been added to your inventory!"
+    "purchaseSuccess": "Item added to your inventory!",
+    "types": {
+      "frame": "Profile Frame",
+      "background": "Profile Background",
+      "badge": "Badge",
+      "ticket": "Special Ticket"
+    },
+    "rarity": {
+      "common": "Common",
+      "rare": "Rare",
+      "epic": "Epic",
+      "legendary": "Legendary"
+    }
   },
   "items": {
     "frame_emerald": {
@@ -249,7 +353,7 @@
       "desc": "A legendary, animated frame shimmering with all colors."
     },
     "bg_deepsea": {
-      "title": "Ocean Depths",
+      "title": "Deep Sea",
       "desc": "A calming, deep blue background for your profile."
     },
     "bg_sunset": {
@@ -261,12 +365,12 @@
       "desc": "A cosmic background with CSS-generated stars."
     },
     "badge_veteran": {
-      "title": "Veteran Badge",
-      "desc": "Badge awarded for tenure and experience."
+      "title": "Service Veteran",
+      "desc": "A badge awarded for seniority and experience."
     },
     "ticket_reset": {
       "title": "Reset Ticket",
-      "desc": "Allows a one-time reset of quiz statistics."
+      "desc": "Allows for a one-time reset of quiz statistics."
     }
   }
 }

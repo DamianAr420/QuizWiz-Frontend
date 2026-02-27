@@ -10,12 +10,13 @@ interface Props {
   hasFullAccess: boolean;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
 
 const emit = defineEmits<{
   (e: "click", quiz: Quiz): void;
   (e: "edit", id: number): void;
   (e: "delete", id: number): void;
+  (e: "submit", id: number): void;
 }>();
 </script>
 
@@ -45,6 +46,13 @@ const emit = defineEmits<{
       </span>
 
       <span
+        v-if="quiz.isSubmitted && !quiz.isVerified"
+        class="text-[10px] px-4 py-1.5 rounded-full font-black uppercase tracking-widest bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-800 shadow-sm flex items-center gap-1 animate-pulse"
+      >
+        ⏳ {{ t("quiz.status.pending") }}
+      </span>
+
+      <span
         v-if="!quiz.isVisible"
         class="text-[10px] px-4 py-1.5 rounded-full font-black uppercase tracking-widest bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 shadow-lg"
       >
@@ -60,6 +68,14 @@ const emit = defineEmits<{
     </div>
 
     <div v-if="hasFullAccess" class="absolute top-26 right-8 flex gap-2 z-20">
+      <button
+        v-if="isAuthor && !quiz.isSubmitted && !quiz.isVerified"
+        @click.stop="emit('submit', quiz.id)"
+        class="p-3 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md hover:bg-blue-100 dark:hover:bg-blue-900/50 hover:text-blue-600 dark:hover:text-blue-400 rounded-2xl transition-all border border-slate-200 dark:border-slate-700 hover:border-blue-200 dark:hover:border-blue-700 shadow-sm"
+        :title="t('quiz.form.save')"
+      >
+        📤
+      </button>
       <button
         @click.stop="emit('edit', quiz.id)"
         class="p-3 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md hover:bg-green-100 dark:hover:bg-green-900/50 hover:text-green-600 dark:hover:text-green-400 rounded-2xl transition-all border border-slate-200 dark:border-slate-700 hover:border-green-200 dark:hover:border-green-700 shadow-sm"
@@ -142,7 +158,6 @@ const emit = defineEmits<{
             class="flex items-center gap-2 px-4 py-2 rounded-2xl border transition-all"
             :class="[
               quiz.isCompletedToday ? 'cursor-help' : 'cursor-default',
-
               quiz.isCompletedToday
                 ? 'bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 border-amber-100 dark:border-amber-800 opacity-80'
                 : quiz.isOfficial || quiz.isVerified
@@ -172,6 +187,7 @@ const emit = defineEmits<{
               EXP
             </span>
           </div>
+
           <div
             v-if="quiz.isCompletedToday"
             class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 w-56 overflow-hidden bg-slate-900/95 backdrop-blur-md border border-slate-700/50 rounded-2xl opacity-0 scale-90 group-hover/tooltip:opacity-100 group-hover/tooltip:scale-100 transition-all duration-300 pointer-events-none z-50 shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
@@ -179,25 +195,20 @@ const emit = defineEmits<{
             <div
               class="h-1 w-full bg-linear-to-r from-amber-400 via-amber-500 to-amber-600"
             ></div>
-
             <div class="p-3">
               <div class="flex items-center gap-2 mb-1.5">
                 <span
                   class="flex items-center justify-center w-5 h-5 rounded-full bg-amber-500/20 text-amber-500 text-[10px]"
+                  >⚠️</span
                 >
-                  ⚠️
-                </span>
                 <span
                   class="text-amber-400 font-bold uppercase tracking-widest text-[9px]"
+                  >{{ t("quiz.limitTitle") }}</span
                 >
-                  {{ t("quiz.limitTitle") }}
-                </span>
               </div>
-
               <p class="text-slate-300 text-[10px] leading-relaxed text-left">
                 {{ t("quiz.alreadyDoneToday") }}
               </p>
-
               <div
                 class="mt-2 pt-2 border-t border-slate-700/50 flex justify-between items-center"
               >
@@ -209,7 +220,6 @@ const emit = defineEmits<{
                 >
               </div>
             </div>
-
             <div
               class="absolute top-full left-1/2 -translate-x-1/2 border-[6px] border-transparent border-t-slate-900/95"
             ></div>
@@ -220,9 +230,9 @@ const emit = defineEmits<{
           class="flex items-center gap-2 text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 px-4 py-2 rounded-2xl border border-slate-100 dark:border-slate-700"
         >
           <span class="text-lg">⏱️</span>
-          <span class="text-xs font-black uppercase tracking-tighter">
-            {{ quiz.timeLimitSeconds }}s
-          </span>
+          <span class="text-xs font-black uppercase tracking-tighter"
+            >{{ quiz.timeLimitSeconds }}s</span
+          >
         </div>
       </div>
     </div>
@@ -248,5 +258,19 @@ const emit = defineEmits<{
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
+}
+
+@keyframes pulse-subtle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse {
+  animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 </style>

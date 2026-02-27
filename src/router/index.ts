@@ -12,6 +12,7 @@ import QuizPlay from "@/views/QuizPlay.vue";
 import QuizForm from "@/views/QuizForm.vue";
 import { useAuthStore } from "@/stores/auth";
 import Shop from "@/views/Shop.vue";
+import AdminPanel from "@/views/AdminPanel.vue";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -67,6 +68,12 @@ const routes: RouteRecordRaw[] = [
     name: "shop",
     component: Shop,
     meta: { requiresAuth: true },
+  },
+  {
+    path: "/admin",
+    name: "admin",
+    component: AdminPanel,
+    meta: { requiresAuth: true, requiresAdmin: true },
   },
 ];
 
