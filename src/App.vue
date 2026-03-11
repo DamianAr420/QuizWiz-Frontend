@@ -6,6 +6,7 @@ import { useAuthStore } from "@/stores/auth";
 import { useUserStore } from "@/stores/user";
 import Toast from "./components/Notifications/Toast.vue";
 import { SpeedInsights } from "@vercel/speed-insights/vue";
+import { Analytics } from "@vercel/analytics/vue";
 
 const authStore = useAuthStore();
 const userStore = useUserStore();
@@ -26,6 +27,7 @@ onMounted(async () => {
       </transition>
     </RouterView>
     <SpeedInsights />
+    <Analytics />
   </MainLayout>
 </template>
 
