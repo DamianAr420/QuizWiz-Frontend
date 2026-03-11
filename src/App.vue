@@ -5,6 +5,7 @@ import { onMounted } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import { useUserStore } from "@/stores/user";
 import Toast from "./components/Notifications/Toast.vue";
+import { SpeedInsights } from "@vercel/speed-insights/vue";
 
 const authStore = useAuthStore();
 const userStore = useUserStore();
@@ -24,6 +25,7 @@ onMounted(async () => {
         <component :is="Component" v-if="Component" />
       </transition>
     </RouterView>
+    <SpeedInsights />
   </MainLayout>
 </template>
 
