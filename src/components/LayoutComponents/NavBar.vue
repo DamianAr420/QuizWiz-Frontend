@@ -444,22 +444,23 @@ const canSeeAdmin = computed(() => {
         </div>
 
         <div class="p-4 space-y-1">
-          <router-link
-            v-for="link in navLinks"
-            :key="link.path"
-            :to="link.path"
-            class="flex items-center justify-between px-5 py-3.5 rounded-xl font-bold"
-            :class="
-              route.path === link.path
-                ? 'bg-green-50 dark:bg-green-900/10 text-green-700'
-                : 'text-slate-600 dark:text-slate-300'
-            "
-          >
-            {{ t(link.name) }}
-            <span v-if="route.path === link.path" class="text-green-500"
-              >●</span
+          <template v-for="link in navLinks" :key="link.path">
+            <router-link
+              v-if="link.path !== '/admin' || canSeeAdmin"
+              :to="link.path"
+              class="flex items-center justify-between px-5 py-3.5 rounded-xl font-bold"
+              :class="
+                route.path === link.path
+                  ? 'bg-green-50 dark:bg-green-900/10 text-green-700'
+                  : 'text-slate-600 dark:text-slate-300'
+              "
             >
-          </router-link>
+              {{ t(link.name) }}
+              <span v-if="route.path === link.path" class="text-green-500"
+                >●</span
+              >
+            </router-link>
+          </template>
 
           <button
             @click="handleLogout"
