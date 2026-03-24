@@ -189,97 +189,100 @@ const handleDeleteItem = (id: number) => {
       <main v-if="!adminStore.loading">
         <section
           v-if="activeTab === 'users'"
-          class="bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-sm border border-slate-200 dark:border-slate-800"
+          class="bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden"
         >
-          <table class="w-full text-left border-collapse">
-            <thead class="bg-slate-50 dark:bg-slate-800/50">
-              <tr>
-                <th
-                  class="p-6 font-black text-slate-400 uppercase text-[10px] tracking-widest"
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-200">
+              <thead class="bg-slate-50 dark:bg-slate-800/50">
+                <tr>
+                  <th
+                    class="p-6 font-black text-slate-400 uppercase text-[10px] tracking-widest"
+                  >
+                    {{ t("admin.users.table.user") }}
+                  </th>
+                  <th
+                    class="p-6 font-black text-slate-400 uppercase text-[10px] tracking-widest text-center"
+                  >
+                    {{ t("admin.users.table.role") }}
+                  </th>
+                  <th
+                    class="p-6 font-black text-slate-400 uppercase text-[10px] tracking-widest text-center"
+                  >
+                    {{ t("admin.users.table.lvlPoints") }}
+                  </th>
+                  <th
+                    class="p-6 font-black text-slate-400 uppercase text-[10px] tracking-widest text-right"
+                  >
+                    {{ t("admin.users.table.actions") }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="user in adminStore.users"
+                  :key="user.id"
+                  class="border-t border-slate-50 dark:border-slate-800 hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors"
                 >
-                  {{ t("admin.users.table.user") }}
-                </th>
-                <th
-                  class="p-6 font-black text-slate-400 uppercase text-[10px] tracking-widest text-center"
-                >
-                  {{ t("admin.users.table.role") }}
-                </th>
-                <th
-                  class="p-6 font-black text-slate-400 uppercase text-[10px] tracking-widest text-center"
-                >
-                  {{ t("admin.users.table.lvlPoints") }}
-                </th>
-                <th
-                  class="p-6 font-black text-slate-400 uppercase text-[10px] tracking-widest text-right"
-                >
-                  {{ t("admin.users.table.actions") }}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="user in adminStore.users"
-                :key="user.id"
-                class="border-t border-slate-50 dark:border-slate-800 hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors"
-              >
-                <td class="p-6">
-                  <div class="flex items-center gap-4">
-                    <img
-                      v-if="user.cloudinaryPublicId"
-                      :src="
-                        getAvatarUrl(user.cloudinaryPublicId, 200) ?? undefined
-                      "
-                      class="w-12 h-12 rounded-2xl object-cover border-2 border-green-500/20"
-                    />
-                    <div
-                      v-else
-                      class="w-12 h-12 rounded-2xl bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-black text-slate-400"
-                    >
-                      ?
-                    </div>
-                    <div>
+                  <td class="p-6">
+                    <div class="flex items-center gap-4">
+                      <img
+                        v-if="user.cloudinaryPublicId"
+                        :src="
+                          getAvatarUrl(user.cloudinaryPublicId, 200) ??
+                          undefined
+                        "
+                        class="w-12 h-12 rounded-2xl object-cover border-2 border-green-500/20"
+                      />
                       <div
-                        class="font-black text-slate-800 dark:text-slate-100 text-lg leading-tight"
+                        v-else
+                        class="w-12 h-12 rounded-2xl bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-black text-slate-400"
                       >
-                        {{ user.displayName }}
+                        ?
                       </div>
-                      <div class="text-sm text-slate-400 font-medium">
-                        {{ user.email }}
+                      <div>
+                        <div
+                          class="font-black text-slate-800 dark:text-slate-100 text-lg leading-tight"
+                        >
+                          {{ user.displayName }}
+                        </div>
+                        <div class="text-sm text-slate-400 font-medium">
+                          {{ user.email }}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </td>
-                <td class="p-6 text-center">
-                  <span
-                    :class="[
-                      'px-3 py-1 rounded-lg text-[10px] font-black uppercase',
-                      user.role === 'Admin'
-                        ? 'bg-red-100 text-red-600'
-                        : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400',
-                    ]"
-                  >
-                    {{ user.role }}
-                  </span>
-                </td>
-                <td class="p-6 text-center">
-                  <div class="font-black text-slate-700 dark:text-slate-300">
-                    LVL {{ user.level }}
-                  </div>
-                  <div class="text-xs font-bold text-green-600">
-                    {{ user.points }} WIZ
-                  </div>
-                </td>
-                <td class="p-6 text-right">
-                  <button
-                    @click="openUserEdit(user)"
-                    class="px-5 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl font-bold text-slate-600 dark:text-slate-300 hover:bg-green-600 hover:text-white transition-all"
-                  >
-                    {{ t("admin.users.edit") }}
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                  </td>
+                  <td class="p-6 text-center">
+                    <span
+                      :class="[
+                        'px-3 py-1 rounded-lg text-[10px] font-black uppercase',
+                        user.role === 'Admin'
+                          ? 'bg-red-100 text-red-600'
+                          : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400',
+                      ]"
+                    >
+                      {{ user.role }}
+                    </span>
+                  </td>
+                  <td class="p-6 text-center">
+                    <div class="font-black text-slate-700 dark:text-slate-300">
+                      LVL {{ user.level }}
+                    </div>
+                    <div class="text-xs font-bold text-green-600">
+                      {{ user.points }} WIZ
+                    </div>
+                  </td>
+                  <td class="p-6 text-right">
+                    <button
+                      @click="openUserEdit(user)"
+                      class="px-5 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl font-bold text-slate-600 dark:text-slate-300 hover:bg-green-600 hover:text-white transition-all whitespace-nowrap"
+                    >
+                      {{ t("admin.users.edit") }}
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </section>
 
         <section v-if="activeTab === 'shop'" class="space-y-6">
