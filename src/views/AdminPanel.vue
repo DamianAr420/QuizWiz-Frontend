@@ -113,7 +113,7 @@ const handleReject = (id: number) => {
     title: t("admin.verifications.confirm.rejectTitle"),
     description: t("admin.verifications.confirm.rejectDesc"),
     confirmText: t("admin.verifications.actions.reject"),
-    priority: "Medium", // Medium, bo tylko cofamy do edycji, nie usuwamy na stałe
+    priority: "Medium",
     action: () => adminStore.rejectQuiz(id),
   });
 };
@@ -189,7 +189,7 @@ const handleDeleteItem = (id: number) => {
       <main v-if="!adminStore.loading">
         <section
           v-if="activeTab === 'users'"
-          class="bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden"
+          class="bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-sm border border-slate-200 dark:border-slate-800"
         >
           <table class="w-full text-left border-collapse">
             <thead class="bg-slate-50 dark:bg-slate-800/50">
