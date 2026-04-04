@@ -372,5 +372,28 @@
       "title": "Bilet Resetu",
       "desc": "Pozwala na jednorazowe zresetowanie statystyk quizu."
     }
+  },
+
+  "ranking": {
+    "title": "Ranking",
+    "subtitle": "Mistrzów",
+    "description": "Rzuć wyzwanie najlepszym i zobacz, jak wypadasz na tle społeczności QuizWiz!",
+    "loading": "Pobieranie rankingu...",
+    "empty": "Brak danych dla wybranej kategorii. Bądź pierwszym graczem!",
+    "level": "Poziom {level}",
+    "anonymous": "Anonim",
+    "tabs": {
+      "experience": "Doświadczenie",
+      "points": "Punkty",
+      "correctanswers": "Poprawne odpowiedzi",
+      "accuracy": "Trafność",
+      "quizzescompleted": "Ukończone quizy"
+    },
+    "units": {
+      "xp": "XP",
+      "pts": "pkt",
+      "answers": "odp.",
+      "quizzes": "quizy"
+    }
   }
 }

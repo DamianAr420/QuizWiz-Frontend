@@ -372,5 +372,28 @@
       "title": "Reset Ticket",
       "desc": "Allows for a one-time reset of quiz statistics."
     }
+  },
+
+  "ranking": {
+    "title": "Leaderboard",
+    "subtitle": "of Masters",
+    "description": "Challenge the best and see how you rank against the QuizWiz community!",
+    "loading": "Fetching leaderboard...",
+    "empty": "No data for this category. Be the first to play!",
+    "level": "Level {level}",
+    "anonymous": "Anonymous",
+    "tabs": {
+      "experience": "Experience",
+      "points": "Points",
+      "correctanswers": "Correct Answers",
+      "accuracy": "Accuracy",
+      "quizzescompleted": "Quizzes Completed"
+    },
+    "units": {
+      "xp": "XP",
+      "pts": "pts",
+      "answers": "ans.",
+      "quizzes": "quizzes"
+    }
   }
 }
