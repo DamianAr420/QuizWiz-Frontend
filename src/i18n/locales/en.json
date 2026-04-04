@@ -32,7 +32,15 @@
     "logoutSuccess": "Logged out successfully",
     "registerSuccess": "Account created successfully!",
     "loginError": "Login failed",
-    "registerError": "Registration failed"
+    "registerError": "Registration failed",
+    "requirements": {
+      "length": "At least 6 characters",
+      "digit": "At least one digit",
+      "uppercase": "One uppercase letter"
+    },
+    "errors": {
+      "weakPassword": "Password does not meet security requirements."
+    }
   },
   "footer": {
     "rules": "Terms of Service",

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, nextTick } from "vue";
+import { ref, watch, nextTick, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/stores/auth";
 
@@ -20,6 +20,22 @@ const form = ref({
   email: "",
   password: "",
 });
+
+const passwordRequirements = computed(() => [
+  {
+    label: t("auth.requirements.length"),
+    met: form.value.password.length >= 6,
+  },
+  { label: t("auth.requirements.digit"), met: /\d/.test(form.value.password) },
+  {
+    label: t("auth.requirements.uppercase"),
+    met: /[A-Z]/.test(form.value.password),
+  },
+]);
+
+const isPasswordValid = computed(() =>
+  passwordRequirements.value.every((req) => req.met),
+);
 
 const resetForm = () => {
   errorMessage.value = "";
@@ -52,6 +68,11 @@ const toggleMode = () => {
 };
 
 const handleSubmit = async () => {
+  if (!isLoginMode.value && !isPasswordValid.value) {
+    errorMessage.value = t("auth.errors.weakPassword");
+    return;
+  }
+
   errorMessage.value = "";
   try {
     if (isLoginMode.value) {
@@ -118,6 +139,8 @@ const labelClasses =
                   name="username"
                   autocomplete="username"
                   required
+                  minlength="3"
+                  maxlength="20"
                   placeholder=" "
                   :class="inputClasses"
                 />
@@ -132,6 +155,7 @@ const labelClasses =
                   :name="isLoginMode ? 'username' : 'email'"
                   :autocomplete="isLoginMode ? 'username' : 'email'"
                   required
+                  maxlength="100"
                   placeholder=" "
                   :class="inputClasses"
                 />
@@ -144,33 +168,61 @@ const labelClasses =
                 </label>
               </div>
 
-              <div class="relative">
-                <input
-                  v-model="form.password"
-                  :type="showPassword ? 'text' : 'password'"
-                  required
-                  placeholder=" "
-                  :class="[inputClasses, 'pr-12']"
-                  :autocomplete="
-                    isLoginMode ? 'current-password' : 'new-password'
-                  "
-                />
-                <label :class="labelClasses">{{
-                  t("auth.placeholders.password")
-                }}</label>
-                <button
-                  type="button"
-                  @click="showPassword = !showPassword"
-                  class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 p-2 hover:text-green-500 transition-colors z-10"
-                >
-                  {{ showPassword ? "👁️‍🗨️" : "👁️" }}
-                </button>
+              <div class="space-y-3">
+                <div class="relative">
+                  <input
+                    v-model="form.password"
+                    :type="showPassword ? 'text' : 'password'"
+                    required
+                    maxlength="100"
+                    placeholder=" "
+                    :class="[inputClasses, 'pr-12']"
+                    :autocomplete="
+                      isLoginMode ? 'current-password' : 'new-password'
+                    "
+                  />
+                  <label :class="labelClasses">{{
+                    t("auth.placeholders.password")
+                  }}</label>
+                  <button
+                    type="button"
+                    @click="showPassword = !showPassword"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 p-2 hover:text-green-500 transition-colors z-10"
+                  >
+                    {{ showPassword ? "👁️‍🗨️" : "👁️" }}
+                  </button>
+                </div>
+
+                <Transition name="slide-up">
+                  <div
+                    v-if="!isLoginMode && form.password.length > 0"
+                    class="grid grid-cols-1 gap-1.5 px-1"
+                  >
+                    <div
+                      v-for="req in passwordRequirements"
+                      :key="req.label"
+                      class="flex items-center gap-2 text-xs transition-colors duration-300"
+                      :class="
+                        req.met
+                          ? 'text-green-600 dark:text-green-400'
+                          : 'text-slate-400'
+                      "
+                    >
+                      <span>{{ req.met ? "✓" : "○" }}</span>
+                      <span :class="{ 'opacity-50': req.met }">{{
+                        req.label
+                      }}</span>
+                    </div>
+                  </div>
+                </Transition>
               </div>
 
               <button
                 type="submit"
-                :disabled="authStore.loading"
-                class="w-full bg-green-600 dark:bg-green-500 hover:bg-green-700 dark:hover:bg-green-400 text-white font-bold py-4 rounded-xl transition-all transform active:scale-95 disabled:opacity-50 shadow-lg shadow-green-200 dark:shadow-none mt-4"
+                :disabled="
+                  authStore.loading || (!isLoginMode && !isPasswordValid)
+                "
+                class="w-full bg-green-600 dark:bg-green-500 hover:bg-green-700 dark:hover:bg-green-400 text-white font-bold py-4 rounded-xl transition-all transform active:scale-95 disabled:opacity-50 disabled:grayscale shadow-lg shadow-green-200 dark:shadow-none mt-4"
               >
                 {{
                   authStore.loading

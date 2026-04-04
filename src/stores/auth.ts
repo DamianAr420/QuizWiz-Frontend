@@ -52,8 +52,13 @@ export const useAuthStore = defineStore("auth", {
         this.setAuth(response.data);
         toast.show(t("auth.registerSuccess"), "success");
       } catch (error: any) {
-        const msg = error.response?.data?.message || "Błąd rejestracji";
-        toast.show(t("auth.registerError"), "error");
+        const msg =
+          error.response?.data?.message ||
+          error.response?.data?.errors?.DisplayName?.[0] ||
+          error.response?.data?.errors?.Password?.[0] ||
+          t("auth.registerError");
+
+        toast.show(msg, "error");
         throw msg;
       } finally {
         this.loading = false;

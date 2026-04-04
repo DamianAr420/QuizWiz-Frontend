@@ -32,7 +32,15 @@
     "logoutSuccess": "Wylogowano pomyślnie",
     "registerSuccess": "Konto utworzone pomyślnie!",
     "loginError": "Błąd logowania",
-    "registerError": "Błąd rejestracji"
+    "registerError": "Błąd rejestracji",
+    "requirements": {
+      "length": "Minimum 6 znaków",
+      "digit": "Co najmniej jedna cyfra",
+      "uppercase": "Jedna wielka litera"
+    },
+    "errors": {
+      "weakPassword": "Hasło nie spełnia wymagań bezpieczeństwa."
+    }
   },
   "footer": {
     "rules": "Regulamin",
