@@ -110,13 +110,13 @@ const getRarityClass = (rarity: ItemRarity) => {
           @click="emit('delete', item.id)"
           class="flex-1 py-3 bg-red-50 dark:bg-red-900/20 text-red-600 rounded-xl font-black uppercase text-[10px] hover:bg-red-600 hover:text-white transition-all"
         >
-          Usuń
+          {{ t("common.delete") }}
         </button>
         <button
           @click="emit('edit', item)"
           class="flex-1 py-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl font-black uppercase text-[10px] hover:bg-green-600 hover:text-white transition-all"
         >
-          Edytuj
+          {{ t("common.edit") }}
         </button>
       </div>
 

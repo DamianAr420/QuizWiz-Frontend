@@ -46,8 +46,12 @@ onMounted(async () => {
   ]);
 });
 
+const changePage = (page: number) => {
+  adminStore.fetchUsers(searchQuery.value, page);
+};
+
 const debouncedSearch = debounce((query: string) => {
-  adminStore.fetchUsers(query);
+  adminStore.fetchUsers(query, 1);
 }, 300);
 
 watch(searchQuery, (newQuery) => {
@@ -144,31 +148,48 @@ const handleDeleteItem = (id: number) => {
   <div class="p-4 sm:p-10 transition-colors duration-300">
     <div class="max-w-6xl mx-auto">
       <header
-        class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6"
+        class="mb-8 md:mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6 px-2 md:px-0"
       >
-        <div>
+        <div class="text-center md:text-left">
           <h1
-            class="text-5xl font-black text-slate-800 dark:text-white mb-2 tracking-tighter uppercase"
+            class="text-4xl sm:text-5xl font-black text-slate-800 dark:text-white mb-1 tracking-tighter uppercase leading-none"
           >
             {{ t("admin.title") }}
             <span class="text-green-600">{{ t("admin.subtitle") }}</span>
           </h1>
-          <p class="text-slate-500 dark:text-slate-400 font-medium">
+          <p
+            class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest opacity-60"
+          >
             {{ t("admin.version") }}
           </p>
         </div>
-        <div class="flex gap-2">
+
+        <div class="flex justify-center md:justify-end">
           <div
-            class="bg-white dark:bg-slate-900 px-6 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm min-w-32 text-center"
+            class="group bg-white dark:bg-slate-900 px-8 py-4 rounded-[2.5rem] border-2 border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/40 dark:shadow-none transition-all hover:border-green-600/30 min-w-40"
           >
             <p
-              class="text-[10px] font-black text-slate-400 uppercase tracking-widest"
+              class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-1 text-center md:text-left"
             >
               {{ t("admin.stats.activeUsers") }}
             </p>
-            <p class="text-xl font-black dark:text-white">
-              {{ adminStore.users.length }}
-            </p>
+
+            <div
+              class="flex items-center justify-center md:justify-between gap-4"
+            >
+              <p class="text-3xl font-black dark:text-white leading-none">
+                {{ adminStore.totalCount }}
+              </p>
+
+              <div class="relative flex items-center justify-center">
+                <span
+                  class="absolute w-3 h-3 bg-green-500 rounded-full animate-ping opacity-20"
+                ></span>
+                <span
+                  class="relative w-2.5 h-2.5 bg-green-500 rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)]"
+                ></span>
+              </div>
+            </div>
           </div>
         </div>
       </header>
@@ -213,7 +234,7 @@ const handleDeleteItem = (id: number) => {
               <input
                 v-model="searchQuery"
                 type="text"
-                placeholder="Szukaj po nazwie lub emailu..."
+                :placeholder="t('admin.users.searchPlaceholder')"
                 class="w-full pl-12 pr-4 py-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-green-500 outline-none transition-all dark:text-white font-bold"
               />
             </div>
@@ -322,11 +343,88 @@ const handleDeleteItem = (id: number) => {
                     colspan="4"
                     class="p-20 text-center text-slate-400 font-bold uppercase tracking-widest"
                   >
-                    Nie znaleziono użytkowników
+                    {{ t("admin.users.notFound") }}
                   </td>
                 </tr>
               </tbody>
             </table>
+          </div>
+
+          <div
+            v-if="adminStore.totalPages > 1"
+            class="p-6 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-6"
+          >
+            <div class="flex items-center justify-center gap-3">
+              <div class="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl">
+                <p
+                  class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em]"
+                >
+                  {{
+                    t("admin.users.pagination.info", {
+                      page: adminStore.currentPage,
+                      total: adminStore.totalPages,
+                    })
+                  }}
+                </p>
+              </div>
+              <div
+                class="text-[10px] font-black text-green-600 uppercase tracking-widest bg-green-50 dark:bg-green-900/20 px-3 py-2 rounded-xl"
+              >
+                {{
+                  t("admin.users.pagination.total", {
+                    count: adminStore.totalCount,
+                  })
+                }}
+              </div>
+            </div>
+
+            <div
+              class="flex items-center justify-center gap-3 w-full max-w-lg mx-auto"
+            >
+              <button
+                v-if="adminStore.currentPage > 1"
+                @click="changePage(1)"
+                class="flex-none p-4 bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-green-600 rounded-2xl transition-all active:scale-90 border-2 border-transparent hover:border-green-600/30 shadow-sm"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-5 h-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="m11 17-5-5 5-5M18 17l-5-5 5-5" />
+                </svg>
+              </button>
+
+              <button
+                @click="changePage(adminStore.currentPage - 1)"
+                :disabled="adminStore.currentPage === 1 || adminStore.loading"
+                class="flex-1 group flex items-center justify-center gap-2 px-4 py-4 bg-white dark:bg-slate-900 rounded-2xl font-black text-xs uppercase tracking-widest border-2 border-slate-100 dark:border-slate-800 disabled:opacity-30 hover:border-green-600 hover:text-green-600 transition-all shadow-sm active:scale-95"
+              >
+                <span class="transition-transform group-hover:-translate-x-1"
+                  >←</span
+                >
+                <span class="hidden sm:inline">{{ t("common.previous") }}</span>
+              </button>
+
+              <button
+                @click="changePage(adminStore.currentPage + 1)"
+                :disabled="
+                  adminStore.currentPage === adminStore.totalPages ||
+                  adminStore.loading
+                "
+                class="flex-1 group flex items-center justify-center gap-2 px-4 py-4 bg-green-600 rounded-2xl font-black text-xs uppercase tracking-widest text-white disabled:opacity-30 hover:bg-green-700 transition-all shadow-lg shadow-green-600/20 active:scale-95"
+              >
+                <span class="hidden sm:inline">{{ t("common.next") }}</span>
+                <span class="transition-transform group-hover:translate-x-1"
+                  >→</span
+                >
+              </button>
+            </div>
           </div>
         </section>
 
@@ -521,11 +619,16 @@ button:focus {
 
 #APUserTable::-webkit-scrollbar-track {
   background: transparent;
-  margin: 0 20px;
+  margin: 0 2px;
 }
 
 #APUserTable::-webkit-scrollbar-thumb {
   background: #16a34a;
   border-radius: 20px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  filter: grayscale(1);
 }
 </style>

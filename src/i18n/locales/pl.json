@@ -114,11 +114,14 @@
     "save": "Zapisz zmiany",
     "update": "Aktualizuj",
     "cancel": "Anuluj",
-    "delete": "Usuń teraz",
     "error": "Wystąpił błąd",
     "deleteSuccess": "Usunięto pomyślnie",
     "deleteError": "Nie udało się usunąć elementu",
-    "confirm": "Zatwierdź"
+    "confirm": "Zatwierdź",
+    "previous": "Poprzednia",
+    "next": "Następna",
+    "delete": "Usuń",
+    "edit": "Edytuj"
   },
   "leaderboard": {
     "title": "Ranking Graczy",
@@ -232,90 +235,57 @@
     "soon": "Wkrótce"
   },
   "admin": {
-    "title": "Admin",
-    "subtitle": "Panel",
-    "version": "System zarządzania QuizWiz • Wersja 1.0",
-    "stats": {
-      "activeUsers": "Aktywnych Userów",
-      "syncing": "Synchronizacja danych..."
-    },
+    "title": "Panel",
+    "subtitle": "Admina",
+    "version": "Wersja Systemu 0.2",
     "tabs": {
       "users": "Użytkownicy",
       "shop": "Sklep",
       "verifications": "Weryfikacje"
     },
+    "stats": {
+      "activeUsers": "Aktywni Gracze",
+      "syncing": "Synchronizacja danych..."
+    },
     "users": {
+      "searchPlaceholder": "Szukaj po nazwie lub emailu...",
+      "notFound": "Nie znaleziono użytkowników",
+      "edit": "Edytuj profil",
       "table": {
         "user": "Użytkownik",
-        "role": "Rola",
-        "lvlPoints": "Poziom / Punkty",
+        "role": "Ranga",
+        "lvlPoints": "Poziom / WIZ",
         "actions": "Akcje"
       },
-      "modal": {
-        "title": "Edytuj Profil",
-        "labels": {
-          "displayName": "Nazwa wyświetlana",
-          "email": "Adres Email",
-          "role": "Rola Systemowa",
-          "levelCalculated": "Poziom (Obliczany)",
-          "points": "Waluta",
-          "experience": "Doświadczenie (XP)"
-        }
-      },
-      "edit": "Edytuj"
+      "pagination": {
+        "info": "Strona {page} z {total}",
+        "total": "Razem: {count}"
+      }
     },
     "shop": {
-      "sectionTitle": "Zasoby Sklepu",
-      "addItem": "+ DODAJ PRZEDMIOT",
-      "modal": {
-        "newTitle": "Nowy Przedmiot",
-        "editTitle": "Edytuj Przedmiot",
-        "labels": {
-          "title": "Tytuł przedmiotu",
-          "description": "Opis",
-          "price": "Cena",
-          "level": "Wymagany LVL",
-          "type": "Typ",
-          "rarity": "Rzadkość",
-          "image": "Źródło obrazu / Preset",
-          "stock": "Ilość w magazynie"
-        },
-        "placeholders": {
-          "title": "Wpisz nazwę...",
-          "description": "Krótki opis przedmiotu...",
-          "unlimited": "Puste = Nielimitowane"
-        }
-      },
+      "sectionTitle": "Zarządzanie Sklepem",
+      "addItem": "Dodaj przedmiot",
       "confirm": {
-        "deleteTitle": "Usuń przedmiot?",
-        "deleteDesc": "Czy na pewno chcesz bezpowrotnie usunąć ten przedmiot ze sklepu? Użytkownicy, którzy go zakupili, mogą stracić do niego dostęp."
+        "deleteTitle": "Usuń przedmiot",
+        "deleteDesc": "Czy na pewno chcesz usunąć ten przedmiot ze sklepu? Tej operacji nie można cofnąć."
       }
     },
     "verifications": {
-      "empty": "Czysta karta!",
-      "emptyDesc": "Brak nowych zgłoszeń do moderacji.",
-      "status": "Oczekiwanie",
-      "details": "{count} pytań • {time}s limitu",
+      "empty": "Wszystko sprawdzone!",
+      "emptyDesc": "Nie ma obecnie żadnych quizów oczekujących na weryfikację.",
+      "status": "Oczekuje",
+      "details": "{count} pytań • {time}s na limit",
       "actions": {
         "preview": "Podgląd",
         "reject": "Odrzuć",
         "verify": "Zatwierdź"
       },
       "confirm": {
-        "verify": "Czy na pewno chcesz zatwierdzić ten quiz? Stanie się on publiczny.",
-        "reject": "Czy na pewno chcesz odrzucić ten quiz? Zostanie on usunięty.",
-        "verifyTitle": "Zatwierdzić quiz?",
-        "verifyDesc": "Quiz zostanie opublikowany i będzie dostępny dla wszystkich graczy w zakładce Społeczność.",
-        "rejectTitle": "Odrzucić ten projekt?",
-        "rejectDesc": "Quiz nie spełnia standardów i zostanie usunięty z kolejki weryfikacyjnej."
+        "verifyTitle": "Zatwierdź quiz",
+        "verifyDesc": "Czy sprawdziłeś treść i chcesz opublikować ten quiz dla wszystkich graczy?",
+        "rejectTitle": "Odrzuć quiz",
+        "rejectDesc": "Czy na pewno chcesz odrzucić ten quiz? Autor zostanie powiadomiony o decyzji."
       }
-    },
-    "preview": {
-      "question": "Pytanie",
-      "correct": "Poprawna",
-      "timeLimit": "Limit czasu",
-      "perQuestion": "pytanie",
-      "totalQuestions": "Łącznie pytań"
     }
   },
   "shop": {

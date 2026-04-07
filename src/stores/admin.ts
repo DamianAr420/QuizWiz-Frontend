@@ -9,6 +9,9 @@ export const useAdminStore = defineStore("admin", {
     users: [] as User[],
     shopItems: [] as ShopItem[],
     pendingQuizzes: [] as Quiz[],
+    totalPages: 1,
+    currentPage: 1,
+    totalCount: 0,
     loading: false,
     error: null as string | null,
   }),
@@ -19,17 +22,16 @@ export const useAdminStore = defineStore("admin", {
   },
 
   actions: {
-    async fetchUsers(search?: string) {
+    async fetchUsers(search?: string, page: number = 1) {
       this.loading = true;
       try {
-        const { data } = await api.get<User[]>("/Admin/users", {
-          params: { search: search || undefined },
+        const { data } = await api.get("/Admin/users", {
+          params: { search, page, pageSize: 10 },
         });
-
-        this.users = data;
-      } catch (err) {
-        this.error = "Nie udało się pobrać listy użytkowników.";
-        console.error(err);
+        this.users = data.items;
+        this.totalPages = data.totalPages;
+        this.currentPage = data.currentPage;
+        this.totalCount = data.totalCount;
       } finally {
         this.loading = false;
       }
