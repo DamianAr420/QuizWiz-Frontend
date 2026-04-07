@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted, reactive } from "vue";
+import { ref, onMounted, reactive, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAdminStore } from "@/stores/admin";
 import { ItemType } from "@/types/shop";
 import { useCloudinary } from "@/composables/useCloudinary";
+import { debounce } from "lodash-es";
 import ShopItemCard from "@/components/Cards/ShopItemCard.vue";
 import UserModal from "@/components/Modals/UserModal.vue";
 import ShopItemModal from "@/components/Modals/ShopItemModal.vue";
@@ -16,6 +17,8 @@ const { getAvatarUrl } = useCloudinary();
 
 type AdminTab = "users" | "shop" | "verifications";
 const activeTab = ref<AdminTab>("users");
+
+const searchQuery = ref("");
 
 const isUserModalOpen = ref(false);
 const isShopModalOpen = ref(false);
@@ -41,6 +44,14 @@ onMounted(async () => {
     adminStore.fetchShopItems(),
     adminStore.fetchPendingQuizzes(),
   ]);
+});
+
+const debouncedSearch = debounce((query: string) => {
+  adminStore.fetchUsers(query);
+}, 300);
+
+watch(searchQuery, (newQuery) => {
+  debouncedSearch(newQuery);
 });
 
 const requestConfirm = (options: {
@@ -148,7 +159,7 @@ const handleDeleteItem = (id: number) => {
         </div>
         <div class="flex gap-2">
           <div
-            class="bg-white dark:bg-slate-900 px-6 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm"
+            class="bg-white dark:bg-slate-900 px-6 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm min-w-32 text-center"
           >
             <p
               class="text-[10px] font-black text-slate-400 uppercase tracking-widest"
@@ -163,14 +174,14 @@ const handleDeleteItem = (id: number) => {
       </header>
 
       <nav
-        class="flex gap-2 mb-8 bg-white dark:bg-slate-900 p-2 rounded-4xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-auto"
+        class="flex gap-2 mb-8 bg-white dark:bg-slate-900 p-2 rounded-4xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-auto scroll-hide"
       >
         <button
           v-for="tab in ['users', 'shop', 'verifications'] as AdminTab[]"
           :key="tab"
           @click="activeTab = tab"
           :class="[
-            'flex-1 px-4 py-4 rounded-3xl font-black transition-all duration-300 uppercase text-xs tracking-widest flex items-center justify-center gap-2',
+            'flex-1 px-4 py-4 rounded-3xl font-black transition-all duration-300 uppercase text-xs tracking-widest flex items-center justify-center gap-2 min-w-35',
             activeTab === tab
               ? 'bg-green-600 text-white shadow-xl shadow-green-600/20'
               : 'text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800',
@@ -186,12 +197,38 @@ const handleDeleteItem = (id: number) => {
         </button>
       </nav>
 
-      <main v-if="!adminStore.loading">
+      <main>
         <section
           v-if="activeTab === 'users'"
           class="bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden"
         >
-          <div id="APUserTable" class="overflow-x-auto">
+          <div
+            class="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/20"
+          >
+            <div class="relative max-w-lg">
+              <span
+                class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                >🔍</span
+              >
+              <input
+                v-model="searchQuery"
+                type="text"
+                placeholder="Szukaj po nazwie lub emailu..."
+                class="w-full pl-12 pr-4 py-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-green-500 outline-none transition-all dark:text-white font-bold"
+              />
+            </div>
+          </div>
+
+          <div id="APUserTable" class="overflow-x-auto relative">
+            <div
+              v-if="adminStore.loading"
+              class="absolute inset-0 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm z-10 flex items-center justify-center"
+            >
+              <div
+                class="w-10 h-10 border-4 border-green-600 border-t-transparent rounded-full animate-spin"
+              ></div>
+            </div>
+
             <table class="w-full text-left border-collapse min-w-200">
               <thead class="bg-slate-50 dark:bg-slate-800/50">
                 <tr>
@@ -280,6 +317,14 @@ const handleDeleteItem = (id: number) => {
                     </button>
                   </td>
                 </tr>
+                <tr v-if="!adminStore.loading && adminStore.users.length === 0">
+                  <td
+                    colspan="4"
+                    class="p-20 text-center text-slate-400 font-bold uppercase tracking-widest"
+                  >
+                    Nie znaleziono użytkowników
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -334,19 +379,22 @@ const handleDeleteItem = (id: number) => {
             :key="quiz.id"
             class="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 flex flex-col lg:flex-row justify-between items-center gap-8 group hover:shadow-xl transition-all"
           >
-            <div class="flex-1">
-              <div class="flex items-center gap-3 mb-3">
+            <div class="flex-1 text-center lg:text-left">
+              <div class="flex flex-col lg:flex-row items-center gap-3 mb-3">
                 <span
                   class="bg-amber-100 text-amber-600 text-[10px] font-black px-2 py-1 rounded uppercase tracking-tighter animate-pulse"
-                  >{{ t("admin.verifications.status") }}</span
                 >
+                  {{ t("admin.verifications.status") }}
+                </span>
                 <h3
                   class="text-2xl font-black text-slate-800 dark:text-white leading-tight"
                 >
                   {{ quiz.title }}
                 </h3>
               </div>
-              <p class="text-slate-500 font-medium flex items-center gap-2">
+              <p
+                class="text-slate-500 font-medium flex items-center justify-center lg:justify-start gap-2"
+              >
                 <span class="font-bold text-slate-800 dark:text-slate-300"
                   >@{{ quiz.authorId }}</span
                 >
@@ -384,7 +432,10 @@ const handleDeleteItem = (id: number) => {
         </section>
       </main>
 
-      <div v-else class="flex flex-col items-center justify-center py-40">
+      <div
+        v-if="adminStore.loading && activeTab !== 'users'"
+        class="flex flex-col items-center justify-center py-40"
+      >
         <div
           class="w-16 h-16 border-4 border-green-600 border-t-transparent rounded-full animate-spin mb-4"
         ></div>
@@ -452,21 +503,20 @@ button:focus {
   outline: none;
 }
 
-nav {
+.scroll-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
 }
-
-nav::-webkit-scrollbar {
+.scroll-hide::-webkit-scrollbar {
   display: none;
 }
+
 #APUserTable {
   padding-bottom: 8px;
 }
 
 #APUserTable::-webkit-scrollbar {
-  height: 4px;
+  height: 6px;
 }
 
 #APUserTable::-webkit-scrollbar-track {
@@ -475,7 +525,7 @@ nav::-webkit-scrollbar {
 }
 
 #APUserTable::-webkit-scrollbar-thumb {
-  background: oklch(62.7% 0.194 149.214);
+  background: #16a34a;
   border-radius: 20px;
 }
 </style>

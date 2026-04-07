@@ -19,13 +19,17 @@ export const useAdminStore = defineStore("admin", {
   },
 
   actions: {
-    async fetchUsers() {
+    async fetchUsers(search?: string) {
       this.loading = true;
       try {
-        const { data } = await api.get<User[]>("/Admin/users");
+        const { data } = await api.get<User[]>("/Admin/users", {
+          params: { search: search || undefined },
+        });
+
         this.users = data;
       } catch (err) {
         this.error = "Nie udało się pobrać listy użytkowników.";
+        console.error(err);
       } finally {
         this.loading = false;
       }
