@@ -163,7 +163,7 @@ const handleDeleteItem = (id: number) => {
       </header>
 
       <nav
-        class="flex gap-2 mb-8 bg-white dark:bg-slate-900 p-2 rounded-4xl shadow-sm border border-slate-200 dark:border-slate-800"
+        class="flex gap-2 mb-8 bg-white dark:bg-slate-900 p-2 rounded-4xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-auto"
       >
         <button
           v-for="tab in ['users', 'shop', 'verifications'] as AdminTab[]"
@@ -191,7 +191,7 @@ const handleDeleteItem = (id: number) => {
           v-if="activeTab === 'users'"
           class="bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden"
         >
-          <div class="overflow-x-auto">
+          <div id="APUserTable" class="overflow-x-auto">
             <table class="w-full text-left border-collapse min-w-200">
               <thead class="bg-slate-50 dark:bg-slate-800/50">
                 <tr>
@@ -450,5 +450,32 @@ th {
 }
 button:focus {
   outline: none;
+}
+
+nav {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+nav::-webkit-scrollbar {
+  display: none;
+}
+#APUserTable {
+  padding-bottom: 8px;
+}
+
+#APUserTable::-webkit-scrollbar {
+  height: 4px;
+}
+
+#APUserTable::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 0 20px;
+}
+
+#APUserTable::-webkit-scrollbar-thumb {
+  background: oklch(62.7% 0.194 149.214);
+  border-radius: 20px;
 }
 </style>
