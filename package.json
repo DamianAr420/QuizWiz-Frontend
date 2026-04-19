@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@cloudinary/url-gen": "^1.22.0",
+    "@microsoft/signalr": "^10.0.0",
     "@types/lodash-es": "^4.17.12",
     "@vercel/analytics": "^2.0.0",
     "@vercel/speed-insights": "^2.0.0",
