@@ -4,6 +4,10 @@ import { useAuthStore } from "./auth";
 import api from "@/services/api";
 import { useFriendsStore } from "@/stores/friends";
 import { useUserStore } from "@/stores/user";
+import { useToastStore } from "@/stores/toast";
+import i18n from "@/i18n";
+
+const { t } = i18n.global;
 
 export const useChatStore = defineStore("chat", {
   state: () => ({
@@ -17,10 +21,15 @@ export const useChatStore = defineStore("chat", {
     getFriendName: () => (id: number) => {
       const friendsStore = useFriendsStore();
       const friend = friendsStore.friends.find((f) => f.id === id);
-      return friend ? friend.name : "Nieznajomy";
+      return friend ? friend.name : t("chat.window.unknownUser");
     },
   },
   actions: {
+    notifyError(code: string, defaultKey: string) {
+      const message = code ? t(`chat.errors.${code}`) : t(defaultKey);
+      useToastStore().error(message);
+    },
+
     async startConnection() {
       const authStore = useAuthStore();
       const userStore = useUserStore();
@@ -35,6 +44,10 @@ export const useChatStore = defineStore("chat", {
         })
         .withAutomaticReconnect()
         .build();
+
+      this.connection.on("Error", (code: string) => {
+        this.notifyError(code, "chat.toast.defaultError");
+      });
 
       this.connection.on("ReceiveMessage", (message) => {
         const friendId =
@@ -80,7 +93,11 @@ export const useChatStore = defineStore("chat", {
 
     async sendMessage(receiverId: number, content: string) {
       if (this.connection?.state === signalR.HubConnectionState.Connected) {
-        await this.connection.invoke("SendMessage", receiverId, content);
+        try {
+          await this.connection.invoke("SendMessage", receiverId, content);
+        } catch (err) {
+          useToastStore().error(t("chat.toast.sendError"));
+        }
       }
     },
 

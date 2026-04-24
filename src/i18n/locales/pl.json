@@ -121,7 +121,11 @@
     "previous": "Poprzednia",
     "next": "Następna",
     "delete": "Usuń",
-    "edit": "Edytuj"
+    "edit": "Edytuj",
+    "errors": {
+      "UNAUTHORIZED": "Musisz być zalogowany.",
+      "UNKNOWN_ERROR": "Wystąpił nieoczekiwany błąd."
+    }
   },
   "leaderboard": {
     "title": "Ranking Graczy",
@@ -372,6 +376,60 @@
       "pts": "pkt",
       "answers": "odp.",
       "quizzes": "quizy"
+    }
+  },
+
+  "friends": {
+    "title": "Znajomi",
+    "addFriend": "Dodaj znajomego",
+    "placeholder": "Wpisz nazwę użytkownika...",
+    "add": "Dodaj",
+    "requests": "Zaproszenia ({count})",
+    "noRequests": "Brak oczekujących zaproszeń",
+    "accept": "Akceptuj",
+    "decline": "Odrzuć",
+    "yourFriends": "Twoi znajomi",
+    "noFriends": "Nie masz jeszcze znajomych",
+    "errors": {
+      "USER_NOT_FOUND": "Użytkownik nie istnieje.",
+      "CANNOT_INVITE_SELF": "Nie możesz zaprosić samego siebie.",
+      "FRIENDSHIP_ALREADY_EXISTS": "Użytkownik jest już Twoim znajomym lub masz już wysłane zaproszenie.",
+      "REQUEST_NOT_FOUND": "Zaproszenie nie istnieje."
+    },
+    "toast": {
+      "sent": "Zaproszenie wysłane.",
+      "accepted": "Zaproszenie zaakceptowane.",
+      "declined": "Zaproszenie odrzucone.",
+      "fetchFriendsError": "Błąd pobierania listy znajomych.",
+      "fetchRequestsError": "Błąd pobierania zaproszeń.",
+      "sendError": "Błąd wysyłania zaproszenia.",
+      "acceptError": "Błąd akceptacji zaproszenia.",
+      "declineError": "Błąd odrzucania zaproszenia."
+    }
+  },
+
+  "chat": {
+    "errors": {
+      "UNAUTHORIZED": "Sesja wygasła. Zaloguj się ponownie.",
+      "EMPTY_MESSAGE": "Nie można wysłać pustej wiadomości.",
+      "MESSAGE_SAVE_FAILED": "Nie udało się zapisać wiadomości."
+    },
+    "toast": {
+      "defaultError": "Wystąpił błąd w komunikacji.",
+      "sendError": "Błąd połączenia podczas wysyłania."
+    },
+    "window": {
+      "today": "Dzisiaj",
+      "yesterday": "Wczoraj",
+      "placeholder": "Napisz wiadomość...",
+      "unknownUser": "Nieznajomy"
+    },
+    "container": {
+      "title": "Znajomi",
+      "online": "Online",
+      "offline": "Offline",
+      "close": "Zamknij",
+      "manage": "Zarządzaj znajomymi"
     }
   }
 }

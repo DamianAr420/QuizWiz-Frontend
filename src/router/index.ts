@@ -10,9 +10,11 @@ import QuizList from "@/views/QuizList.vue";
 import QuizDetail from "@/views/QuizDetail.vue";
 import QuizPlay from "@/views/QuizPlay.vue";
 import QuizForm from "@/views/QuizForm.vue";
-import { useAuthStore } from "@/stores/auth";
 import Shop from "@/views/Shop.vue";
 import AdminPanel from "@/views/AdminPanel.vue";
+import Friends from "@/views/Friends.vue";
+import { useAuthStore } from "@/stores/auth";
+import { useChatStore } from "@/stores/chat";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -75,6 +77,12 @@ const routes: RouteRecordRaw[] = [
     component: AdminPanel,
     meta: { requiresAuth: true, requiresAdmin: true },
   },
+  {
+    path: "/friends",
+    name: "friends",
+    component: Friends,
+    meta: { requiresAuth: true },
+  },
 ];
 
 const router = createRouter({
@@ -84,6 +92,11 @@ const router = createRouter({
 
 router.beforeEach((to, _from, next) => {
   const authStore = useAuthStore();
+  const chatStore = useChatStore();
+
+  chatStore.openChats = [];
+  chatStore.isFriendsListOpen = false;
+
   const isAuthenticated = authStore.isAuthenticated;
   const isAdmin = authStore.user?.role === "Admin";
 

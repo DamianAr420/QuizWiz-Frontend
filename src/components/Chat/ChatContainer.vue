@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 import { useFriendsStore } from "@/stores/friends";
 import { useChatStore } from "@/stores/chat";
 
+const { t } = useI18n();
 const chatStore = useChatStore();
 const friendsStore = useFriendsStore();
+const router = useRouter();
 
 onMounted(() => {
   friendsStore.fetchFriends();
@@ -16,6 +20,10 @@ const onlineFriends = computed(() =>
 const offlineFriends = computed(() =>
   friendsStore.friends.filter((f) => !f.isOnline),
 );
+
+const goToFriendsPage = () => {
+  router.push("/friends");
+};
 </script>
 
 <template>
@@ -64,12 +72,14 @@ const offlineFriends = computed(() =>
         <div
           class="p-4 bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center"
         >
-          <span class="font-bold text-slate-800 dark:text-white">Znajomi</span>
+          <span class="font-bold text-slate-800 dark:text-white">{{
+            t("chat.container.title")
+          }}</span>
           <button
             @click.stop="chatStore.toggleFriendsList"
             class="text-slate-500 hover:text-red-500 text-xs font-bold uppercase tracking-wider transition-colors"
           >
-            Zamknij
+            {{ t("chat.container.close") }}
           </button>
         </div>
 
@@ -77,7 +87,7 @@ const offlineFriends = computed(() =>
           <div
             class="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest"
           >
-            Online
+            {{ t("chat.container.online") }}
           </div>
           <div
             v-for="friend in onlineFriends"
@@ -102,7 +112,7 @@ const offlineFriends = computed(() =>
           <div
             class="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest"
           >
-            Offline
+            {{ t("chat.container.offline") }}
           </div>
           <div
             v-for="friend in offlineFriends"
@@ -124,6 +134,13 @@ const offlineFriends = computed(() =>
             >
           </div>
         </div>
+
+        <button
+          @click="goToFriendsPage"
+          class="p-3 text-xs font-bold text-green-600 dark:text-green-400 border-t border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors uppercase tracking-wider"
+        >
+          {{ t("chat.container.manage") }}
+        </button>
       </div>
     </div>
   </Transition>

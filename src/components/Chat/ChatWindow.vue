@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch, nextTick } from "vue";
+import { useI18n } from "vue-i18n";
 import { useChatStore } from "@/stores/chat";
 import { useUserStore } from "@/stores/user";
 
+const { t } = useI18n();
 const props = defineProps<{ friendId: number }>();
 const chatStore = useChatStore();
 const userStore = useUserStore();
@@ -27,8 +29,10 @@ const getDayLabel = (dateString: string) => {
   const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
 
-  if (date.toDateString() === today.toDateString()) return "Dzisiaj";
-  if (date.toDateString() === yesterday.toDateString()) return "Wczoraj";
+  if (date.toDateString() === today.toDateString())
+    return t("chat.window.today");
+  if (date.toDateString() === yesterday.toDateString())
+    return t("chat.window.yesterday");
   return date.toLocaleDateString(undefined, { day: "numeric", month: "long" });
 };
 
@@ -144,7 +148,7 @@ const sendMessage = async () => {
       v-model="newMessage"
       @keyup.enter="sendMessage"
       class="p-3 border-t border-slate-200 dark:border-slate-800 outline-none text-sm dark:bg-slate-900 dark:text-white"
-      placeholder="Napisz wiadomość..."
+      :placeholder="t('chat.window.placeholder')"
     />
   </div>
 </template>

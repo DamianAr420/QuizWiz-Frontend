@@ -121,7 +121,11 @@
     "previous": "Previous",
     "next": "Next",
     "delete": "Delete",
-    "edit": "Edit"
+    "edit": "Edit",
+    "errors": {
+      "UNAUTHORIZED": "You must be logged in.",
+      "UNKNOWN_ERROR": "An unexpected error occurred."
+    }
   },
   "leaderboard": {
     "title": "Player Ranking",
@@ -372,6 +376,60 @@
       "pts": "pts",
       "answers": "ans.",
       "quizzes": "quizzes"
+    }
+  },
+
+  "friends": {
+    "title": "Friends",
+    "addFriend": "Add friend",
+    "placeholder": "Enter username...",
+    "add": "Add",
+    "requests": "Requests ({count})",
+    "noRequests": "No pending requests",
+    "accept": "Accept",
+    "decline": "Decline",
+    "yourFriends": "Your friends",
+    "noFriends": "You don't have friends yet",
+    "errors": {
+      "USER_NOT_FOUND": "User does not exist.",
+      "CANNOT_INVITE_SELF": "You cannot invite yourself.",
+      "FRIENDSHIP_ALREADY_EXISTS": "You are already friends or have a pending request.",
+      "REQUEST_NOT_FOUND": "Request not found."
+    },
+    "toast": {
+      "sent": "Request sent.",
+      "accepted": "Request accepted.",
+      "declined": "Request declined.",
+      "fetchFriendsError": "Error fetching friends.",
+      "fetchRequestsError": "Error fetching requests.",
+      "sendError": "Error sending request.",
+      "acceptError": "Error accepting request.",
+      "declineError": "Error declining request."
+    }
+  },
+
+  "chat": {
+    "errors": {
+      "UNAUTHORIZED": "Session expired. Please log in again.",
+      "EMPTY_MESSAGE": "Cannot send an empty message.",
+      "MESSAGE_SAVE_FAILED": "Failed to save the message."
+    },
+    "toast": {
+      "defaultError": "Communication error.",
+      "sendError": "Connection error while sending."
+    },
+    "window": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "placeholder": "Write a message...",
+      "unknownUser": "Unknown"
+    },
+    "container": {
+      "title": "Friends",
+      "online": "Online",
+      "offline": "Offline",
+      "close": "Close",
+      "manage": "Manage friends"
     }
   }
 }
