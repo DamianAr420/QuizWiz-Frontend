@@ -42,3 +42,8 @@ export interface UserInventory {
   shopItem: ShopItem;
   purchasedAt: string;
 }
+
+export interface PurchaseResult {
+  success: boolean;
+  message: string;
+}

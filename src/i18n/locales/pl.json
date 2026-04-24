@@ -81,6 +81,7 @@
     "deleteError": "Błąd podczas usuwania konta.",
     "avatarSuccess": "Avatar zaktualizowany!",
     "avatarError": "Błąd przesyłania zdjęcia.",
+    "fetchStatsError": "Nie udało się pobrać statystyk użytkownika.",
     "errors": {
       "USER_NOT_FOUND": "Użytkownik nie istnieje.",
       "UNAUTHORIZED": "Musisz się zalogować.",

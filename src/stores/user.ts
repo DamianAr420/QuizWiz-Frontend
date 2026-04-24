@@ -103,6 +103,18 @@ export const useUserStore = defineStore("user", () => {
     }
   };
 
+  const fetchStats = async () => {
+    loading.value = true;
+    try {
+      const response = await api.get<UserStats>("/users/stats");
+      stats.value = response.data;
+    } catch (err: any) {
+      handleError(err, "profile.fetchStatsError");
+    } finally {
+      loading.value = false;
+    }
+  };
+
   const updateWallet = (points: number, xp: number) => {
     if (profile.value) {
       profile.value.points = points;
@@ -119,5 +131,6 @@ export const useUserStore = defineStore("user", () => {
     uploadAvatar,
     deleteAccount,
     updateWallet,
+    fetchStats,
   };
 });

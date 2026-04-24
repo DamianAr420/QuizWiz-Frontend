@@ -16,6 +16,7 @@ const toast = useToastStore();
 onMounted(() => {
   shopStore.fetchShopItems();
   shopStore.fetchInventory();
+  userStore.fetchStats();
 });
 
 const userPoints = computed(() => userStore.profile?.points || 0);
@@ -25,7 +26,6 @@ const isOwned = (itemId: number) => {
   return shopStore.inventory.some((ui) => ui.shopItemId === itemId);
 };
 
-// POPRAWKA: Zmiana typu argumentu na string | null | undefined
 const isRealImage = (url: string | null | undefined) => {
   if (!url) return false;
   return (

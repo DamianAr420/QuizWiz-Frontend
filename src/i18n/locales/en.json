@@ -79,6 +79,7 @@
     "deleteError": "Failed to delete account.",
     "avatarSuccess": "Avatar updated!",
     "avatarError": "Failed to upload image.",
+    "fetchStatsError": "Failed to fetch user statistics.",
     "errors": {
       "USER_NOT_FOUND": "User does not exist.",
       "UNAUTHORIZED": "You must be logged in.",
