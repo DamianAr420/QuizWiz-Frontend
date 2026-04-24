@@ -12,42 +12,45 @@
       "dark": "Ciemny"
     }
   },
+
   "auth": {
     "welcome": "Witaj w QuizWiz",
-    "join": "Dołącz do gry",
-    "email": "Twój email",
-    "displayName": "Jak Cię zwać?",
-    "loading": "Chwileczkę...",
+    "join": "Dołącz do nas",
+    "displayName": "Nazwa użytkownika",
     "submitLogin": "Zaloguj się",
-    "submitRegister": "Stwórz konto",
-    "noAccount": "Nie masz jeszcze konta? Zarejestruj się",
+    "submitRegister": "Zarejestruj się",
+    "noAccount": "Nie masz konta? Zarejestruj się",
     "hasAccount": "Masz już konto? Zaloguj się",
+    "loading": "Ładowanie...",
+    "loginSuccess": "Witaj {name}!",
+    "registerSuccess": "Konto utworzone pomyślnie!",
+    "logoutSuccess": "Wylogowano pomyślnie.",
+    "registerError": "Wystąpił błąd podczas rejestracji.",
+    "errors": {
+      "EMAIL_TAKEN": "Ten adres email jest już zajęty.",
+      "USERNAME_TAKEN": "Ta nazwa użytkownika jest już zajęta.",
+      "INVALID_CREDENTIALS": "Nieprawidłowe dane logowania.",
+      "WEAK_PASSWORD": "Hasło jest zbyt słabe."
+    },
     "placeholders": {
-      "displayName": "np. MistrzQuizu99",
-      "identifier": "Twój email lub nick",
-      "email": "twoj{'@'}email.com",
+      "identifier": "Email lub nazwa użytkownika",
+      "email": "Adres email",
       "password": "Hasło"
     },
-    "loginSuccess": "Witaj ponownie, {name}!",
-    "logoutSuccess": "Wylogowano pomyślnie",
-    "registerSuccess": "Konto utworzone pomyślnie!",
-    "loginError": "Błąd logowania",
-    "registerError": "Błąd rejestracji",
     "requirements": {
       "length": "Minimum 6 znaków",
-      "digit": "Co najmniej jedna cyfra",
-      "uppercase": "Jedna wielka litera"
-    },
-    "errors": {
-      "weakPassword": "Hasło nie spełnia wymagań bezpieczeństwa."
+      "digit": "Zawiera cyfrę",
+      "uppercase": "Zawiera wielką literę"
     }
   },
+
   "footer": {
     "rules": "Regulamin",
     "privacy": "Polityka prywatności",
     "contact": "Kontakt",
     "builtWith": "Zbudowano w"
   },
+
   "home": {
     "title": "Zostań mistrzem w",
     "description": "Sprawdź swoją wiedzę w setkach kategorii, rywalizuj ze znajomymi i wspinaj się na szczyt rankingu. Najlepszy sposób na naukę i zabawę zaczyna się tutaj!",
@@ -74,8 +77,15 @@
     "editBtn": "Edytuj profil",
     "memberSince": "Dołączył(a)",
     "levelShort": "lvl",
-    "updateError": "Nie udało się zaktualizować profilu",
-    "updateSuccess": "Profil zaktualizowany pomyślnie!",
+    "deleteSuccess": "Konto zostało usunięte.",
+    "deleteError": "Błąd podczas usuwania konta.",
+    "avatarSuccess": "Avatar zaktualizowany!",
+    "avatarError": "Błąd przesyłania zdjęcia.",
+    "errors": {
+      "USER_NOT_FOUND": "Użytkownik nie istnieje.",
+      "UNAUTHORIZED": "Musisz się zalogować.",
+      "INVALID_FILE": "Nieprawidłowy plik."
+    },
     "stats": {
       "title": "Statystyki",
       "xp": "Doświadczenie",
@@ -156,8 +166,6 @@
     "alreadyDoneToday": "Już rozegrałeś/aś ten quiz dzisiaj",
     "limitTitle": "Limit punktów",
     "multiplier": "Mnożnik:",
-    "submitSuccess": "Quiz został zgłoszony do weryfikacji!",
-    "submitError": "Nie udało się zgłosić quizu do weryfikacji",
     "filter": {
       "official": "Oficjalne",
       "users": "Społeczność"
@@ -203,9 +211,31 @@
       "perQuestion": "pyt."
     },
     "createSuccess": "Quiz został utworzony!",
-    "createError": "Nie udało się utworzyć quizu",
-    "deleteSuccess": "Quiz został usunięty",
-    "deleteError": "Błąd podczas usuwania quizu"
+    "createError": "Błąd tworzenia quizu.",
+    "updateSuccess": "Quiz został zaktualizowany.",
+    "updateError": "Błąd aktualizacji quizu.",
+    "deleteSuccess": "Quiz usunięty.",
+    "deleteError": "Błąd usuwania quizu.",
+    "submitSuccess": "Quiz zgłoszony do weryfikacji.",
+    "submitError": "Błąd podczas zgłaszania.",
+    "verifySuccess": "Status weryfikacji zaktualizowany.",
+    "verifyError": "Błąd aktualizacji statusu.",
+    "errors": {
+      "QUIZ_NOT_FOUND": "Quiz nie istnieje.",
+      "QUIZ_ALREADY_SUBMITTED": "Quiz został już zgłoszony do weryfikacji.",
+      "FORBIDDEN": "Nie masz uprawnień do tej akcji.",
+      "UNAUTHORIZED": "Musisz się zalogować."
+    },
+
+    "list": {
+      "title": "Quizy",
+      "officialDescription": "Certyfikowane wyzwania wiedzy",
+      "userDescription": "Twórczość naszej społeczności",
+      "emptyTitle": "Nic tu nie ma...",
+      "submitTitle": "Zgłosić quiz do weryfikacji?",
+      "submitDescription": "Po wysłaniu nie będziesz mógł edytować pytań do czasu podjęcia decyzji przez administratora.",
+      "submitAction": "Zgłoś teraz"
+    }
   },
   "game": {
     "score": "Wynik",
@@ -242,6 +272,20 @@
     "title": "Panel",
     "subtitle": "Admina",
     "version": "Wersja Systemu 0.2",
+    "userUpdateSuccess": "Dane użytkownika zaktualizowane.",
+    "userUpdateError": "Błąd podczas aktualizacji użytkownika.",
+    "shopSaveSuccess": "Przedmiot w sklepie zapisany.",
+    "shopSaveError": "Błąd podczas zapisu przedmiotu.",
+    "shopDeleteSuccess": "Przedmiot usunięty.",
+    "shopDeleteError": "Błąd usuwania przedmiotu.",
+    "quizVerifySuccess": "Quiz został zweryfikowany.",
+    "quizRejectSuccess": "Quiz został odrzucony.",
+    "quizActionError": "Błąd podczas operacji na quizie.",
+    "errors": {
+      "USER_NOT_FOUND": "Użytkownik nie istnieje.",
+      "ITEM_NOT_FOUND": "Przedmiot nie istnieje.",
+      "QUIZ_NOT_FOUND": "Quiz nie istnieje."
+    },
     "tabs": {
       "users": "Użytkownicy",
       "shop": "Sklep",
@@ -303,7 +347,14 @@
     "lowLevel": "Zbyt niski poziom",
     "buyNow": "Kup teraz",
     "empty": "Sklep jest obecnie pusty. Wróć później!",
-    "purchaseSuccess": "Przedmiot został dodany do Twojego ekwipunku!",
+    "purchaseSuccess": "Zakup zakończony sukcesem!",
+    "purchaseError": "Wystąpił błąd podczas zakupu.",
+    "errors": {
+      "INSUFFICIENT_FUNDS": "Nie masz wystarczającej liczby punktów.",
+      "ITEM_ALREADY_OWNED": "Już posiadasz ten przedmiot.",
+      "ITEM_NOT_FOUND": "Przedmiot nie istnieje.",
+      "USER_NOT_FOUND": "Użytkownik nie znaleziony."
+    },
     "types": {
       "frame": "Ramka profilu",
       "background": "Tło profilu",
@@ -364,6 +415,8 @@
     "empty": "Brak danych dla wybranej kategorii. Bądź pierwszym graczem!",
     "level": "Poziom {level}",
     "anonymous": "Anonim",
+    "fetchError": "Nie udało się pobrać danych rankingu.",
+    "unknownType": "Nieznany typ rankingu.",
     "tabs": {
       "experience": "Doświadczenie",
       "points": "Punkty",

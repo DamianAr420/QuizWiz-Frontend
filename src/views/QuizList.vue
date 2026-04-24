@@ -104,8 +104,8 @@ const confirmSubmit = async () => {
             >
               {{
                 activeFilter === "official"
-                  ? "Certyfikowane wyzwania wiedzy"
-                  : "Twórczość naszej społeczności"
+                  ? t("quiz.list.officialDescription")
+                  : t("quiz.list.userDescription")
               }}
             </p>
           </Transition>
@@ -128,9 +128,8 @@ const confirmSubmit = async () => {
         <div class="relative flex-1 w-full group">
           <span
             class="absolute left-6 top-1/2 -translate-y-1/2 text-2xl group-focus-within:scale-110 transition-transform"
+            >🔍</span
           >
-            🔍
-          </span>
           <input
             v-model="searchQuery"
             type="text"
@@ -216,7 +215,7 @@ const confirmSubmit = async () => {
       >
         <div class="text-6xl mb-6 grayscale opacity-80">🏜️</div>
         <h3 class="text-2xl font-black text-slate-800 dark:text-white mb-2">
-          Nic tu nie ma...
+          {{ t("quiz.list.emptyTitle") }}
         </h3>
         <p
           class="text-slate-400 dark:text-slate-500 font-bold max-w-sm mx-auto"
@@ -239,9 +238,9 @@ const confirmSubmit = async () => {
 
     <ConfirmModal
       :is-open="isSubmitConfirmOpen"
-      title="Zgłosić quiz do weryfikacji?"
-      description="Po wysłaniu nie będziesz mógł edytować pytań do czasu podjęcia decyzji przez administratora."
-      confirm-text="Zgłoś teraz"
+      :title="t('quiz.list.submitTitle')"
+      :description="t('quiz.list.submitDescription')"
+      :confirm-text="t('quiz.list.submitAction')"
       priority="Medium"
       :loading="quizStore.loading"
       @confirm="confirmSubmit"

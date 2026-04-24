@@ -69,7 +69,7 @@ const toggleMode = () => {
 
 const handleSubmit = async () => {
   if (!isLoginMode.value && !isPasswordValid.value) {
-    errorMessage.value = t("auth.errors.weakPassword");
+    errorMessage.value = t("auth.errors.WEAK_PASSWORD");
     return;
   }
 

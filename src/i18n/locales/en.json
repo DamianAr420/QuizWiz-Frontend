@@ -15,33 +15,34 @@
   "auth": {
     "welcome": "Welcome to QuizWiz",
     "join": "Join the game",
-    "email": "Your email",
     "displayName": "Display name",
-    "loading": "Just a moment...",
     "submitLogin": "Login",
     "submitRegister": "Create account",
     "noAccount": "Don't have an account? Sign up",
     "hasAccount": "Already have an account? Login",
+    "loading": "Loading...",
+    "loginSuccess": "Welcome back, {name}!",
+    "registerSuccess": "Account created successfully!",
+    "logoutSuccess": "Logged out successfully.",
+    "registerError": "Registration failed.",
+    "errors": {
+      "EMAIL_TAKEN": "This email address is already taken.",
+      "USERNAME_TAKEN": "This username is already taken.",
+      "INVALID_CREDENTIALS": "Invalid login credentials.",
+      "WEAK_PASSWORD": "Password is too weak."
+    },
     "placeholders": {
-      "displayName": "e.g. QuizMaster99",
-      "identifier": "Email or nickname",
-      "email": "your{'@'}email.com",
+      "identifier": "Email or username",
+      "email": "Email address",
       "password": "Password"
     },
-    "loginSuccess": "Welcome back, {name}!",
-    "logoutSuccess": "Logged out successfully",
-    "registerSuccess": "Account created successfully!",
-    "loginError": "Login failed",
-    "registerError": "Registration failed",
     "requirements": {
-      "length": "At least 6 characters",
-      "digit": "At least one digit",
-      "uppercase": "One uppercase letter"
-    },
-    "errors": {
-      "weakPassword": "Password does not meet security requirements."
+      "length": "Minimum 6 characters",
+      "digit": "Contains a digit",
+      "uppercase": "Contains an uppercase letter"
     }
   },
+
   "footer": {
     "rules": "Terms of Service",
     "privacy": "Privacy Policy",
@@ -74,8 +75,15 @@
     "editBtn": "Edit profile",
     "memberSince": "Joined",
     "levelShort": "lvl",
-    "updateError": "Failed to update profile",
-    "updateSuccess": "Profile updated successfully!",
+    "deleteSuccess": "Account deleted successfully.",
+    "deleteError": "Failed to delete account.",
+    "avatarSuccess": "Avatar updated!",
+    "avatarError": "Failed to upload image.",
+    "errors": {
+      "USER_NOT_FOUND": "User does not exist.",
+      "UNAUTHORIZED": "You must be logged in.",
+      "INVALID_FILE": "Invalid file."
+    },
     "stats": {
       "title": "Statistics",
       "xp": "Experience",
@@ -156,8 +164,6 @@
     "alreadyDoneToday": "You already played this quiz today",
     "limitTitle": "Points limit",
     "multiplier": "Multiplier:",
-    "submitSuccess": "Quiz submitted for verification!",
-    "submitError": "Failed to submit quiz for verification",
     "filter": {
       "official": "Official",
       "users": "Community"
@@ -203,9 +209,30 @@
       "perQuestion": "q."
     },
     "createSuccess": "Quiz created successfully!",
-    "createError": "Failed to create quiz",
-    "deleteSuccess": "Quiz deleted successfully",
-    "deleteError": "Error deleting quiz"
+    "createError": "Error creating quiz.",
+    "updateSuccess": "Quiz updated successfully.",
+    "updateError": "Error updating quiz.",
+    "deleteSuccess": "Quiz deleted.",
+    "deleteError": "Error deleting quiz.",
+    "submitSuccess": "Quiz submitted for verification.",
+    "submitError": "Error during submission.",
+    "verifySuccess": "Verification status updated.",
+    "verifyError": "Error updating status.",
+    "errors": {
+      "QUIZ_NOT_FOUND": "Quiz does not exist.",
+      "QUIZ_ALREADY_SUBMITTED": "Quiz has already been submitted for verification.",
+      "FORBIDDEN": "You do not have permissions for this action.",
+      "UNAUTHORIZED": "You must log in."
+    },
+    "list": {
+      "title": "Quizzes",
+      "officialDescription": "Certified knowledge challenges",
+      "userDescription": "Our community's creativity",
+      "emptyTitle": "Nothing here...",
+      "submitTitle": "Submit quiz for verification?",
+      "submitDescription": "After submission, you won't be able to edit the questions until the admin makes a decision.",
+      "submitAction": "Submit"
+    }
   },
   "game": {
     "score": "Score",
@@ -242,6 +269,20 @@
     "title": "Admin",
     "subtitle": "Panel",
     "version": "System Version 0.2",
+    "userUpdateSuccess": "User data updated.",
+    "userUpdateError": "Error updating user data.",
+    "shopSaveSuccess": "Item saved in the shop.",
+    "shopSaveError": "Error saving item.",
+    "shopDeleteSuccess": "Item deleted.",
+    "shopDeleteError": "Error deleting item.",
+    "quizVerifySuccess": "Quiz verified.",
+    "quizRejectSuccess": "Quiz rejected.",
+    "quizActionError": "Error during quiz action.",
+    "errors": {
+      "USER_NOT_FOUND": "User not found.",
+      "ITEM_NOT_FOUND": "Item not found.",
+      "QUIZ_NOT_FOUND": "Quiz not found."
+    },
     "tabs": {
       "users": "Users",
       "shop": "Shop",
@@ -303,7 +344,14 @@
     "lowLevel": "Level too low",
     "buyNow": "Buy now",
     "empty": "The shop is currently empty. Check back later!",
-    "purchaseSuccess": "Item added to your inventory!",
+    "purchaseSuccess": "Purchase successful!",
+    "purchaseError": "An error occurred while processing your purchase.",
+    "errors": {
+      "INSUFFICIENT_FUNDS": "You don't have enough points.",
+      "ITEM_ALREADY_OWNED": "You already own this item.",
+      "ITEM_NOT_FOUND": "Item not found.",
+      "USER_NOT_FOUND": "User not found."
+    },
     "types": {
       "frame": "Profile Frame",
       "background": "Profile Background",
@@ -364,6 +412,8 @@
     "empty": "No data for this category. Be the first to play!",
     "level": "Level {level}",
     "anonymous": "Anonymous",
+    "fetchError": "Failed to fetch leaderboard data.",
+    "unknownType": "Unknown leaderboard type.",
     "tabs": {
       "experience": "Experience",
       "points": "Points",

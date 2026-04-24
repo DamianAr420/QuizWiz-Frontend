@@ -13,6 +13,7 @@ export const useAuthStore = defineStore("auth", {
 
   getters: {
     isAuthenticated: (state) => !!state.token,
+    currentUser: (state) => state.user,
   },
 
   actions: {
@@ -20,18 +21,22 @@ export const useAuthStore = defineStore("auth", {
       this.loading = true;
       const toast = useToastStore();
       const t = i18n.global.t;
+
       try {
         const response = await api.post<AuthResponse>("/auth/login", {
           identifier,
           password: passwordHash,
         });
+
         this.setAuth(response.data);
         toast.show(
           t("auth.loginSuccess", { name: response.data.user.displayName }),
           "success",
         );
       } catch (error: any) {
-        const msg = error.response?.data?.message || "Błąd logowania";
+        const code = error.response?.data?.code;
+        const msg = code ? t(`auth.errors.${code}`) : t("auth.registerError");
+
         toast.show(msg, "error");
         throw msg;
       } finally {
@@ -43,20 +48,19 @@ export const useAuthStore = defineStore("auth", {
       this.loading = true;
       const toast = useToastStore();
       const t = i18n.global.t;
+
       try {
         const response = await api.post<AuthResponse>("/auth/register", {
           displayName,
           email,
           password: passwordHash,
         });
+
         this.setAuth(response.data);
         toast.show(t("auth.registerSuccess"), "success");
       } catch (error: any) {
-        const msg =
-          error.response?.data?.message ||
-          error.response?.data?.errors?.DisplayName?.[0] ||
-          error.response?.data?.errors?.Password?.[0] ||
-          t("auth.registerError");
+        const code = error.response?.data?.code;
+        const msg = code ? t(`auth.errors.${code}`) : t("auth.registerError");
 
         toast.show(msg, "error");
         throw msg;
@@ -75,10 +79,12 @@ export const useAuthStore = defineStore("auth", {
     logout() {
       const toast = useToastStore();
       const t = i18n.global.t;
+
       this.user = null;
       this.token = null;
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+
       toast.show(t("auth.logoutSuccess"), "info");
     },
   },

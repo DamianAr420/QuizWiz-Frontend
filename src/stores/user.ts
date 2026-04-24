@@ -1,144 +1,123 @@
 import { defineStore } from "pinia";
+import { ref } from "vue";
 import api from "@/services/api";
 import { useAuthStore } from "./auth";
-import type { User, UserStats } from "@/types/user";
 import { useToastStore } from "./toast";
 import i18n from "@/i18n/index";
+import type { User, UserStats } from "@/types/user";
 
-export const useUserStore = defineStore("user", {
-  state: () => ({
-    profile: null as User | null,
-    stats: null as UserStats | null,
-    loading: false,
-    error: null as string | null,
-  }),
+export const useUserStore = defineStore("user", () => {
+  const profile = ref<User | null>(null);
+  const stats = ref<UserStats | null>(null);
+  const loading = ref(false);
+  const toast = useToastStore();
+  const t = i18n.global.t;
 
-  actions: {
-    async fetchProfile() {
-      this.loading = true;
-      this.error = null;
-      try {
-        const response = await api.get<User>("/users/me");
-        this.profile = response.data;
+  const handleError = (error: any, defaultKey: string) => {
+    const code = error.response?.data?.code;
+    const msg = code ? t(`profile.errors.${code}`) : t(defaultKey);
+    toast.show(msg, "error");
+    throw msg;
+  };
 
-        const authStore = useAuthStore();
-        if (authStore.user) {
-          authStore.user.displayName = response.data.displayName;
-          authStore.user.cloudinaryPublicId = response.data.cloudinaryPublicId;
-          localStorage.setItem("user", JSON.stringify(response.data));
-        }
-      } catch (err: any) {
-        this.error =
-          err.response?.data?.message || "Nie udało się pobrać profilu";
-      } finally {
-        this.loading = false;
+  const fetchProfile = async () => {
+    loading.value = true;
+    try {
+      const response = await api.get<User>("/users/me");
+      profile.value = response.data;
+
+      const authStore = useAuthStore();
+      if (authStore.user) {
+        authStore.user.displayName = response.data.displayName;
+        authStore.user.cloudinaryPublicId = response.data.cloudinaryPublicId;
+        localStorage.setItem("user", JSON.stringify(response.data));
       }
-    },
+    } catch (err: any) {
+      handleError(err, "profile.fetchError");
+    } finally {
+      loading.value = false;
+    }
+  };
 
-    async fetchStats() {
-      this.loading = true;
-      this.error = null;
-      try {
-        const response = await api.get<UserStats>("/users/stats");
-        this.stats = response.data;
-      } catch (err: any) {
-        this.error =
-          err.response?.data?.message || "Nie udało się pobrać statystyk";
-      } finally {
-        this.loading = false;
+  const updateProfile = async (payload: {
+    displayName: string;
+    selectedFrame?: string | null;
+    selectedBackground?: string | null;
+  }) => {
+    loading.value = true;
+    try {
+      const response = await api.put<User>("/users/update-profile", payload);
+      profile.value = response.data;
+
+      const authStore = useAuthStore();
+      if (authStore.user) {
+        authStore.user.displayName = response.data.displayName;
+        localStorage.setItem("user", JSON.stringify(response.data));
       }
-    },
+      toast.show(t("profile.updateSuccess"), "success");
+    } catch (err: any) {
+      handleError(err, "profile.updateError");
+    } finally {
+      loading.value = false;
+    }
+  };
 
-    async updateProfile(payload: {
-      displayName: string;
-      selectedFrame?: string | null;
-      selectedBackground?: string | null;
-    }) {
-      this.loading = true;
-      const toast = useToastStore();
-      const t = i18n.global.t;
-      try {
-        const response = await api.put<User>("/users/update-profile", {
-          DisplayName: payload.displayName,
-          SelectedFrame: payload.selectedFrame,
-          SelectedBackground: payload.selectedBackground,
-        });
+  const uploadAvatar = async (file: File) => {
+    loading.value = true;
+    const formData = new FormData();
+    formData.append("file", file);
 
-        this.profile = response.data;
+    try {
+      const response = await api.post<{ publicId: string }>(
+        "/users/upload-avatar",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        },
+      );
 
-        const authStore = useAuthStore();
-        if (authStore.user) {
-          authStore.user.displayName = response.data.displayName;
-          localStorage.setItem("user", JSON.stringify(response.data));
-        }
-
-        toast.show(t("profile.updateSuccess"), "success");
-      } catch (err: any) {
-        this.error = err.response?.data?.message || t("profile.updateError");
-        toast.show(this.error as string, "error");
-        throw err;
-      } finally {
-        this.loading = false;
+      if (profile.value) {
+        profile.value.cloudinaryPublicId = response.data.publicId;
       }
-    },
+      toast.show(t("profile.avatarSuccess"), "success");
+      return response.data.publicId;
+    } catch (err: any) {
+      handleError(err, "profile.avatarError");
+    } finally {
+      loading.value = false;
+    }
+  };
 
-    async deleteAccount() {
-      this.loading = true;
-      const toast = useToastStore();
-      const t = i18n.global.t;
-      try {
-        await api.delete("/users/delete-account");
-        const authStore = useAuthStore();
-        authStore.logout();
-        this.profile = null;
-        this.stats = null;
-        toast.show(t("profile.deleteSuccess"), "info");
-      } catch (err: any) {
-        this.error = err.response?.data?.message || t("profile.deleteError");
-        toast.show(this.error as string, "error");
-        throw err;
-      } finally {
-        this.loading = false;
-      }
-    },
+  const deleteAccount = async () => {
+    loading.value = true;
+    try {
+      await api.delete("/users/delete-account");
+      useAuthStore().logout();
+      profile.value = null;
+      stats.value = null;
+      toast.show(t("profile.deleteSuccess"), "info");
+    } catch (err: any) {
+      handleError(err, "profile.deleteError");
+    } finally {
+      loading.value = false;
+    }
+  };
 
-    async uploadAvatar(file: File) {
-      this.loading = true;
-      const toast = useToastStore();
-      const t = i18n.global.t;
-      const formData = new FormData();
-      formData.append("file", file);
+  const updateWallet = (points: number, xp: number) => {
+    if (profile.value) {
+      profile.value.points = points;
+      profile.value.experience = xp;
+    }
+  };
 
-      try {
-        const response = await api.post<{ publicId: string }>(
-          "/users/upload-avatar",
-          formData,
-          { headers: { "Content-Type": "multipart/form-data" } },
-        );
-
-        if (this.profile) {
-          this.profile.cloudinaryPublicId = response.data.publicId;
-        }
-
-        toast.show(
-          t("profile.avatarSuccess") || "Avatar zaktualizowany!",
-          "success",
-        );
-        return response.data.publicId;
-      } catch (err: any) {
-        this.error = err.response?.data || "Błąd podczas przesyłania zdjęcia";
-        toast.show(this.error as string, "error");
-        throw err;
-      } finally {
-        this.loading = false;
-      }
-    },
-
-    updateWallet(points: number, xp: number) {
-      if (this.profile) {
-        this.profile.points = points;
-        this.profile.experience = xp;
-      }
-    },
-  },
+  return {
+    profile,
+    stats,
+    loading,
+    fetchProfile,
+    updateProfile,
+    uploadAvatar,
+    deleteAccount,
+    updateWallet,
+  };
 });
