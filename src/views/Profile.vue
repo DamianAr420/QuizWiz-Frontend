@@ -6,12 +6,14 @@ import { useUserStore } from "@/stores/user";
 import { useQuizStore } from "@/stores/quiz";
 import { useAuthStore } from "@/stores/auth";
 import { useShopStore } from "@/stores/shop";
+import { useStatsStore } from "@/stores/stats";
 import QuizCard from "@/components/Cards/QuizCard.vue";
 import ConfirmModal from "@/components/Modals/Confirm.vue";
 import { useCloudinary } from "@/composables/useCloudinary";
 import { ItemRarity, ItemType } from "@/types/shop";
 import AnimatedNumber from "@/components/AnimatedNumber.vue";
 import { SHOP_PRESETS } from "@/components/shop/shopPresets";
+import HistoryModal from "@/components/Modals/History.vue";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -20,12 +22,14 @@ const quizStore = useQuizStore();
 const authStore = useAuthStore();
 const shopStore = useShopStore();
 const { getAvatarUrl } = useCloudinary();
+const statsStore = useStatsStore();
 
 const isEditing = ref(false);
 const isDeleteModalOpen = ref(false);
 const isQuizDeleteModalOpen = ref(false);
 const quizToDelete = ref<number | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
+const isHistoryModalOpen = ref(false);
 
 const form = ref({
   displayName: "",
@@ -107,6 +111,7 @@ onMounted(async () => {
     userStore.fetchStats(),
     quizStore.fetchQuizzes(false),
     shopStore.fetchInventory(),
+    statsStore.fetchHistory(1, 5),
   ]);
 });
 
@@ -570,6 +575,36 @@ const confirmQuizDelete = async () => {
               <h3
                 class="text-xl font-black text-slate-800 dark:text-white flex items-center gap-2"
               >
+                <span class="text-2xl">📜</span>
+                {{ t("profile.history.title") }}
+              </h3>
+              <button
+                @click="isHistoryModalOpen = true"
+                class="text-xs font-black uppercase text-green-600 hover:underline"
+              >
+                {{ t("common.showAll") }}
+              </button>
+            </div>
+
+            <div class="space-y-2">
+              <div
+                v-for="attempt in statsStore.attempts.slice(0, 5)"
+                :key="attempt.id"
+                class="flex justify-between items-center p-3 bg-white dark:bg-[#151e32] border border-slate-100 dark:border-slate-800 rounded-xl text-sm"
+              >
+                <span class="font-bold truncate">{{ attempt.quizTitle }}</span>
+                <span class="font-mono font-black text-green-600"
+                  >{{ attempt.score }}/{{ attempt.totalQuestions }}</span
+                >
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="flex items-center justify-between mb-4">
+              <h3
+                class="text-xl font-black text-slate-800 dark:text-white flex items-center gap-2"
+              >
                 <span class="text-2xl">🎒</span>
                 {{ t("profile.inventory.title") }}
               </h3>
@@ -744,6 +779,10 @@ const confirmQuizDelete = async () => {
       :loading="quizStore.loading"
       @close="isQuizDeleteModalOpen = false"
       @confirm="confirmQuizDelete"
+    />
+    <HistoryModal
+      :is-open="isHistoryModalOpen"
+      @close="isHistoryModalOpen = false"
     />
   </div>
 </template>

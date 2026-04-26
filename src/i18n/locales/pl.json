@@ -86,7 +86,9 @@
     "errors": {
       "USER_NOT_FOUND": "Użytkownik nie istnieje.",
       "UNAUTHORIZED": "Musisz się zalogować.",
-      "INVALID_FILE": "Nieprawidłowy plik."
+      "INVALID_FILE": "Nieprawidłowy plik.",
+      "fetch_stats_failed": "Błąd podczas pobierania statystyk",
+      "fetch_history_failed": "Błąd podczas pobierania historii"
     },
     "stats": {
       "title": "Statystyki",
@@ -98,6 +100,9 @@
       "correct": "Poprawne",
       "streak": "Seria dni",
       "points": "Punkty"
+    },
+    "history": {
+      "title": "Historia Gier"
     },
     "inventory": {
       "title": "Ekwipunek",
@@ -134,6 +139,8 @@
     "next": "Następna",
     "delete": "Usuń",
     "edit": "Edytuj",
+    "showAll": "Pokaż wszystko",
+    "loadMore": "Wczytaj więcej",
     "errors": {
       "UNAUTHORIZED": "Musisz być zalogowany.",
       "UNKNOWN_ERROR": "Wystąpił nieoczekiwany błąd."

@@ -1,12 +1,8 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import api from "@/services/api";
-
-interface Stats {
-  totalQuizzes: number;
-  totalQuestions: number;
-  totalUsers: number;
-}
+import { type Attempt, type Stats } from "@/types/stats";
+import i18n from "@/i18n";
 
 export const useStatsStore = defineStore("stats", () => {
   const stats = ref<Stats>({
@@ -15,7 +11,11 @@ export const useStatsStore = defineStore("stats", () => {
     totalUsers: 0,
   });
 
+  const attempts = ref<Attempt[]>([]);
+  const totalAttempts = ref(0);
   const loading = ref(false);
+
+  const t = i18n.global.t;
 
   const fetchStats = async () => {
     loading.value = true;
@@ -23,7 +23,29 @@ export const useStatsStore = defineStore("stats", () => {
       const { data } = await api.get<Stats>("/stats");
       stats.value = data;
     } catch (error) {
-      console.error("Błąd podczas pobierania statystyk:", error);
+      console.error(t("profile.errors.fetch_stats_failed"), error);
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const fetchHistory = async (page = 1, pageSize = 5) => {
+    loading.value = true;
+    try {
+      const { data } = await api.get(
+        `/stats/history?page=${page}&pageSize=${pageSize}`,
+      );
+
+      if (page === 1) {
+        attempts.value = data.items;
+      } else {
+        attempts.value.push(...data.items);
+      }
+
+      totalAttempts.value = data.totalItems;
+      return data;
+    } catch (error) {
+      console.error(t("profile.errors.fetch_history_failed"), error);
     } finally {
       loading.value = false;
     }
@@ -31,7 +53,10 @@ export const useStatsStore = defineStore("stats", () => {
 
   return {
     stats,
+    attempts,
+    totalAttempts,
     loading,
     fetchStats,
+    fetchHistory,
   };
 });

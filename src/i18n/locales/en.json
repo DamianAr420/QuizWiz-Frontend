@@ -84,7 +84,9 @@
     "errors": {
       "USER_NOT_FOUND": "User does not exist.",
       "UNAUTHORIZED": "You must be logged in.",
-      "INVALID_FILE": "Invalid file."
+      "INVALID_FILE": "Invalid file.",
+      "fetch_stats_failed": "Error occurred while fetching statistics",
+      "fetch_history_failed": "Error occurred while fetching history"
     },
     "stats": {
       "title": "Statistics",
@@ -96,6 +98,9 @@
       "correct": "Correct",
       "streak": "Day streak",
       "points": "Points"
+    },
+    "history": {
+      "title": "Game History"
     },
     "inventory": {
       "title": "Inventory",
@@ -132,6 +137,8 @@
     "next": "Next",
     "delete": "Delete",
     "edit": "Edit",
+    "showAll": "Show all",
+    "loadMore": "Load more",
     "errors": {
       "UNAUTHORIZED": "You must be logged in.",
       "UNKNOWN_ERROR": "An unexpected error occurred."
