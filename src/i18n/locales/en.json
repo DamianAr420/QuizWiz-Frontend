@@ -80,6 +80,7 @@
     "avatarSuccess": "Avatar updated!",
     "avatarError": "Failed to upload image.",
     "fetchStatsError": "Failed to fetch user statistics.",
+    "fetchError": "Failed to fetch user data.",
     "errors": {
       "USER_NOT_FOUND": "User does not exist.",
       "UNAUTHORIZED": "You must be logged in.",
@@ -332,6 +333,13 @@
         "rejectTitle": "Reject Quiz",
         "rejectDesc": "Are you sure you want to reject this quiz? The author will be notified."
       }
+    },
+    "preview": {
+      "question": "Question",
+      "correct": "Correct Answer",
+      "timeLimit": "Time limit",
+      "perQuestion": "per question",
+      "totalQuestions": "Total questions"
     }
   },
   "shop": {

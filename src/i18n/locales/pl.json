@@ -82,6 +82,7 @@
     "avatarSuccess": "Avatar zaktualizowany!",
     "avatarError": "Błąd przesyłania zdjęcia.",
     "fetchStatsError": "Nie udało się pobrać statystyk użytkownika.",
+    "fetchError": "Nie udało się pobrać danych użytkownika.",
     "errors": {
       "USER_NOT_FOUND": "Użytkownik nie istnieje.",
       "UNAUTHORIZED": "Musisz się zalogować.",
@@ -335,6 +336,13 @@
         "rejectTitle": "Odrzuć quiz",
         "rejectDesc": "Czy na pewno chcesz odrzucić ten quiz? Autor zostanie powiadomiony o decyzji."
       }
+    },
+    "preview": {
+      "question": "Pytanie",
+      "correct": "Poprawna odpowiedź",
+      "timeLimit": "Limit czasu",
+      "perQuestion": "na pytanie",
+      "totalQuestions": "Razem pytań"
     }
   },
   "shop": {
