@@ -169,7 +169,7 @@ const handlePurchase = async (itemId: number) => {
               userLevel < item.requiredLevel ||
               userPoints < item.price
             "
-            class="w-full py-3 rounded-xl font-black uppercase text-xs tracking-widest transition-all active:scale-95 disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed border-b-4"
+            class="w-full py-3 rounded-xl font-black uppercase text-xs tracking-widest transition-all active:scale-95 disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed border-b-4 cursor-pointer"
             :class="[
               isOwned(item.id)
                 ? 'bg-slate-100 text-slate-400 border-slate-200'

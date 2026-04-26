@@ -83,6 +83,8 @@
     "avatarError": "Błąd przesyłania zdjęcia.",
     "fetchStatsError": "Nie udało się pobrać statystyk użytkownika.",
     "fetchError": "Nie udało się pobrać danych użytkownika.",
+    "updateSuccess": "Dane użytkownika zaktualizowane.",
+    "updateError": "Błąd podczas aktualizacji danych użytkownika.",
     "errors": {
       "USER_NOT_FOUND": "Użytkownik nie istnieje.",
       "UNAUTHORIZED": "Musisz się zalogować.",

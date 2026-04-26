@@ -182,15 +182,16 @@ const canSeeAdmin = computed(() => {
               @click="toggleDarkMode"
               class="w-9 h-9 flex items-center justify-center rounded-full text-slate-500 hover:text-amber-500 dark:hover:text-yellow-400 transition-all active:scale-90"
             >
-              <span class="text-lg transition-transform hover:rotate-45">{{
-                isDark ? "☀️" : "🌙"
-              }}</span>
+              <span
+                class="text-lg transition-transform hover:rotate-45 cursor-pointer"
+                >{{ isDark ? "☀️" : "🌙" }}</span
+              >
             </button>
 
             <div class="relative" ref="dropdownRef">
               <button
                 @click.stop="isLangMenuOpen = !isLangMenuOpen"
-                class="flex items-center gap-2 h-9 pl-2 pr-3 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                class="flex items-center gap-2 h-9 pl-2 pr-3 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
               >
                 <img
                   :src="languages.find((l) => l.code === locale)?.flag"
@@ -212,7 +213,7 @@ const canSeeAdmin = computed(() => {
                     v-for="lang in languages"
                     :key="lang.code"
                     @click="setLanguage(lang.code)"
-                    class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all"
+                    class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700/50"
                     :class="
                       locale === lang.code
                         ? 'bg-green-50 dark:bg-green-900/10 text-green-700 dark:text-green-400'
@@ -309,7 +310,7 @@ const canSeeAdmin = computed(() => {
 
               <button
                 @click="handleLogout"
-                class="hidden md:flex w-10 h-10 items-center justify-center text-slate-400 hover:text-red-500 transition-all"
+                class="hidden md:flex w-10 h-10 items-center justify-center text-slate-400 hover:text-red-500 transition-all cursor-pointer"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

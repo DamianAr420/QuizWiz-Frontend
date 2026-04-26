@@ -73,7 +73,7 @@ const startSoloGame = () => {
               :key="count"
               @click="selectedQuestionCount = count"
               :class="[
-                'px-6 md:px-8 py-3 rounded-2xl font-black transition-all transform active:scale-95 border-2',
+                'px-6 md:px-8 py-3 rounded-2xl font-black transition-all transform active:scale-95 border-2 cursor-pointer',
                 selectedQuestionCount === count
                   ? 'bg-green-600 dark:bg-green-500 text-white border-green-600 dark:border-green-500 shadow-lg shadow-green-200 dark:shadow-none'
                   : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-transparent hover:bg-slate-200 dark:hover:bg-slate-700',
@@ -91,7 +91,7 @@ const startSoloGame = () => {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <button
             @click="startSoloGame"
-            class="group p-8 bg-slate-50 dark:bg-slate-800/50 rounded-[2.5rem] border-2 border-transparent hover:border-green-600 dark:hover:border-green-500 hover:bg-white dark:hover:bg-slate-800 transition-all text-left shadow-sm min-w-0"
+            class="group p-8 bg-slate-50 dark:bg-slate-800/50 rounded-[2.5rem] border-2 border-transparent hover:border-green-600 dark:hover:border-green-500 hover:bg-white dark:hover:bg-slate-800 transition-all text-left shadow-sm min-w-0 cursor-pointer"
           >
             <div
               class="text-3xl mb-4 group-hover:scale-110 transition-transform"

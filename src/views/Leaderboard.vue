@@ -89,7 +89,7 @@ const getValue = (user: RankingEntry) => {
           :key="tab.value"
           @click="activeTab = tab.value"
           :class="[
-            'px-6 py-3 font-bold rounded-2xl transition-all duration-300 border text-sm',
+            'px-6 py-3 font-bold rounded-2xl transition-all duration-300 border text-sm cursor-pointer',
             activeTab === tab.value
               ? 'bg-green-600 dark:bg-green-500 text-white border-green-600 dark:border-green-500 shadow-lg shadow-green-200 dark:shadow-none'
               : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-green-300 shadow-sm',

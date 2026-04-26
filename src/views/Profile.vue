@@ -300,7 +300,7 @@ const confirmQuizDelete = async () => {
 
                 <button
                   @click="isEditing = !isEditing"
-                  class="group px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all duration-300 border flex items-center gap-2"
+                  class="group px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all duration-300 border flex items-center gap-2 cursor-pointer"
                   :class="
                     isEditing
                       ? 'bg-red-50 text-red-600 border-red-100 hover:bg-red-100 dark:bg-red-900/10 dark:text-red-400 dark:border-red-900/30'
@@ -345,7 +345,7 @@ const confirmQuizDelete = async () => {
                               ? 'border-green-500 ring-4 ring-green-500/10 bg-green-50 dark:bg-green-900/20 text-green-600'
                               : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-400 hover:border-green-300'
                           "
-                          class="w-16 h-16 rounded-2xl border-2 flex items-center justify-center text-xl transition-all"
+                          class="w-16 h-16 rounded-2xl border-2 flex items-center justify-center text-xl transition-all cursor-pointer"
                           title="Brak ramki"
                         >
                           🚫
@@ -365,7 +365,7 @@ const confirmQuizDelete = async () => {
                           ]"
                         >
                           <div
-                            class="absolute inset-[-15%]"
+                            class="absolute inset-[-15%] cursor-pointer"
                             :class="
                               SHOP_PRESETS.getClassName(item.shopItem.imageUrl)
                             "
@@ -393,7 +393,7 @@ const confirmQuizDelete = async () => {
                               ? 'border-green-500 ring-4 ring-green-500/10 bg-green-50 dark:bg-green-900/20 text-green-600'
                               : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-400 hover:border-green-300'
                           "
-                          class="px-4 h-14 rounded-xl border-2 font-black text-[10px] uppercase transition-all"
+                          class="px-4 h-14 rounded-xl border-2 font-black text-[10px] uppercase transition-all cursor-pointer"
                         >
                           Default
                         </button>
@@ -413,7 +413,7 @@ const confirmQuizDelete = async () => {
                           ]"
                         >
                           <div
-                            class="absolute inset-0"
+                            class="absolute inset-0 cursor-pointer"
                             :class="
                               SHOP_PRESETS.getClassName(item.shopItem.imageUrl)
                             "
@@ -431,7 +431,7 @@ const confirmQuizDelete = async () => {
                   <button
                     type="submit"
                     :disabled="userStore.loading"
-                    class="w-full py-4 bg-green-600 hover:bg-green-500 text-white font-black uppercase rounded-xl transition-all shadow-lg shadow-green-500/20 hover:shadow-green-500/40 active:scale-[0.99] flex items-center justify-center gap-2"
+                    class="w-full py-4 bg-green-600 hover:bg-green-500 text-white font-black uppercase rounded-xl transition-all shadow-lg shadow-green-500/20 hover:shadow-green-500/40 active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <span v-if="!userStore.loading">{{
                       t("common.save")
@@ -580,7 +580,7 @@ const confirmQuizDelete = async () => {
               </h3>
               <button
                 @click="isHistoryModalOpen = true"
-                class="text-xs font-black uppercase text-green-600 hover:underline"
+                class="text-xs font-black uppercase text-green-600 hover:underline cursor-pointer"
               >
                 {{ t("common.showAll") }}
               </button>
@@ -610,7 +610,7 @@ const confirmQuizDelete = async () => {
               </h3>
               <button
                 @click="router.push('/shop')"
-                class="text-xs font-black uppercase text-green-600 hover:text-green-700 dark:text-green-400 hover:underline"
+                class="text-xs font-black uppercase text-green-600 hover:text-green-700 dark:text-green-400 hover:underline cursor-pointer"
               >
                 {{ t("profile.inventory.goToShop") }}
               </button>
@@ -659,7 +659,7 @@ const confirmQuizDelete = async () => {
           <section class="pt-4">
             <button
               @click="isDeleteModalOpen = true"
-              class="w-full px-5 py-4 flex items-center justify-between rounded-2xl border border-red-100 dark:border-red-900/30 bg-red-50/50 dark:bg-red-900/5 group hover:bg-red-100 transition-all"
+              class="w-full px-5 py-4 flex items-center justify-between rounded-2xl border border-red-100 dark:border-red-900/30 bg-red-50/50 dark:bg-red-900/5 group hover:bg-red-100 transition-all cursor-pointer"
             >
               <div class="text-left">
                 <span
@@ -690,7 +690,7 @@ const confirmQuizDelete = async () => {
             </h3>
             <button
               @click="router.push('/quiz/create')"
-              class="hidden sm:flex items-center gap-2 px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl text-xs font-bold hover:opacity-90 transition-opacity"
+              class="hidden sm:flex items-center gap-2 px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl text-xs font-bold hover:opacity-90 transition-opacity cursor-pointer"
             >
               <span>+</span> {{ t("profile.quizzes.create") }}
             </button>
@@ -723,7 +723,7 @@ const confirmQuizDelete = async () => {
             />
             <button
               @click="router.push('/quiz/create')"
-              class="group min-h-62.5 rounded-4xl border-3 border-dashed border-slate-200 dark:border-slate-800 hover:border-green-400 bg-transparent flex flex-col items-center justify-center gap-4 transition-all"
+              class="group min-h-62.5 rounded-4xl border-3 border-dashed border-slate-200 dark:border-slate-800 hover:border-green-400 bg-transparent flex flex-col items-center justify-center gap-4 transition-all cursor-pointer"
             >
               <div
                 class="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 group-hover:bg-green-100 flex items-center justify-center text-3xl text-slate-400 group-hover:text-green-500 transition-colors"

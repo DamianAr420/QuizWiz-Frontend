@@ -81,6 +81,8 @@
     "avatarError": "Failed to upload image.",
     "fetchStatsError": "Failed to fetch user statistics.",
     "fetchError": "Failed to fetch user data.",
+    "updateSuccess": "User data updated successfully.",
+    "updateError": "Error occurred while updating user data.",
     "errors": {
       "USER_NOT_FOUND": "User does not exist.",
       "UNAUTHORIZED": "You must be logged in.",

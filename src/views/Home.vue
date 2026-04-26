@@ -66,13 +66,13 @@ onMounted(() => {
       <div class="flex flex-wrap justify-center gap-4">
         <button
           @click="$router.push('/quiz')"
-          class="px-10 py-4 bg-green-600 dark:bg-green-500 text-white font-bold rounded-2xl shadow-xl shadow-green-200 dark:shadow-none hover:bg-green-700 dark:hover:bg-green-400 hover:-translate-y-1 transition-all active:scale-95"
+          class="px-10 py-4 bg-green-600 dark:bg-green-500 text-white font-bold rounded-2xl shadow-xl shadow-green-200 dark:shadow-none hover:bg-green-700 dark:hover:bg-green-400 hover:-translate-y-1 transition-all active:scale-95 cursor-pointer"
         >
           {{ t("home.cta") }}
         </button>
         <button
           @click="$router.push('/leaderboard')"
-          class="px-10 py-4 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold rounded-2xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-sm"
+          class="px-10 py-4 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold rounded-2xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-sm cursor-pointer"
         >
           {{ t("nav.ranking") }}
         </button>
@@ -135,7 +135,7 @@ onMounted(() => {
         </p>
         <button
           @click="$router.push('/quiz')"
-          class="bg-white text-green-700 dark:bg-green-500 dark:text-white px-12 py-4 rounded-2xl font-black hover:bg-green-50 dark:hover:bg-green-400 transition-all shadow-lg active:scale-95"
+          class="bg-white text-green-700 dark:bg-green-500 dark:text-white px-12 py-4 rounded-2xl font-black hover:bg-green-50 dark:hover:bg-green-400 transition-all shadow-lg active:scale-95 cursor-pointer"
         >
           {{ t("home.startNow") }}
         </button>
