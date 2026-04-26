@@ -2,6 +2,9 @@
 import { ref, onMounted } from "vue";
 import { useFriendsStore } from "@/stores/friends";
 import { useI18n } from "vue-i18n";
+import { useFriendsPolling } from "@/composables/useFriendsPolling";
+
+useFriendsPolling(15000);
 
 const { t } = useI18n();
 const friendsStore = useFriendsStore();

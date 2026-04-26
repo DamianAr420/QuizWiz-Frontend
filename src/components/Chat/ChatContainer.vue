@@ -4,6 +4,9 @@ import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { useFriendsStore } from "@/stores/friends";
 import { useChatStore } from "@/stores/chat";
+import { useFriendsPolling } from "@/composables/useFriendsPolling";
+
+useFriendsPolling(30000);
 
 const { t } = useI18n();
 const chatStore = useChatStore();

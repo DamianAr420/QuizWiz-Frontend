@@ -41,6 +41,7 @@ export const useAuthStore = defineStore("auth", {
         throw msg;
       } finally {
         this.loading = false;
+        await api.post("users/ping");
       }
     },
 
@@ -69,23 +70,29 @@ export const useAuthStore = defineStore("auth", {
       }
     },
 
+    async logout() {
+      const toast = useToastStore();
+      const t = i18n.global.t;
+
+      try {
+        await api.post("/auth/logout");
+      } catch (error) {
+        console.error("Wylogowywanie z serwera nie powiodło się", error);
+      } finally {
+        this.user = null;
+        this.token = null;
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        toast.show(t("auth.logoutSuccess"), "info");
+      }
+    },
+
     setAuth(data: AuthResponse) {
       this.token = data.token;
       this.user = data.user;
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
-    },
-
-    logout() {
-      const toast = useToastStore();
-      const t = i18n.global.t;
-
-      this.user = null;
-      this.token = null;
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-
-      toast.show(t("auth.logoutSuccess"), "info");
     },
   },
 });

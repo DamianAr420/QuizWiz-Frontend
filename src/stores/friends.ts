@@ -27,16 +27,18 @@ export const useFriendsStore = defineStore("friends", {
       useToastStore().error(message);
     },
 
-    async fetchFriends() {
+    async fetchFriends(silent = false) {
       try {
         const response = await api.get("/friends");
         this.friends = response.data.map((f: any) => ({
           id: f.id,
           name: f.displayName,
-          isOnline: f.isOnline || false,
+          isOnline: f.isOnline,
         }));
       } catch (error) {
-        this.notifyError(error, "friends.toast.fetchFriendsError");
+        if (!silent) {
+          this.notifyError(error, "friends.toast.fetchFriendsError");
+        }
       }
     },
 
