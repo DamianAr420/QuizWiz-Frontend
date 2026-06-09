@@ -5,6 +5,7 @@ import { useI18n } from "vue-i18n";
 import { useFriendsStore } from "@/stores/friends";
 import { useChatStore } from "@/stores/chat";
 import { useFriendsPolling } from "@/composables/useFriendsPolling";
+import { useAuthStore } from "@/stores/auth";
 
 useFriendsPolling(30000);
 
@@ -12,9 +13,12 @@ const { t } = useI18n();
 const chatStore = useChatStore();
 const friendsStore = useFriendsStore();
 const router = useRouter();
+const authStore = useAuthStore();
 
 onMounted(() => {
-  friendsStore.fetchFriends();
+  if (authStore.isAuthenticated) {
+    friendsStore.fetchFriends();
+  }
 });
 
 const onlineFriends = computed(() =>

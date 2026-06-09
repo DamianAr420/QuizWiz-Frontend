@@ -3,6 +3,7 @@ import api from "@/services/api";
 import { useToastStore } from "@/stores/toast";
 import i18n from "@/i18n";
 import type { Friend, FriendRequest } from "@/types/friend";
+import { useAuthStore } from "@/stores/auth";
 
 const { t } = i18n.global;
 
@@ -28,14 +29,25 @@ export const useFriendsStore = defineStore("friends", {
     },
 
     async fetchFriends(silent = false) {
+      const authStore = useAuthStore();
+
+      if (!authStore.isAuthenticated) {
+        this.friends = [];
+        return;
+      }
+
       try {
         const response = await api.get("/friends");
+
         this.friends = response.data.map((f: any) => ({
           id: f.id,
           name: f.displayName,
           isOnline: f.isOnline,
         }));
-      } catch (error) {
+      } catch (error: any) {
+        if (error.response?.status === 401) {
+          return;
+        }
         if (!silent) {
           this.notifyError(error, "friends.toast.fetchFriendsError");
         }

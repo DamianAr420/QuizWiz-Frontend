@@ -1,19 +1,30 @@
 import { onMounted, onUnmounted } from "vue";
 import { useFriendsStore } from "@/stores/friends";
+import { useAuthStore } from "@/stores/auth";
 
 export function useFriendsPolling(intervalMs = 30000) {
   const friendsStore = useFriendsStore();
-  let interval: any = null;
+  const authStore = useAuthStore();
+
+  let interval: number | null = null;
 
   onMounted(() => {
+    if (!authStore.isAuthenticated) {
+      return;
+    }
+
     friendsStore.fetchFriends(false);
 
-    interval = setInterval(() => {
-      friendsStore.fetchFriends(true);
+    interval = window.setInterval(() => {
+      if (authStore.isAuthenticated) {
+        friendsStore.fetchFriends(true);
+      }
     }, intervalMs);
   });
 
   onUnmounted(() => {
-    if (interval) clearInterval(interval);
+    if (interval) {
+      clearInterval(interval);
+    }
   });
 }

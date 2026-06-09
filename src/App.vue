@@ -33,7 +33,7 @@ onUnmounted(() => {
 <template>
   <MainLayout>
     <Toast />
-    <ChatContainer />
+    <ChatContainer v-if="authStore.isAuthenticated" />
     <ChatManager />
 
     <RouterView v-slot="{ Component }">
