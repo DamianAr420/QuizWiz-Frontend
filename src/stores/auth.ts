@@ -33,6 +33,7 @@ export const useAuthStore = defineStore("auth", {
           t("auth.loginSuccess", { name: response.data.user.displayName }),
           "success",
         );
+        await api.post("users/ping");
       } catch (error: any) {
         const code = error.response?.data?.code;
         const msg = code ? t(`auth.errors.${code}`) : t("auth.registerError");
@@ -41,7 +42,6 @@ export const useAuthStore = defineStore("auth", {
         throw msg;
       } finally {
         this.loading = false;
-        await api.post("users/ping");
       }
     },
 
@@ -79,10 +79,7 @@ export const useAuthStore = defineStore("auth", {
       } catch (error) {
         console.error("Wylogowywanie z serwera nie powiodło się", error);
       } finally {
-        this.user = null;
-        this.token = null;
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
+        this.clearAuth();
 
         toast.show(t("auth.logoutSuccess"), "info");
       }
@@ -93,6 +90,14 @@ export const useAuthStore = defineStore("auth", {
       this.user = data.user;
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
+    },
+
+    clearAuth() {
+      this.user = null;
+      this.token = null;
+
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
     },
   },
 });
