@@ -31,6 +31,10 @@ export const useChatStore = defineStore("chat", {
     },
 
     async startConnection() {
+      if (this.connection) {
+        return;
+      }
+
       const authStore = useAuthStore();
       const userStore = useUserStore();
       const baseUrl =
@@ -78,6 +82,17 @@ export const useChatStore = defineStore("chat", {
       } catch (err) {
         console.error("SignalR Error:", err);
       }
+    },
+
+    async stopConnection() {
+      if (this.connection) {
+        await this.connection.stop();
+        this.connection = null;
+      }
+
+      this.openChats = [];
+      this.messagesByFriend = {};
+      this.isFriendsListOpen = false;
     },
 
     async openChat(friendId: number) {
