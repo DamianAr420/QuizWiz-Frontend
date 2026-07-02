@@ -27,6 +27,16 @@ const startSoloGame = () => {
     query: { count: selectedQuestionCount.value, ended: "false" },
   });
 };
+
+const startMultiplayerGame = () => {
+  router.push({
+    name: "lobby-create",
+    query: {
+      quizId: quiz.value?.id,
+      questions: selectedQuestionCount.value,
+    },
+  });
+};
 </script>
 
 <template>
@@ -111,14 +121,14 @@ const startSoloGame = () => {
           </button>
 
           <button
-            class="group p-8 bg-slate-50 dark:bg-slate-800/50 rounded-[2.5rem] border-2 border-transparent opacity-50 cursor-not-allowed text-left relative min-w-0"
+            @click="startMultiplayerGame"
+            class="group p-8 bg-slate-50 dark:bg-slate-800/50 rounded-[2.5rem] border-2 border-transparent hover:border-indigo-600 dark:hover:border-indigo-500 hover:bg-white dark:hover:bg-slate-800 transition-all text-left shadow-sm min-w-0 cursor-pointer"
           >
-            <span
-              class="absolute top-6 right-8 text-[10px] font-black bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full uppercase tracking-widest"
+            <div
+              class="text-3xl mb-4 group-hover:scale-110 transition-transform"
             >
-              {{ t("lobby.soon") }}
-            </span>
-            <div class="text-3xl mb-4">🎮</div>
+              🎮
+            </div>
             <h3
               class="text-xl font-black text-slate-800 dark:text-white mb-2 breakWords"
             >

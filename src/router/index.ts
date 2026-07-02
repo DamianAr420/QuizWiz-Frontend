@@ -13,6 +13,13 @@ import QuizForm from "@/views/QuizForm.vue";
 import Shop from "@/views/Shop.vue";
 import AdminPanel from "@/views/AdminPanel.vue";
 import Friends from "@/views/Friends.vue";
+// @ts-ignore
+import LobbyBrowser from "@/views/LobbyBrowser.vue";
+// @ts-ignore
+import LobbyCreator from "@/views/LobbyCreator.vue";
+// @ts-ignore
+import LobbyRoom from "@/views/LobbyRoom.vue";
+import MultiplayerGame from "@/views/MultiplayerGame.vue";
 import { useAuthStore } from "@/stores/auth";
 import { useChatStore } from "@/stores/chat";
 
@@ -82,6 +89,32 @@ const routes: RouteRecordRaw[] = [
     name: "friends",
     component: Friends,
     meta: { requiresAuth: true },
+  },
+  {
+    path: "/multiplayer",
+    name: "lobby-browser",
+    component: LobbyBrowser,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/multiplayer/create",
+    name: "lobby-create",
+    component: LobbyCreator,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/multiplayer/lobby/:id",
+    name: "lobby-room",
+    component: LobbyRoom,
+    props: true,
+    meta: { requiresAuth: true, hideHexBg: true },
+  },
+  {
+    path: "/play/:id",
+    name: "multiplayer-play",
+    component: MultiplayerGame,
+    props: true,
+    meta: { requiresAuth: true, hideHexBg: true },
   },
 ];
 

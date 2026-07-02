@@ -11,4 +11,18 @@ export default defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
+  server: {
+    proxy: {
+      "/hubs": {
+        target: "http://localhost:7225",
+        ws: true,
+        changeOrigin: true,
+      },
+      "/api": {
+        target: "http://localhost:7225",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 });

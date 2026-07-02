@@ -1,5 +1,5 @@
 export interface Question {
-  id?: number;
+  id?: string;
   text: string;
   correctAnswer: string;
   distractors: string[];
@@ -41,4 +41,39 @@ export interface QuizSubmitResult {
   currentLevel: number;
   newTotalPoints?: number;
   newExperience?: number;
+}
+
+export interface GameState {
+  isStarted: boolean;
+  currentQuestion: string | null;
+  answers: string[];
+  endTime: string | null;
+  scores: Record<string, number>;
+  hasAnswered: boolean;
+  answeredPlayerIds?: (string | number)[];
+  rewards?: Record<
+    string,
+    {
+      experience: number;
+      points: number;
+      correctAnswers: number;
+    }
+  >;
+}
+
+export interface ReconnectData {
+  questionText: string;
+  answers: string[];
+  currentIndex: number;
+  totalQuestions: number;
+  endTime: string;
+  scores: Record<number, number>;
+}
+
+export interface NewQuestionData {
+  text: string;
+  answers: string[];
+  currentIndex: number;
+  totalQuestions: number;
+  endTime: string;
 }

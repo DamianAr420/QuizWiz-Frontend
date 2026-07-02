@@ -143,6 +143,8 @@
     "edit": "Edytuj",
     "showAll": "Pokaż wszystko",
     "loadMore": "Wczytaj więcej",
+    "creating": "Tworzenie...",
+    "refresh": "Odśwież",
     "errors": {
       "UNAUTHORIZED": "Musisz być zalogowany.",
       "UNKNOWN_ERROR": "Wystąpił nieoczekiwany błąd."
@@ -177,6 +179,7 @@
     "alreadyDoneToday": "Już rozegrałeś/aś ten quiz dzisiaj",
     "limitTitle": "Limit punktów",
     "multiplier": "Mnożnik:",
+    "multiplayer": "Dołącz do gry",
     "filter": {
       "official": "Oficjalne",
       "users": "Społeczność"
@@ -268,7 +271,16 @@
     "sec": "S",
     "greatJob": "Dobra robota",
     "points": "Punkty",
-    "levelUp": "Nowy Poziom! 🎉"
+    "levelUp": "Nowy Poziom! 🎉",
+    "gameMode": "Tryb gry",
+    "multiplayerMatch": "Gra wieloosobowa",
+    "leave": "Opuść pokój",
+    "playersStatus": "Status gracza",
+    "statusThinking": "Myśli...",
+    "statusAnswered": "Odpowiedział",
+    "finalStandings": "Ostateczne wyniki",
+    "pointsShort": "pkt",
+    "waitingForHost": "Oczekiwanie na hosta..."
   },
   "lobby": {
     "questionCount": "Wybierz liczbę pytań",
@@ -277,7 +289,65 @@
     "soloDesc": "Trenuj swoje umiejętności w spokojnym tempie.",
     "multiMode": "Multiplayer",
     "multiDesc": "Rywalizuj z innymi w czasie rzeczywistym.",
-    "soon": "Wkrótce"
+    "soon": "Wkrótce",
+    "create": {
+      "title": "Stwórz Lobby",
+      "subtitle": "Skonfiguruj parametry swojej rozgrywki",
+      "submit": "Stwórz Pokój",
+      "selected": "Wybrany quiz"
+    },
+    "fields": {
+      "name": "Nazwa Pokoju",
+      "maxPlayers": "Max. Graczy",
+      "questions": "Pytania",
+      "visibility": "Widoczność",
+      "questionCount": "Liczba pytań",
+      "players": "Gracze"
+    },
+    "placeholders": {
+      "name": "np. Szybki Quiz"
+    },
+    "options": {
+      "questions": "{count} pytań"
+    },
+    "visibility": {
+      "public": "Publiczne",
+      "private": "Prywatne"
+    },
+    "errors": {
+      "emptyName": "Podaj nazwę lobby!"
+    },
+    "browser": {
+      "title": "Dostępne Gry",
+      "subtitle": "Dołącz do istniejącego pokoju lub stwórz własny",
+      "createNew": "Nowa Gra",
+      "empty": "Obecnie nie ma żadnych publicznych pokoi.",
+      "hostInfo": "Host: {name}",
+      "join": "DOŁĄCZ",
+      "refresh": "Odśwież listę",
+      "success": {
+        "joined": "Dołączyłeś do pokoju!"
+      },
+      "errors": {
+        "joinFailed": "Nie udało się dołączyć do pokoju."
+      }
+    },
+    "room": {
+      "waiting": "Oczekiwanie na pozostałych graczy...",
+      "readyBtn": "GOTOWY",
+      "notReadyBtn": "CZEKAJ",
+      "statusReady": "Gotowy",
+      "statusWaiting": "W trakcie...",
+      "playersTitle": "Gracze",
+      "isReady": "Gotowy",
+      "ready": "Gotowość",
+      "notReady": "Niegotowy",
+      "hostWait": "Oczekiwanie na hosta...",
+      "start": "Start",
+      "leave": "Opuść pokój",
+      "playerWait": "Oczekiwanie na graczy...",
+      "readyButton": "Gotowy"
+    }
   },
   "admin": {
     "title": "Panel",

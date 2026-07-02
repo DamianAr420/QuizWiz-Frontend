@@ -111,17 +111,34 @@ const confirmSubmit = async () => {
           </Transition>
         </div>
 
-        <button
-          @click="router.push('/quiz/create')"
-          class="group relative bg-green-600 dark:bg-green-500 text-white px-10 py-5 rounded-4xl font-black shadow-[0_20px_50px_rgba(22,163,74,0.3)] dark:shadow-none hover:bg-green-700 dark:hover:bg-green-400 transition-all active:scale-95 overflow-hidden"
+        <div
+          class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full md:w-auto"
         >
-          <span class="relative z-10 flex items-center gap-2">
-            <span class="text-2xl">+</span> {{ t("quiz.createNew") }}
-          </span>
-          <div
-            class="absolute inset-0 bg-linear-to-r from-green-400 to-green-600 opacity-0 group-hover:opacity-100 transition-opacity"
-          ></div>
-        </button>
+          <button
+            @click="router.push('/multiplayer')"
+            class="group relative bg-indigo-600 dark:bg-indigo-500 text-white px-8 py-5 rounded-4xl font-black shadow-[0_20px_50px_rgba(79,70,229,0.3)] dark:shadow-none hover:bg-indigo-700 dark:hover:bg-indigo-400 transition-all active:scale-95 overflow-hidden text-center cursor-pointer"
+          >
+            <span class="relative z-10 flex items-center justify-center gap-2">
+              <span class="text-xl">🎮</span>
+              {{ t("quiz.multiplayer") || "Multiplayer" }}
+            </span>
+            <div
+              class="absolute inset-0 bg-linear-to-r from-indigo-400 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity"
+            ></div>
+          </button>
+
+          <button
+            @click="router.push('/quiz/create')"
+            class="group relative bg-green-600 dark:bg-green-500 text-white px-10 py-5 rounded-4xl font-black shadow-[0_20px_50px_rgba(22,163,74,0.3)] dark:shadow-none hover:bg-green-700 dark:hover:bg-green-400 transition-all active:scale-95 overflow-hidden text-center cursor-pointer"
+          >
+            <span class="relative z-10 flex items-center justify-center gap-2">
+              <span class="text-2xl">+</span> {{ t("quiz.createNew") }}
+            </span>
+            <div
+              class="absolute inset-0 bg-linear-to-r from-green-400 to-green-600 opacity-0 group-hover:opacity-100 transition-opacity"
+            ></div>
+          </button>
+        </div>
       </div>
 
       <div class="flex flex-col lg:flex-row gap-6 items-center">

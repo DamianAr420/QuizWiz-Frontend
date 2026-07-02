@@ -141,6 +141,8 @@
     "edit": "Edit",
     "showAll": "Show all",
     "loadMore": "Load more",
+    "creating": "Creating...",
+    "refresh": "Refresh",
     "errors": {
       "UNAUTHORIZED": "You must be logged in.",
       "UNKNOWN_ERROR": "An unexpected error occurred."
@@ -175,6 +177,7 @@
     "alreadyDoneToday": "You already played this quiz today",
     "limitTitle": "Points limit",
     "multiplier": "Multiplier:",
+    "multiplayer": "Join Game",
     "filter": {
       "official": "Official",
       "users": "Community"
@@ -265,7 +268,16 @@
     "sec": "S",
     "greatJob": "Great job",
     "points": "Points",
-    "levelUp": "Level Up! 🎉"
+    "levelUp": "Level Up! 🎉",
+    "gameMode": "Game Mode",
+    "multiplayerMatch": "Multiplayer Match",
+    "leave": "Leave Room",
+    "playersStatus": "Player Status",
+    "statusThinking": "Thinking...",
+    "statusAnswered": "Answered",
+    "finalStandings": "Final Standings",
+    "pointsShort": "pts",
+    "waitingForHost": "Waiting for host..."
   },
   "lobby": {
     "questionCount": "Select number of questions",
@@ -274,7 +286,65 @@
     "soloDesc": "Train your skills at your own pace.",
     "multiMode": "Multiplayer",
     "multiDesc": "Compete with others in real-time.",
-    "soon": "Soon"
+    "soon": "Soon",
+    "create": {
+      "title": "Create Lobby",
+      "subtitle": "Configure your game settings",
+      "submit": "Create Room",
+      "selected": "Selected Quiz"
+    },
+    "fields": {
+      "name": "Room Name",
+      "maxPlayers": "Max. Players",
+      "questions": "Questions",
+      "visibility": "Visibility",
+      "questionCount": "Number of Questions",
+      "players": "Players"
+    },
+    "placeholders": {
+      "name": "e.g., Quick Quiz"
+    },
+    "options": {
+      "questions": "{count} questions"
+    },
+    "visibility": {
+      "public": "Public",
+      "private": "Private"
+    },
+    "errors": {
+      "emptyName": "Please enter a lobby name!"
+    },
+    "browser": {
+      "title": "Available Games",
+      "subtitle": "Join an existing room or create your own",
+      "createNew": "New Game",
+      "empty": "There are currently no public rooms.",
+      "hostInfo": "Host: {name}",
+      "join": "JOIN",
+      "refresh": "Refresh List",
+      "success": {
+        "joined": "You have joined the room!"
+      },
+      "errors": {
+        "joinFailed": "Failed to join the room."
+      }
+    },
+    "room": {
+      "waiting": "Waiting for other players...",
+      "readyBtn": "READY",
+      "notReadyBtn": "WAIT",
+      "statusReady": "Ready",
+      "statusWaiting": "In progress...",
+      "playersTitle": "Players",
+      "isReady": "Ready",
+      "ready": "Ready Up",
+      "notReady": "Not Ready",
+      "hostWait": "Waiting for host...",
+      "start": "Start Game",
+      "leave": "Leave Room",
+      "playerWait": "Waiting for players...",
+      "readyButton": "Ready"
+    }
   },
   "admin": {
     "title": "Admin",
