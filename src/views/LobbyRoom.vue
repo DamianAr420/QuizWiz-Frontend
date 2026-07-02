@@ -60,9 +60,9 @@ onMounted(async () => {
   }
 });
 
-onUnmounted(async () => {
+onUnmounted(() => {
   if (!isStartingGame.value) {
-    lobbyStore.leaveLobby();
+    void lobbyStore.leaveLobby();
   }
 });
 
