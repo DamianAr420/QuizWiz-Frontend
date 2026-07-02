@@ -3,6 +3,7 @@ export interface PlayerReward {
   points: number;
   isWinner: boolean;
   correctAnswers: number;
+  isLevelUp: boolean;
 }
 
 export interface GameFinishedData {
