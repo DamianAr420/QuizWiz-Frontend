@@ -280,7 +280,8 @@
     "statusAnswered": "Odpowiedział",
     "finalStandings": "Ostateczne wyniki",
     "pointsShort": "pkt",
-    "waitingForHost": "Oczekiwanie na hosta..."
+    "waitingForHost": "Oczekiwanie na hosta...",
+    "player": "Gracz"
   },
   "lobby": {
     "questionCount": "Wybierz liczbę pytań",
@@ -325,6 +326,7 @@
       "hostInfo": "Host: {name}",
       "join": "DOŁĄCZ",
       "refresh": "Odśwież listę",
+      "full": "Pełne",
       "success": {
         "joined": "Dołączyłeś do pokoju!"
       },
@@ -346,7 +348,9 @@
       "start": "Start",
       "leave": "Opuść pokój",
       "playerWait": "Oczekiwanie na graczy...",
-      "readyButton": "Gotowy"
+      "readyButton": "Gotowy",
+      "startingGame": "Rozpoczynanie gry...",
+      "prepare": "Przygotuj się!"
     }
   },
   "admin": {

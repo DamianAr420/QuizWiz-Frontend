@@ -110,7 +110,7 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true, hideHexBg: true },
   },
   {
-    path: "/play/:id",
+    path: "/multiplayer/play/:id",
     name: "multiplayer-play",
     component: MultiplayerGame,
     props: true,

@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, computed, watch, ref } from "vue";
+import { onMounted, computed, watch, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { useLobbyStore } from "@/stores/lobby";
 import { useAuthStore } from "@/stores/auth";
 import { useCloudinary } from "@/composables/useCloudinary";
+import { SHOP_PRESETS } from "@/components/shop/shopPresets";
 
 const { t } = useI18n();
 const route = useRoute();
@@ -40,7 +41,7 @@ watch(
   () => lobbyStore.currentLobby?.status,
   (newStatus) => {
     if (newStatus === "InGame") {
-      router.push(`/play/${lobbyId.value}`);
+      router.push(`/multiplayer/play/${lobbyId.value}`);
     }
   },
 );
@@ -52,17 +53,11 @@ onMounted(async () => {
       await lobbyStore.connectToLobby(lobbyId.value, authStore.token);
 
       if (lobbyStore.currentLobby?.status === "InGame") {
-        router.push(`/play/${lobbyId.value}`);
+        router.push(`/multiplayer/play/${lobbyId.value}`);
       }
     }
   } catch (error) {
     router.push("/quiz");
-  }
-});
-
-onUnmounted(() => {
-  if (!isStartingGame.value) {
-    void lobbyStore.leaveLobby();
   }
 });
 
@@ -89,10 +84,42 @@ const handleLeave = async () => {
     isStartingGame.value = false;
   }
 };
+
+const gameStarting = computed(() => {
+  return lobbyStore.currentLobby?.status === "Starting";
+});
 </script>
 
 <template>
   <div class="max-w-6xl mx-auto w-full py-8 md:py-12 px-4">
+    <Transition name="fade">
+      <div
+        v-if="gameStarting"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md"
+      >
+        <div class="text-center text-white">
+          <div class="text-8xl mb-6 animate-bounce">🎮</div>
+
+          <h2 class="text-4xl font-black uppercase mb-3">
+            {{ t("lobby.room.startingGame") }}
+          </h2>
+
+          <p class="text-slate-300 mb-8">
+            {{ t("lobby.room.prepare") }}
+          </p>
+
+          <div class="flex justify-center gap-3">
+            <span
+              v-for="i in 3"
+              :key="i"
+              class="w-4 h-4 bg-green-400 rounded-full animate-pulse"
+              :style="{ animationDelay: `${i * 0.2}s` }"
+            />
+          </div>
+        </div>
+      </div>
+    </Transition>
+
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div class="lg:col-span-2 space-y-6">
         <div
@@ -137,46 +164,76 @@ const handleLeave = async () => {
             <div
               v-for="player in lobbyStore.currentLobby?.players"
               :key="player.userId"
-              class="flex items-center gap-4 p-5 bg-slate-50 dark:bg-slate-800/50 rounded-3xl border border-slate-100 dark:border-slate-800 transition-all group relative overflow-hidden"
-              :class="[player.isReady ? 'border-green-500/50' : '']"
+              class="relative overflow-hidden rounded-3xl border border-white/20 dark:border-slate-700 p-5 flex items-center gap-5 transition-all hover:scale-[1.02] hover:shadow-xl"
+              :class="SHOP_PRESETS.getClassName(player.selectedBackground)"
+              :style="SHOP_PRESETS.getInlineStyle(player.selectedBackground)"
             >
               <div
-                class="w-14 h-14 rounded-2xl flex items-center justify-center text-white text-xl font-black shadow-lg transition-transform group-hover:scale-110 relative z-10"
-              >
-                <img
-                  :src="
-                    getAvatarUrl(player.cloudinaryPublicId, 80) ?? undefined
-                  "
-                  :alt="player.displayName"
-                  class="w-full h-full object-cover rounded-2xl shadow-inner"
-                />
+                class="absolute inset-0 bg-black/20 backdrop-blur-[2px]"
+              ></div>
+
+              <div class="relative z-10 shrink-0">
+                <div
+                  class="relative w-20 h-20 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center"
+                >
+                  <img
+                    :src="
+                      getAvatarUrl(player.cloudinaryPublicId, 96) ?? undefined
+                    "
+                    :alt="player.displayName"
+                    class="absolute w-full h-full rounded-xl object-cover z-10 p-1"
+                  />
+
+                  <div
+                    v-if="player.selectedFrame"
+                    class="absolute inset-0 pointer-events-none rounded-xl"
+                    :class="SHOP_PRESETS.getClassName(player.selectedFrame)"
+                    :style="SHOP_PRESETS.getInlineStyle(player.selectedFrame)"
+                  ></div>
+                </div>
               </div>
 
-              <div class="flex flex-col relative z-10">
-                <span
-                  class="font-black text-slate-800 dark:text-white text-lg"
-                  >{{ player.displayName }}</span
-                >
+              <div class="relative z-10 flex-1">
                 <div class="flex items-center gap-2">
+                  <h3 class="font-black text-xl text-white">
+                    {{ player.displayName }}
+                  </h3>
+
                   <span
                     v-if="player.userId === lobbyStore.currentLobby?.hostId"
-                    class="text-[10px] font-black text-green-600 dark:text-green-400 uppercase italic tracking-tighter"
-                    >Host</span
+                    class="px-2 py-0.5 rounded-full bg-yellow-400 text-yellow-950 text-[10px] font-black uppercase text-center"
                   >
+                    👑 Host
+                  </span>
+                </div>
+
+                <div class="mt-2 flex gap-2">
                   <span
                     v-if="player.isReady"
-                    class="text-[10px] font-black text-green-500 uppercase tracking-tighter"
-                    >{{ t("lobby.room.isReady") }}</span
+                    class="px-2 py-1 rounded-full bg-green-500 text-white text-xs font-black uppercase"
                   >
+                    ✅ {{ t("lobby.room.isReady") }}
+                  </span>
+
+                  <span
+                    v-else
+                    class="px-2 py-1 rounded-full bg-white/20 text-white text-xs font-black uppercase"
+                  >
+                    ⏳ Waiting
+                  </span>
                 </div>
               </div>
 
-              <div v-if="player.isReady" class="ml-auto relative z-10">
+              <!-- Status -->
+              <div class="relative z-10">
                 <div
-                  class="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center animate-pulse"
-                >
-                  <div class="w-1.5 h-1.5 bg-white rounded-full"></div>
-                </div>
+                  :class="[
+                    'w-5 h-5 rounded-full ring-4 ring-white/20',
+                    player.isReady
+                      ? 'bg-green-400 animate-pulse'
+                      : 'bg-slate-400',
+                  ]"
+                ></div>
               </div>
             </div>
 
@@ -314,5 +371,15 @@ const handleLeave = async () => {
     opacity: 0.5;
     transform: scale(1.2);
   }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

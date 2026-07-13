@@ -8,11 +8,14 @@ import { useCloudinary } from "@/composables/useCloudinary";
 import AnimatedNumber from "@/components/AnimatedNumber.vue";
 import confetti from "canvas-confetti";
 import { useUserStore } from "@/stores/user";
+import { SHOP_PRESETS } from "@/components/shop/shopPresets";
 
 interface LobbyUser {
   id: string;
   username: string;
   cloudinaryPublicId: string;
+  selectedBackground?: string;
+  selectedFrame?: string;
 }
 
 const route = useRoute();
@@ -103,7 +106,7 @@ const startTimer = () => {
     if (gameState.value.endTime) {
       const diff =
         new Date(gameState.value.endTime).getTime() - new Date().getTime();
-      const seconds = Math.max(0, Math.ceil(diff / 1000));
+      const seconds = Math.max(0, Math.floor(diff / 1000));
       timeLeft.value = seconds;
 
       if (seconds <= 0 && timer) {
@@ -111,7 +114,7 @@ const startTimer = () => {
         timer = null;
       }
     }
-  }, 1000);
+  }, 100);
 };
 
 watch(
@@ -131,13 +134,10 @@ const finalRewards = computed(() => gameState.value.rewards || {});
 
 onMounted(async () => {
   try {
-    console.log("Inicjalizacja Hub...");
     await initHub(lobbyId);
 
-    console.log("Pobieranie listy użytkowników...");
-
     const users = await signalRService.invoke("GetLobbyUsers", lobbyId);
-    console.log("Odpowiedź z GetLobbyUsers:", users);
+    console.log(users);
 
     if (users && Array.isArray(users)) {
       playersMap.value = {};
@@ -146,9 +146,10 @@ onMounted(async () => {
           id: user.id.toString(),
           username: user.username,
           cloudinaryPublicId: user.cloudinaryPublicId,
+          selectedBackground: user.selectedBackground,
+          selectedFrame: user.selectedFrame,
         };
       });
-      console.log("Zaktualizowano playersMap:", playersMap.value);
     } else {
       console.warn("GetLobbyUsers zwróciło pustą lub niepoprawną odpowiedź.");
     }
@@ -165,20 +166,40 @@ onUnmounted(() => {
 });
 
 const handleAnswerClick = async (answer: string) => {
-  if (gameState.value.hasAnswered) return;
-  localSelectedAnswer.value = answer;
-  await submitAnswer(answer);
+  if (
+    gameState.value.hasAnswered ||
+    gameState.value.isRevealingAnswer ||
+    timeLeft.value <= 0
+  ) {
+    return;
+  }
+
+  try {
+    localSelectedAnswer.value = answer;
+    await submitAnswer(answer);
+  } catch {
+    localSelectedAnswer.value = null;
+  }
 };
 
 const handleLeave = async () => {
   router.push("/multiplayer");
 };
+
+const sortedScores = computed(() => {
+  return Object.entries(gameState.value.scores)
+    .sort(([, a], [, b]) => Number(b) - Number(a))
+    .map(([userId, score], index) => ({
+      userId,
+      score,
+      place: index + 1,
+    }));
+});
 </script>
 
 <template>
-  <div
-    class="relative w-full flex flex-col grow justify-center items-center py-4 md:py-10"
-  >
+  <div class="relative w-full flex flex-col grow justify-start items-center">
+    <!-- Tło z blobami, które niweluje paddingi z MainLayout, aby rozciągać się do krawędzi -->
     <div
       class="absolute inset-0 -mx-4 sm:-mx-6 lg:-mx-8 -my-8 z-0 overflow-hidden pointer-events-none"
     >
@@ -186,14 +207,15 @@ const handleLeave = async () => {
         class="absolute top-0 left-1/2 -translate-x-1/2 w-150 h-100 bg-emerald-400/20 dark:bg-emerald-500/40 rounded-full blur-[120px] animate-blob animation-delay-2000"
       ></div>
       <div
-        class="absolute top-40 left-0 translate-y-1/2 w-96 h-96 bg-emerald-200/50 dark:bg-emerald-500/40 rounded-full filter blur-3xl opacity-60 dark:opacity-50 dark:mix-blend-multiply animate-blob"
+        class="absolute top-40 left-0 translate-y-1/2 w-72 h-72 md:w-96 md:h-96 bg-emerald-200/50 dark:bg-emerald-500/40 rounded-full filter blur-3xl opacity-60 dark:opacity-50 dark:mix-blend-multiply animate-blob"
       ></div>
       <div
-        class="absolute top-40 right-0 translate-y-1/2 w-96 h-96 bg-emerald-200/50 dark:bg-emerald-500/40 rounded-full filter blur-3xl opacity-60 dark:opacity-50 dark:mix-blend-multiply animate-blob"
+        class="absolute top-40 right-0 translate-y-1/2 w-72 h-72 md:w-96 md:h-96 bg-emerald-200/50 dark:bg-emerald-500/40 rounded-full filter blur-3xl opacity-60 dark:opacity-50 dark:mix-blend-multiply animate-blob"
       ></div>
     </div>
 
-    <div class="absolute z-10 w-full max-w-7xl space-y-8 top-0">
+    <!-- Kontener treści zmieniony na relative - teraz oddycha i płynnie się skaluje -->
+    <div class="relative z-10 w-full max-w-7xl space-y-6 md:space-y-8">
       <header
         class="w-full flex justify-between items-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200 dark:border-slate-800 p-4 md:p-5 rounded-2xl md:rounded-3xl shadow-md transition-colors duration-300"
       >
@@ -225,26 +247,26 @@ const handleLeave = async () => {
         <Transition name="fade" mode="out-in">
           <div
             v-if="isFinished"
-            class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-2xl border border-slate-200 dark:border-slate-800 p-6 md:p-12 rounded-3xl md:rounded-[3rem] shadow-xl text-center space-y-6 md:space-y-8 max-w-2xl mx-auto transition-colors duration-300"
+            class="relative overflow-hidden bg-white/90 dark:bg-slate-900/90 backdrop-blur-2xl border border-slate-200 dark:border-slate-800 p-6 md:p-12 rounded-3xl md:rounded-[3rem] shadow-xl text-center space-y-6 md:space-y-8 max-w-2xl mx-auto transition-colors duration-300"
           >
             <transition name="bounce">
               <div
                 v-if="showLevelUp"
-                class="absolute inset-0 z-50 flex items-center justify-center bg-emerald-500/20 backdrop-blur-sm"
+                class="absolute inset-0 z-50 flex items-center justify-center bg-emerald-500/20 backdrop-blur-sm p-4"
               >
                 <div
-                  class="bg-white dark:bg-slate-800 p-8 rounded-full shadow-2xl border-4 border-emerald-500 flex flex-col items-center"
+                  class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl md:rounded-full shadow-2xl border-4 border-emerald-500 flex flex-col items-center max-w-xs md:max-w-none text-center"
                 >
-                  <span class="text-6xl mb-2">⭐</span>
-
+                  <span class="text-4xl md:text-6xl mb-2">⭐</span>
                   <span
-                    class="text-4xl font-black text-emerald-500 uppercase tracking-tight"
+                    class="text-2xl md:text-4xl font-black text-emerald-500 uppercase tracking-tight"
                   >
                     {{ t("game.levelUp") }}
                   </span>
                 </div>
               </div>
             </transition>
+
             <div class="text-5xl md:text-6xl animate-bounce">🏆</div>
             <div class="space-y-2">
               <h2
@@ -259,74 +281,154 @@ const handleLeave = async () => {
 
             <div class="space-y-3 pt-2">
               <div
-                v-for="(score, userId) in gameState.scores"
-                :key="userId"
-                class="flex justify-between items-center bg-slate-100/60 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 px-4 py-3 md:px-6 md:py-4 rounded-2xl shadow-inner transition-all hover:scale-[1.01] md:hover:scale-[1.02]"
+                v-for="player in sortedScores"
+                :key="player.userId"
+                class="relative overflow-hidden rounded-2xl border transition-all hover:scale-[1.01]"
+                :class="[
+                  player.place === 1
+                    ? 'bg-linear-to-r from-yellow-300 via-amber-300 to-yellow-200 text-black ring-4 ring-yellow-400 shadow-2xl scale-[1.03] winner'
+                    : '',
+                  playersMap[player.userId]?.selectedBackground
+                    ? [
+                        SHOP_PRESETS.getClassName(
+                          playersMap[player.userId]?.selectedBackground,
+                        ),
+                        'border-white/10',
+                      ]
+                    : 'bg-slate-100 dark:bg-slate-900 border-slate-200 dark:border-slate-800',
+                ]"
+                :style="
+                  playersMap[player.userId]?.selectedBackground
+                    ? SHOP_PRESETS.getInlineStyle(
+                        playersMap[player.userId]?.selectedBackground,
+                      )
+                    : undefined
+                "
               >
-                <div class="flex items-center gap-3">
-                  <div
-                    class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 dark:border-emerald-500/30 flex items-center justify-center font-bold text-emerald-600 dark:text-emerald-400 text-sm"
-                  >
-                    <img
-                      v-if="playersMap[userId]?.cloudinaryPublicId"
-                      :src="
-                        getAvatarUrl(
-                          playersMap[userId]?.cloudinaryPublicId ?? '',
-                          80,
-                        ) ?? undefined
+                <div
+                  v-if="playersMap[player.userId]?.selectedBackground"
+                  class="absolute inset-0 bg-black/20 backdrop-blur-[2px]"
+                ></div>
+
+                <div
+                  class="relative z-10 flex flex-col sm:flex-row gap-3 justify-between items-center px-4 py-3 md:px-6 md:py-4"
+                >
+                  <div class="flex items-center gap-3 w-full sm:w-auto">
+                    <div
+                      class="w-10 h-10 rounded-full flex items-center justify-center font-black text-lg shrink-0"
+                      :class="{
+                        'bg-yellow-400 text-yellow-900': player.place === 1,
+                        'bg-slate-300 text-slate-800': player.place === 2,
+                        'bg-amber-700 text-white': player.place === 3,
+                        'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200':
+                          player.place > 3,
+                      }"
+                    >
+                      <template v-if="player.place === 1">🥇</template>
+                      <template v-else-if="player.place === 2">🥈</template>
+                      <template v-else-if="player.place === 3">🥉</template>
+                      <template v-else>#{{ player.place }}</template>
+                    </div>
+
+                    <div class="relative w-12 h-12 md:w-14 md:h-14 shrink-0">
+                      <div
+                        v-if="!playersMap[player.userId]?.selectedBackground"
+                        class="absolute inset-0 rounded-xl bg-slate-200 dark:bg-slate-800"
+                      ></div>
+
+                      <img
+                        v-if="playersMap[player.userId]?.cloudinaryPublicId"
+                        :src="
+                          getAvatarUrl(
+                            playersMap[player.userId]?.cloudinaryPublicId,
+                            80,
+                          ) ?? undefined
+                        "
+                        :alt="playersMap[player.userId]?.username"
+                        class="absolute p-1 w-full h-full object-cover rounded-xl z-40 shadow-lg"
+                      />
+
+                      <div
+                        v-if="playersMap[player.userId]?.selectedFrame"
+                        class="absolute inset-0 pointer-events-none z-30 rounded-xl"
+                        :class="
+                          SHOP_PRESETS.getClassName(
+                            playersMap[player.userId]?.selectedFrame,
+                          )
+                        "
+                        :style="
+                          SHOP_PRESETS.getInlineStyle(
+                            playersMap[player.userId]?.selectedFrame,
+                          )
+                        "
+                      ></div>
+                    </div>
+
+                    <span
+                      class="font-bold text-sm md:text-md truncate max-w-40 sm:max-w-none"
+                      :class="
+                        playersMap[player.userId]?.selectedBackground
+                          ? 'text-white drop-shadow'
+                          : 'text-slate-700 dark:text-slate-300'
                       "
-                      :alt="playersMap[userId]?.username"
-                      class="w-full h-full object-cover rounded-xl shadow-inner"
-                    />
+                    >
+                      {{
+                        playersMap[player.userId]?.username ||
+                        `${t("game.player")} #${player.userId}`
+                      }}
+                    </span>
                   </div>
-                  <span
-                    class="font-bold text-slate-700 dark:text-slate-300 text-sm md:text-md"
-                  >
-                    {{
-                      playersMap[userId]?.username ||
-                      `${t("game.player")} #${userId}`
-                    }}
-                  </span>
-                </div>
-
-                <div class="flex flex-col items-end gap-1">
-                  <span
-                    class="font-black text-base md:text-xl text-emerald-600 dark:text-emerald-400"
-                  >
-                    {{ score }} {{ t("game.pointsShort") }}
-                  </span>
 
                   <div
-                    v-if="finalRewards[userId]"
-                    class="flex flex-wrap justify-end gap-1 text-[10px] md:text-[11px] font-bold"
+                    class="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2 w-full sm:w-auto border-t sm:border-t-0 pt-2 sm:pt-0 border-slate-200/10"
                   >
                     <span
-                      class="bg-blue-500/10 text-blue-600 dark:text-blue-400 px-1.5 md:px-2 py-0.5 rounded-md border border-blue-500/20"
+                      class="font-black text-base md:text-xl"
+                      :class="
+                        playersMap[player.userId]?.selectedBackground
+                          ? 'text-white drop-shadow'
+                          : 'text-emerald-600 dark:text-emerald-400'
+                      "
                     >
-                      +<AnimatedNumber
-                        :value="finalRewards[userId]?.experience ?? 0"
-                        :duration="1500"
-                      />
-                      EXP
+                      {{ player.score }} {{ t("game.pointsShort") }}
                     </span>
-                    <span
-                      class="bg-amber-500/10 text-amber-600 dark:text-amber-400 px-1.5 md:px-2 py-0.5 rounded-md border border-amber-500/20"
+
+                    <div
+                      v-if="finalRewards[player.userId]"
+                      class="flex flex-wrap justify-end gap-1 text-[10px] md:text-[11px] font-bold"
                     >
-                      +<AnimatedNumber
-                        :value="finalRewards[userId]?.points ?? 0"
-                        :duration="1500"
-                      />
-                      pkt
-                    </span>
-                    <span
-                      class="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-1.5 md:px-2 py-0.5 rounded-md border border-emerald-500/20 flex items-center gap-0.5"
-                    >
-                      ✅
-                      <AnimatedNumber
-                        :value="finalRewards[userId]?.correctAnswers ?? 0"
-                        :duration="1500"
-                      />
-                    </span>
+                      <span
+                        class="bg-blue-500/10 text-blue-600 dark:text-blue-400 px-1.5 md:px-2 py-0.5 rounded-md border border-blue-500/20"
+                      >
+                        +<AnimatedNumber
+                          :value="finalRewards[player.userId]?.experience ?? 0"
+                          :duration="1500"
+                        />
+                        EXP
+                      </span>
+
+                      <span
+                        class="bg-amber-500/10 text-amber-600 dark:text-amber-400 px-1.5 md:px-2 py-0.5 rounded-md border border-amber-500/20"
+                      >
+                        +<AnimatedNumber
+                          :value="finalRewards[player.userId]?.points ?? 0"
+                          :duration="1500"
+                        />
+                        pkt
+                      </span>
+
+                      <span
+                        class="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-1.5 md:px-2 py-0.5 rounded-md border border-emerald-500/20 flex items-center gap-0.5"
+                      >
+                        ✅
+                        <AnimatedNumber
+                          :value="
+                            finalRewards[player.userId]?.correctAnswers ?? 0
+                          "
+                          :duration="1500"
+                        />
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -335,11 +437,11 @@ const handleLeave = async () => {
 
           <div
             v-else-if="!gameState.isStarted"
-            class="flex flex-col items-center justify-center py-24 md:py-32 text-center space-y-6"
+            class="flex flex-col items-center justify-center py-20 md:py-32 text-center space-y-6"
           >
             <div class="text-7xl md:text-9xl animate-spin-slow">🪄</div>
             <h2
-              class="text-lg md:text-2xl font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.3em] md:tracking-[0.4em] animate-pulse"
+              class="text-base md:text-2xl font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] md:tracking-[0.4em] animate-pulse px-4"
             >
               {{ t("game.waitingForHost") }}
             </h2>
@@ -347,7 +449,7 @@ const handleLeave = async () => {
 
           <div
             v-else
-            class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start w-full"
+            class="grid grid-cols-1 grid-rows-1 lg:grid-cols-12 gap-6 items-start w-full"
           >
             <aside
               class="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4 order-2 lg:order-1 w-full"
@@ -399,46 +501,94 @@ const handleLeave = async () => {
                   {{ t("game.playersStatus") }}
                 </h4>
                 <div
-                  class="space-y-2.5 max-h-48 md:max-h-64 overflow-y-auto pr-1 custom-scrollbar"
+                  class="overflow-y-auto custom-scrollbar flex flex-col gap-3 max-h-48 md:max-h-72 pr-1"
                 >
                   <div
                     v-for="(_, userId) in gameState.scores"
                     :key="userId"
-                    class="flex items-center justify-between bg-slate-50 dark:bg-slate-950/40 border border-slate-100 dark:border-slate-800/60 px-3 py-2.5 rounded-xl transition-colors duration-300"
+                    class="relative overflow-hidden rounded-xl border border-white/10 transition-all shrink-0"
+                    :class="
+                      SHOP_PRESETS.getClassName(
+                        playersMap[userId.toString()]?.selectedBackground,
+                      )
+                    "
+                    :style="
+                      SHOP_PRESETS.getInlineStyle(
+                        playersMap[userId.toString()]?.selectedBackground,
+                      ) || 'background: rgb(248 250 252)'
+                    "
                   >
-                    <div class="flex items-center gap-2 overflow-hidden mr-2">
+                    <div
+                      class="absolute inset-0 bg-black/20 backdrop-blur-[2px]"
+                    ></div>
+
+                    <div
+                      class="relative z-10 flex items-center justify-between px-3 py-2.5 gap-2"
+                    >
+                      <div class="flex items-center gap-2 overflow-hidden grow">
+                        <span
+                          class="w-2 h-2 rounded-full shrink-0"
+                          :class="
+                            isPlayerAnswered(userId)
+                              ? 'bg-emerald-500'
+                              : 'bg-slate-300 dark:bg-slate-600'
+                          "
+                        ></span>
+
+                        <div class="relative w-8 h-8 md:w-10 md:h-10 shrink-0">
+                          <img
+                            :src="
+                              getAvatarUrl(
+                                playersMap[userId.toString()]
+                                  ?.cloudinaryPublicId,
+                                64,
+                              ) || undefined
+                            "
+                            :alt="playersMap[userId.toString()]?.username"
+                            class="absolute w-full h-full rounded-xl object-cover z-30 p-1"
+                          />
+
+                          <div
+                            v-if="playersMap[userId.toString()]?.selectedFrame"
+                            class="absolute inset-0 pointer-events-none rounded-xl"
+                            :class="
+                              SHOP_PRESETS.getClassName(
+                                playersMap[userId.toString()]?.selectedFrame,
+                              )
+                            "
+                            :style="
+                              SHOP_PRESETS.getInlineStyle(
+                                playersMap[userId.toString()]?.selectedFrame,
+                              )
+                            "
+                          ></div>
+                        </div>
+
+                        <span
+                          class="text-xs font-black text-white truncate drop-shadow"
+                        >
+                          {{
+                            playersMap[userId.toString()]?.username ||
+                            `${t("game.player")} #${userId}`
+                          }}
+                        </span>
+                      </div>
+
                       <span
-                        class="w-2 h-2 rounded-full shrink-0"
+                        class="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md shrink-0 text-center min-w-18.75"
                         :class="
                           isPlayerAnswered(userId)
-                            ? 'bg-emerald-500'
-                            : 'bg-slate-300 dark:bg-slate-600'
+                            ? 'bg-emerald-500/90 text-white'
+                            : 'bg-black/20 text-white'
                         "
-                      ></span>
-                      <span
-                        class="text-xs font-semibold text-slate-600 dark:text-slate-300 truncate"
                       >
                         {{
-                          playersMap[userId.toString()]?.username ||
-                          `${t("game.player")} #${userId}`
+                          isPlayerAnswered(userId)
+                            ? t("game.statusAnswered")
+                            : t("game.statusThinking")
                         }}
                       </span>
                     </div>
-
-                    <span
-                      class="text-[9px] md:text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md shrink-0"
-                      :class="
-                        isPlayerAnswered(userId)
-                          ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-                          : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500'
-                      "
-                    >
-                      {{
-                        isPlayerAnswered(userId)
-                          ? t("game.statusAnswered")
-                          : t("game.statusThinking")
-                      }}
-                    </span>
                   </div>
                 </div>
               </div>
@@ -450,7 +600,7 @@ const handleLeave = async () => {
               >
                 <div class="relative z-10 mb-6 md:mb-10 text-center">
                   <h2
-                    class="text-lg md:text-3xl font-black text-slate-900 dark:text-white leading-snug"
+                    class="text-lg md:text-2xl lg:text-3xl font-black text-slate-900 dark:text-white leading-snug"
                   >
                     {{ gameState.currentQuestion }}
                   </h2>
@@ -461,9 +611,21 @@ const handleLeave = async () => {
                     v-for="(answer, idx) in gameState.answers"
                     :key="answer"
                     @click="handleAnswerClick(answer)"
-                    :disabled="gameState.hasAnswered"
+                    :disabled="
+                      gameState.hasAnswered ||
+                      gameState.isRevealingAnswer ||
+                      timeLeft <= 0
+                    "
                     class="group relative w-full p-4 md:p-5 rounded-2xl md:rounded-3xl font-bold text-sm md:text-base transition-all duration-200 border-b-[6px] active:border-b-0 active:translate-y-1.5 flex items-center overflow-hidden text-left cursor-pointer"
                     :class="[
+                      gameState.correctAnswer === answer
+                        ? 'bg-green-600 border-green-800 text-white shadow-lg'
+                        : '',
+                      gameState.correctAnswer &&
+                      localSelectedAnswer === answer &&
+                      answer !== gameState.correctAnswer
+                        ? 'bg-red-600 border-red-800 text-white shadow-lg'
+                        : '',
                       !gameState.hasAnswered
                         ? 'bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 hover:border-emerald-500 dark:hover:border-emerald-500 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/10'
                         : '',
@@ -593,6 +755,25 @@ button {
   100% {
     transform: scale(1);
     opacity: 1;
+  }
+}
+
+.winner {
+  animation: winnerGlow 2s ease-in-out infinite;
+}
+
+@keyframes winnerGlow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 20px rgba(250, 204, 21, 0.3),
+      0 0 40px rgba(250, 204, 21, 0.15);
+  }
+
+  50% {
+    box-shadow:
+      0 0 35px rgba(250, 204, 21, 0.7),
+      0 0 60px rgba(250, 204, 21, 0.3);
   }
 }
 </style>

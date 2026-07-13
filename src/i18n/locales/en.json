@@ -277,7 +277,8 @@
     "statusAnswered": "Answered",
     "finalStandings": "Final Standings",
     "pointsShort": "pts",
-    "waitingForHost": "Waiting for host..."
+    "waitingForHost": "Waiting for host...",
+    "player": "Player"
   },
   "lobby": {
     "questionCount": "Select number of questions",
@@ -322,6 +323,7 @@
       "hostInfo": "Host: {name}",
       "join": "JOIN",
       "refresh": "Refresh List",
+      "full": "Full",
       "success": {
         "joined": "You have joined the room!"
       },
@@ -343,7 +345,9 @@
       "start": "Start Game",
       "leave": "Leave Room",
       "playerWait": "Waiting for players...",
-      "readyButton": "Ready"
+      "readyButton": "Ready",
+      "startingGame": "Starting game...",
+      "prepare": "Get ready!"
     }
   },
   "admin": {

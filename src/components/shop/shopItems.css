@@ -16,16 +16,6 @@
   }
 }
 
-@keyframes stars-twinkle {
-  0%,
-  100% {
-    opacity: 0.85;
-  }
-  50% {
-    opacity: 0.45;
-  }
-}
-
 .item-preset {
   border-radius: var(--item-radius);
   overflow: hidden;
@@ -111,7 +101,6 @@
     160px 160px,
     260px 260px,
     cover;
-  animation: stars-twinkle 4.5s ease-in-out infinite;
   border: var(--item-border-width) solid rgba(189, 225, 255, 0.2) !important;
   box-shadow:
     0 0 20px rgba(125, 165, 255, 0.25),

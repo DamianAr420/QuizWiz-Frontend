@@ -4,11 +4,13 @@ import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { useLobbyStore } from "@/stores/lobby";
 import { useToastStore } from "@/stores/toast";
+import { useUserStore } from "@/stores/user";
 
 const { t } = useI18n();
 const router = useRouter();
 const lobbyStore = useLobbyStore();
 const toastStore = useToastStore();
+const userStore = useUserStore();
 
 const handleJoin = async (id: string) => {
   try {
@@ -30,6 +32,7 @@ const handleRefresh = async () => {
 
 onMounted(() => {
   lobbyStore.fetchPublicLobbies();
+  userStore.fetchProfile();
 });
 </script>
 
@@ -143,19 +146,19 @@ onMounted(() => {
               {{ t("lobby.fields.players") }}
             </span>
           </div>
-
+          {{ console.log(l.isMember) }}
           <button
             @click="handleJoin(l.id)"
-            :disabled="l.currentPlayers >= l.maxPlayers"
+            :disabled="l.currentPlayers >= l.maxPlayers && !l.isMember"
             class="flex-1 md:flex-none min-w-35 py-4 px-8 rounded-2xl font-black uppercase tracking-widest transition-all cursor-pointer shadow-lg disabled:opacity-30 disabled:cursor-not-allowed"
             :class="[
-              l.currentPlayers >= l.maxPlayers
+              l.currentPlayers >= l.maxPlayers && !l.isMember
                 ? 'bg-slate-200 text-slate-400 dark:bg-slate-800 shadow-none'
                 : 'bg-green-600 dark:bg-green-500 text-white hover:bg-green-700 dark:hover:bg-green-400 hover:scale-105 active:scale-95 shadow-green-200 dark:shadow-none',
             ]"
           >
             {{
-              l.currentPlayers >= l.maxPlayers
+              l.currentPlayers >= l.maxPlayers && !l.isMember
                 ? t("lobby.browser.full")
                 : t("lobby.browser.join")
             }}

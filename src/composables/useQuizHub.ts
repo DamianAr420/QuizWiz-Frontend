@@ -5,8 +5,20 @@ import type { GameFinishedData, PlayerReward } from "@/types/reward";
 
 interface ExtendedGameState extends GameState {
   currentIndex: number;
-  answeredPlayerIds: number[];
+  answeredPlayerIds: Array<string | number>;
   rewards: Record<string, PlayerReward>;
+  correctAnswer: string | null;
+  isRevealingAnswer: boolean;
+}
+
+interface ReconnectedGame {
+  isStarted: boolean;
+  questionText: string;
+  answers: string[];
+  currentIndex: number;
+  endTime: string;
+  scores: Record<string, number>;
+  answeredPlayerIds: Array<string | number>;
 }
 
 export function useQuizHub() {
@@ -23,6 +35,8 @@ export function useQuizHub() {
     currentIndex: 0,
     answeredPlayerIds: [],
     rewards: {},
+    correctAnswer: null,
+    isRevealingAnswer: false,
   });
 
   const initHub = async (lobbyId: string) => {
@@ -33,9 +47,9 @@ export function useQuizHub() {
     signalRService.off("ReconnectedToGame");
     signalRService.off("PlayerSubmitted");
     signalRService.off("GameFinished");
+    signalRService.off("RevealAnswer");
 
     signalRService.on("NewQuestion", (data: NewQuestionData) => {
-      console.log("Otrzymano nowe pytanie z serwera:", data);
       gameState.value.isStarted = true;
       gameState.value.currentQuestion = data.text;
       gameState.value.answers = data.answers;
@@ -43,10 +57,12 @@ export function useQuizHub() {
       gameState.value.currentIndex = data.currentIndex;
       gameState.value.hasAnswered = false;
       gameState.value.answeredPlayerIds = [];
+      gameState.value.correctAnswer = null;
+      gameState.value.isRevealingAnswer = false;
     });
 
-    signalRService.on("ReconnectedToGame", (data: any) => {
-      gameState.value.isStarted = true;
+    signalRService.on("ReconnectedToGame", (data: ReconnectedGame) => {
+      gameState.value.isStarted = data.isStarted ?? true;
       gameState.value.currentQuestion = data.questionText;
       gameState.value.answers = data.answers;
       gameState.value.endTime = data.endTime;
@@ -63,10 +79,21 @@ export function useQuizHub() {
 
     signalRService.on("GameFinished", (data: GameFinishedData) => {
       gameState.value.scores = data.scores;
-      gameState.value.isStarted = false;
       gameState.value.rewards = data.rewards;
+
+      gameState.value.currentQuestion = null;
+      gameState.value.answers = [];
+      gameState.value.correctAnswer = null;
+      gameState.value.hasAnswered = false;
+      gameState.value.isRevealingAnswer = false;
+
+      gameState.value.isStarted = false;
       isFinished.value = true;
-      console.log(data.rewards);
+    });
+
+    signalRService.on("RevealAnswer", (data: { correctAnswer: string }) => {
+      gameState.value.correctAnswer = data.correctAnswer;
+      gameState.value.isRevealingAnswer = true;
     });
 
     if (!signalRService.isConnected) {
@@ -84,15 +111,9 @@ export function useQuizHub() {
     if (gameState.value.hasAnswered) return;
 
     gameState.value.hasAnswered = true;
-    console.log("Wysyłanie odpowiedzi:", answer);
 
     try {
-      await signalRService.invoke(
-        "SubmitAnswer",
-        currentLobbyId.value,
-        gameState.value.currentIndex,
-        answer,
-      );
+      await signalRService.invoke("SubmitAnswer", currentLobbyId.value, answer);
     } catch (err) {
       console.error("Błąd sieciowy, przywracanie możliwości kliknięcia:", err);
       gameState.value.hasAnswered = false;
@@ -104,6 +125,7 @@ export function useQuizHub() {
     signalRService.off("GameFinished");
     signalRService.off("ReconnectedToGame");
     signalRService.off("PlayerSubmitted");
+    signalRService.off("RevealAnswer");
   });
 
   return { gameState, isFinished, initHub, submitAnswer };

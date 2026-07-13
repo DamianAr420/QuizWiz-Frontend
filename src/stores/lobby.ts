@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import api from "@/services/api";
 import { signalRService } from "@/services/signalrService";
-import router from "@/router";
 
 export const useLobbyStore = defineStore("lobby", {
   state: () => ({
@@ -65,10 +64,15 @@ export const useLobbyStore = defineStore("lobby", {
         if (player) player.isReady = isReady;
       });
 
+      signalRService.on("LobbyStatusChanged", (status: string) => {
+        if (this.currentLobby) {
+          this.currentLobby.status = status;
+        }
+      });
+
       signalRService.on("GameStarted", () => {
         if (this.currentLobby) {
           this.currentLobby.status = "InGame";
-          router.push(`/play/${this.currentLobby.id}`);
         }
       });
 
@@ -103,6 +107,7 @@ export const useLobbyStore = defineStore("lobby", {
           signalRService.off("GameStarted");
           signalRService.off("PlayerLeft");
           signalRService.off("HostChanged");
+          signalRService.off("LobbyStatusChanged");
 
           if (this.currentLobby?.status !== "InGame") {
             await signalRService.stopConnection();
